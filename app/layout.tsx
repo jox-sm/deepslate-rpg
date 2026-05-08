@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Sbar from "@/components/background/sidebar/sidebar"
+import { Analytics } from '@vercel/analytics/next';
 
 import Link from 'next/link';
 const geistSans = Geist({
@@ -32,6 +33,7 @@ export default function RootLayout({
         <body className="flex background">
          <Sbar />
         {children}
+        <Analytics />
         </body>
     </html>
     
