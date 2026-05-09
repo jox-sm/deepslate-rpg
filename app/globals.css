@@ -10,7 +10,8 @@ html, body {
 }
 .background {
     min-height: 100vh;
-
+    z-index: 0;
+    position:sticky;
     background:
         radial-gradient(
             circle at top left,
@@ -30,3 +31,13 @@ html, body {
 
     overflow: hidden;
 }
+
+
+.page {
+  flex: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+

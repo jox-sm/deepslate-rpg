@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+// app/layout.tsx
+import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+
+const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: ["300", "600"], style: ["normal", "italic"] });
+const dmSans = DM_Sans({ subsets: ["latin"], weight: ["300", "400", "500"] });
 import "./globals.css";
 import Sbar from "@/components/background/sidebar/sidebar"
 
@@ -30,8 +35,15 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
         <body className="flex background">
+          <div className="page">
          <Sbar />
-        {children}
+         
+          {children}
+         
+          </div>
+
+            
+        
         </body>
     </html>
     

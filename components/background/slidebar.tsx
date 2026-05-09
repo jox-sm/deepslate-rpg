@@ -8,6 +8,7 @@ import {
 
 import style from '@/styles/sidebar/sidebar.module.css'
 import Link from "next/link";
+import posthog from "posthog-js";
 
 type SidebarItem = {
   icon: any
@@ -46,7 +47,11 @@ export default function Sidebar({
           )}
 
           <button
-            onClick={() => setCollapsed(!collapsed)}
+            onClick={() => {
+              const next = !collapsed;
+              setCollapsed(next);
+              posthog.capture('sidebar_toggled', { collapsed: next });
+            }}
             className={style.toggleButton}
           >
             {collapsed
@@ -71,6 +76,7 @@ export default function Sidebar({
               key={index}
               href={item.label.toLowerCase() === "home" ? "/" : `${item.label.toLowerCase()}`}
               className={style.menuItem}
+              onClick={() => posthog.capture('navigation_item_clicked', { label: item.label })}
             >
 
               <div className={style.icon}>

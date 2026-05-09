@@ -1,12 +1,12 @@
 /* Sidebar.module.css */
 
 .sidebar {
-  width: 270px;
+  width: 172px;
   height: 100vh;
-
+  z-index: 3;
   background: #171717;
   border-right: 1px solid #2a2a2a;
-
+  position:sticky;
   color: white;
 
   display: flex;
