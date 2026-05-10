@@ -2,12 +2,7 @@
 import { useEffect } from "react";
 import style from "@/styles/cards/cards.module.css";
 import posthog from "posthog-js";
-type CardProps = {
-  image: string;
-  name: string;
-  description: string;
-  tags: string[];
-};
+import { CardProps } from "@/types/cards";
 
 export default function ProfileCard({
   image,

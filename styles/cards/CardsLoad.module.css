@@ -1,0 +1,76 @@
+/* ─── Batch wrapper (contains all rows for one fetch) ───────────────────── */
+.batch {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1.5rem;        /* vertical space between rows */
+  padding: 1.5rem 0;
+}
+
+/* ─── Single row — always 3 columns ─────────────────────────────────────── */
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;        /* horizontal gutter between cards */
+  width: 100%;
+}
+
+/* ─── Cell — lets the card stretch to fill ──────────────────────────────── */
+.cell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;       /* prevent grid blowout on long content */
+}
+
+/* ─── Skeleton placeholder ───────────────────────────────────────────────── */
+.skeleton {
+  border-radius: 0.75rem;
+  height: 320px;
+  background: linear-gradient(
+    90deg,
+    #27272a 0%,     /* zinc-800 */
+    #3f3f46 50%,    /* zinc-700 */
+    #27272a 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+/* ─── Error message ──────────────────────────────────────────────────────── */
+.error {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem 0;
+  color: #f87171;     /* red-400 */
+  font-size: 0.875rem;
+}
+
+/* ─── Responsive breakpoints ─────────────────────────────────────────────── */
+
+/* Tablet: 2 columns */
+@media (max-width: 1024px) {
+  .row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile: 1 column */
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .batch {
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+}
