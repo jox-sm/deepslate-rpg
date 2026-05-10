@@ -4,6 +4,7 @@ export default function Page() {
   return (
     <div className="page">
       <ProfileCard
+      likes_count={0}
   image="/images/project.jpg"
   name="AI Chat System"
   description="A futuristic AI chat application with image generation and neon UI."

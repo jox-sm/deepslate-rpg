@@ -87,6 +87,7 @@ export default function CardsLoad({
           {row.map((card, colIndex) => (
             <div key={colIndex} className={style.cell}>
               <ProfileCard
+              likes_count={card.likes_count}
                 image={card.image}
                 name={card.name}
                 description={card.description}
