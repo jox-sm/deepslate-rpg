@@ -20,7 +20,7 @@ async function runMigration() {
     const schemaPath = path.join(process.cwd(), 'db', 'schema.sql');
     const schema = fs.readFileSync(schemaPath, 'utf-8');
 
-    await sql(schema);
+    await sql.unsafe(schema);
 
     console.log("done");
   } catch (error) {
