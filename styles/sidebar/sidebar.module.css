@@ -1,6 +1,9 @@
 /* Sidebar.module.css */
 
 .sidebar {
+  position: fixed;
+  left: 0; 
+  top: 0;
   width: 172px;
   height: 100vh;
   z-index: 3;
@@ -8,7 +11,8 @@
   border-right: 1px solid #2a2a2a;
   position:sticky;
   color: white;
-
+  justify-self: start;
+  align-self: flex-start;
   display: flex;
   flex-direction: column;
 

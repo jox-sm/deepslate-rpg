@@ -37,7 +37,12 @@ html, body {
   flex: 1;
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
+.mod2{
+    flex: 1;
+  min-height: 100vh;
+  display: flex;
+    align-items: center;
+    justify-content: center;
+}

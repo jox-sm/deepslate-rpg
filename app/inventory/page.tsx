@@ -1,8 +1,11 @@
 import React from 'react'
+import CreateForm from "@/components/adventures/form/form";
 
 const page = () => {
   return (
-    <div>page</div>
+    <div className='mod2'>
+      <CreateForm />
+    </div>
   )
 }
 

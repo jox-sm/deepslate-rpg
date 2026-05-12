@@ -2,7 +2,7 @@ import ProfileCard from "../components/adventures/cards/cards";
 
 export default function Page() {
   return (
-    <div className="page">
+    <div className="mod2">
       <ProfileCard
       likes_count={0}
   image="/images/project.jpg"
