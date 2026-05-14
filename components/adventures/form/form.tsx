@@ -1,106 +1,163 @@
 "use client";
-import TextAreaField from '@/ui/FormUI/textComponent';
-import ImageUpload  from '@/ui/FormUI/imageComponent';
+import TextAreaField, { tagsComponent } from '@/ui/FormUI/textComponent';
+import ImageUpload from '@/ui/FormUI/imageComponent';
 import { validateText } from '@/utilities/FormUtils';
-import { useState } from "react";
+import { prepareGameCard } from '@/utilities/utils';
+import { CardProps } from '@/types/cards';
+import { useState, useCallback } from "react";
 import formStyles from "@/styles/forms/form.module.css";
 
-const statusColorMap = {
+const PRE_EXISTING_TAGS = [
+  "Adventure", "Action", "New", "Thrills", "Isekai",
+  "Fantasy", "Sci-Fi", "Horror", "Romance", "Comedy"
+] as const;
+
+const FIELD_CONFIG = {
+  name: { minLength: 4, maxLength: 100, fieldName: "Name" },
+  description: { minLength: 50, maxLength: 400, fieldName: "Description" },
+} as const;
+
+const STATUS_COLOR_MAP = {
   success: formStyles.statusSuccess,
   warning: formStyles.statusWarning,
   error: formStyles.statusError,
 } as const;
 
+interface FormState {
+  name: string;
+  description: string;
+  image: File | null;
+  imagePreview: string;
+  selectedTags: string[];
+}
+
+const initialFormState: FormState = {
+  name: "",
+  description: "",
+  image: null,
+  imagePreview: "",
+  selectedTags: [],
+};
+
 export default function CreateForm() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+  const [form, setForm] = useState<FormState>(initialFormState);
   const [loading, setLoading] = useState(false);
 
-  const nameValidation = validateText(name, { minLength: 4, maxLength: 100, fieldName: "Name" });
-  const descValidation = validateText(description, { minLength: 50, maxLength: 400, fieldName: "Description" });
+  const nameValidation = validateText(form.name, FIELD_CONFIG.name);
+  const descValidation = validateText(form.description, FIELD_CONFIG.description);
   const isFormValid = nameValidation.isFormValid && descValidation.isFormValid;
 
-  async function handleSubmit() {
-    if (!isFormValid) return;
+  const resetForm = useCallback(() => {
+    setForm(initialFormState);
+  }, []);
 
+  const updateField = useCallback(<K extends keyof FormState>(field: K, value: FormState[K]) => {
+    setForm(prev => ({ ...prev, [field]: value }));
+  }, []);
+
+  const handleSubmit = useCallback(async () => {
+    if (!isFormValid || !form.image) return;
+
+    setLoading(true);
     try {
-      setLoading(true);
-
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("description", description);
-
-      if (image) {
-        formData.append("image", image);
-      }
-
-      await fetch("/api", {
+      const imageUrl = await fetch("/api/convertUrl", {
         method: "POST",
-        body: formData,
+        body: form.image,
+      }).then(res => res.json()).then(data => data.url);
+
+      const cardData: CardProps = {
+        name: form.name,
+        description: form.description,
+        tags: form.selectedTags,
+        image: imageUrl,
+        likes_count: 0,
+      };
+
+      const gameData = prepareGameCard(cardData);
+
+      await fetch("/api/push", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "game", data: gameData }),
       });
 
-      setName("");
-      setDescription("");
-      setImage(null);
-
+      resetForm();
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
-  }
+  }, [isFormValid, form, resetForm]);
+
+  const renderValidationMessage = () => {
+    if (!isFormValid) {
+      return (
+        <p className="text-sm text-red-500 text-center">
+          Please follow the length requirements for all fields
+        </p>
+      );
+    }
+    if (form.name.length > 0 && form.description.length > 0 && !form.image) {
+      return (
+        <p className="text-sm text-red-500 text-center">
+          Please upload an image
+        </p>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className={formStyles.wrapper}>
       <div className={formStyles.card}>
-
         <h1 className={formStyles.title}>Create Game</h1>
 
         <TextAreaField
           label="Name"
-          value={name}
-          onChange={setName}
+          value={form.name}
+          onChange={(value) => updateField("name", value)}
           placeholder="Enter the name of the game"
-          minLength={4}
-          maxLength={100}
-          isValid={name.length === 0 ? undefined : nameValidation.isFormValid}
+          minLength={FIELD_CONFIG.name.minLength}
+          maxLength={FIELD_CONFIG.name.maxLength}
+          isValid={form.name.length === 0 ? undefined : nameValidation.isFormValid}
           errorMessage={nameValidation.errorMessage}
-          statusColorClass={nameValidation.trueLength > 0 ? statusColorMap[nameValidation.errorColor] : undefined}
+          statusColorClass={nameValidation.trueLength > 0 ? STATUS_COLOR_MAP[nameValidation.errorColor] : undefined}
         />
 
         <TextAreaField
           label="Description"
-          value={description}
-          onChange={setDescription}
+          value={form.description}
+          onChange={(value) => updateField("description", value)}
           placeholder="Enter the short description of the game"
-          minLength={50}
-          maxLength={400}
-          isValid={description.length === 0 ? undefined : descValidation.isFormValid}
+          minLength={FIELD_CONFIG.description.minLength}
+          maxLength={FIELD_CONFIG.description.maxLength}
+          isValid={form.description.length === 0 ? undefined : descValidation.isFormValid}
           errorMessage={descValidation.errorMessage}
-          statusColorClass={descValidation.trueLength > 0 ? statusColorMap[descValidation.errorColor] : undefined}
+          statusColorClass={descValidation.trueLength > 0 ? STATUS_COLOR_MAP[descValidation.errorColor] : undefined}
         />
 
-        
+        {tagsComponent({
+          label: "Tags",
+          availableTags: [...PRE_EXISTING_TAGS],
+          selectedTags: form.selectedTags,
+          onTagsChange: (tags) => updateField("selectedTags", tags),
+        })}
+
         <ImageUpload
           label="Image"
-          onSelect={setImage}
+          onSelect={(file) => updateField("image", file)}
+          onPreviewChange={(preview) => updateField("imagePreview", preview)}
         />
 
-        {!isFormValid && (
-          <p className="text-sm text-red-500 text-center">
-            Please follow the length requirements for all fields
-          </p>
-        )}
+        {renderValidationMessage()}
 
         <button
           onClick={handleSubmit}
-          disabled={loading || !isFormValid}
+          disabled={loading || !isFormValid || !form.image}
           className={formStyles.button}
         >
           {loading ? "Submitting..." : "Submit"}
         </button>
-
       </div>
     </div>
   );

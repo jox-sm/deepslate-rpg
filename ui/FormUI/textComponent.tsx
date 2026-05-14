@@ -1,4 +1,4 @@
-import { TextAreaFieldProps } from '@/types/form';
+import { TextAreaFieldProps, TagsComponentProps } from '@/types/form';
 import formStyles from "@/styles/forms/form.module.css";
 export default function TextAreaField({
   label,
@@ -52,6 +52,44 @@ export default function TextAreaField({
         <span className={displayColor}>
           {displayMessage}
          </span>
+      </div>
+    </div>
+  );
+}
+
+export function tagsComponent({
+  label,
+  availableTags,
+  selectedTags,
+  onTagsChange,
+}: TagsComponentProps) {
+  const toggleTag = (tag: string) => {
+    if (selectedTags.includes(tag)) {
+      onTagsChange(selectedTags.filter((t) => t !== tag));
+    } else {
+      onTagsChange([...selectedTags, tag]);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-sm font-medium">
+        {label}
+      </label>
+
+      <div className={formStyles.tagsContainer}>
+        {availableTags.map((tag) => (
+          <button
+            key={tag}
+            type="button"
+            onClick={() => toggleTag(tag)}
+            className={`${formStyles.tagButton} ${
+              selectedTags.includes(tag) ? formStyles.selected : ""
+            }`}
+          >
+            {tag}
+          </button>
+        ))}
       </div>
     </div>
   );

@@ -1,11 +1,13 @@
 // lib/storage.ts
 import { supabase } from '@/lib/supabase';
+import {convertToWebp} from '@/utilities/imagesUtils';
 
 export async function uploadImage(file: Buffer, fileName: string): Promise<string> {
   const uniqueName = `${crypto.randomUUID()}-${fileName}`;
+  const webpBuffer = await convertToWebp(file);
   const { data, error } = await supabase.storage
     .from('deepslate-rpg')
-    .upload(`games/${uniqueName}`, file, {
+    .upload(`games/${uniqueName}`, webpBuffer, {
       contentType: 'image/webp',
       upsert: false,
     });

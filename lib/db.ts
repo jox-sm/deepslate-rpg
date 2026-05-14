@@ -17,6 +17,7 @@ export async function insertGame(game: GameCardProps) {
 }
 
 export async function insertGamesBatch(games: GameCardProps[]) {
+  try{
   const result = await sql`
     INSERT INTO games (id, name, description, image, tags, created_at, updated_at)
     SELECT * FROM UNNEST(
@@ -24,13 +25,23 @@ export async function insertGamesBatch(games: GameCardProps[]) {
       ${games.map(g => g.name)}::text[], 
       ${games.map(g => g.description)}::text[], 
       ${games.map(g => g.image)}::text[], 
-      ${games.map(g => g.tags)}::text[], 
+      ${games.map(g => g.tags)}::text[],
       ${games.map(g => g.created_at)}::timestamptz[], 
       ${games.map(g => g.updated_at)}::timestamptz[]
     )
     RETURNING id;
   `;
   return result;
+  }  catch (error: any) {
+    console.error("❌ insertGamesBatch failed:");
+    console.error("Message:", error.message);
+    console.error("Code:", error.code);
+    console.error("Detail:", error.detail);
+    console.error("Hint:", error.hint);
+    console.error("Position:", error.position);
+    console.error("Data sent:", JSON.stringify(games, null, 2));
+    throw error;
+  }
 }
 
 

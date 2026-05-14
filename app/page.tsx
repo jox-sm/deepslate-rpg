@@ -11,6 +11,7 @@ export default function Page() {
   tags={["NextJS", "Flask", "AI", "Tailwind"]}
 />
     </div>
+    
 
   );
 }

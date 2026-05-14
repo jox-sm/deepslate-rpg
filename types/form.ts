@@ -10,15 +10,22 @@ type TextAreaFieldProps = {
   statusColorClass?: string;
 };
 
+type TagsComponentProps = {
+  label: string;
+  availableTags: string[];
+  selectedTags: string[];
+  onTagsChange: (tags: string[]) => void;
+};
+
 type ImageUploadProps = {
   label: string;
   onSelect: (file: File) => void;
-
+  onPreviewChange?: (url: string) => void;
   accept?: string;
   maxSizeMB?: number;
 };
 
-export type { TextAreaFieldProps , ImageUploadProps};
+export type { TextAreaFieldProps, ImageUploadProps, TagsComponentProps };
 
 
 

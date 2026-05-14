@@ -1,17 +1,18 @@
 "use client";
-import { ImageUploadProps } from '@/types/form';
 
 import { useRef, useState } from "react";
+
+import { ImageUploadProps } from "@/types/form";
 import formStyles from "@/styles/forms/form.module.css";
 
 export default function ImageUpload({
   label,
   onSelect,
+  onPreviewChange,
   accept = "image/*",
   maxSizeMB = 3,
 }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState("");
 
@@ -22,26 +23,21 @@ export default function ImageUpload({
     }
 
     const maxBytes = maxSizeMB * 1024 * 1024;
-
     if (file.size > maxBytes) {
       setError(`Image exceeds ${maxSizeMB}MB.`);
       return;
     }
 
     setError("");
-
     const imageUrl = URL.createObjectURL(file);
-
     setPreview(imageUrl);
-
     onSelect(file);
+    onPreviewChange?.(imageUrl);
   }
 
   return (
     <div className="flex flex-col gap-3">
-      <label className="text-sm font-medium">
-        {label}
-      </label>
+      <label className="text-sm font-medium">{label}</label>
 
       <button
         type="button"
@@ -50,10 +46,10 @@ export default function ImageUpload({
       >
         {preview ? (
           <img
-            src={preview}
-            alt="Preview"
-            className="max-h-[250px] rounded-xl object-cover"
-          />
+          src={preview}
+          alt="Preview"
+          className={formStyles.previewImage}
+        />
         ) : (
           <span>Upload Image</span>
         )}
@@ -66,18 +62,12 @@ export default function ImageUpload({
         className={formStyles.hiddenInput}
         onChange={(e) => {
           const file = e.target.files?.[0];
-
           if (!file) return;
-
           handleFile(file);
         }}
       />
 
-      {error && (
-        <p className="text-sm text-red-500">
-          {error}
-        </p>
-      )}
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }
