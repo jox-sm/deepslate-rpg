@@ -18,19 +18,25 @@ export async function insertGame(game: GameCardProps) {
 
 export async function insertGamesBatch(games: GameCardProps[]) {
   try{
-  const result = await sql`
-    INSERT INTO games (id, name, description, image, tags, created_at, updated_at)
-    SELECT * FROM UNNEST(
-      ${games.map(g => g.id)}::uuid[], 
-      ${games.map(g => g.name)}::text[], 
-      ${games.map(g => g.description)}::text[], 
-      ${games.map(g => g.image)}::text[], 
-      ${games.map(g => `{${g.tags.join(',')}}`)}::text[]
-      ${games.map(g => g.created_at)}::timestamptz[], 
-      ${games.map(g => g.updated_at)}::timestamptz[]
-    )
-    RETURNING id;
-  `;
+  const tagsArray = games.map(g => `{${g.tags.join(',')}}`);
+
+const result = await sql`
+  INSERT INTO games (id, name, description, image, tags, created_at, updated_at)
+  SELECT 
+    id::uuid, name, description, image,
+    tags::text[],
+    created_at::timestamptz, updated_at::timestamptz
+  FROM UNNEST(
+    ${games.map(g => g.id)}::uuid[], 
+    ${games.map(g => g.name)}::text[], 
+    ${games.map(g => g.description)}::text[], 
+    ${games.map(g => g.image)}::text[], 
+    ${tagsArray}::text[],
+    ${games.map(g => g.created_at)}::timestamptz[], 
+    ${games.map(g => g.updated_at)}::timestamptz[]
+  ) AS t(id, name, description, image, tags, created_at, updated_at)
+  RETURNING id;
+`;
   return result;
   }  catch (error: any) {
     console.error("❌ insertGamesBatch failed:");
