@@ -25,7 +25,7 @@ export async function insertGamesBatch(games: GameCardProps[]) {
       ${games.map(g => g.name)}::text[], 
       ${games.map(g => g.description)}::text[], 
       ${games.map(g => g.image)}::text[], 
-      ${games.map(g => g.tags)}::text[],
+      ${games.map(g => `{${g.tags.join(',')}}`)}::text[]
       ${games.map(g => g.created_at)}::timestamptz[], 
       ${games.map(g => g.updated_at)}::timestamptz[]
     )
