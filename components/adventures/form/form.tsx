@@ -6,6 +6,8 @@ import { prepareGameCard } from '@/utilities/utils';
 import { CardProps } from '@/types/cards';
 import { useState, useCallback } from "react";
 import formStyles from "@/styles/forms/form.module.css";
+import GamesFormWizard from '@/ui/gamesFormUi/form';
+import type { GamesFormData } from '@/types/form';
 
 const PRE_EXISTING_TAGS = [
   "Adventure", "Action", "New", "Thrills", "Isekai",
@@ -42,6 +44,8 @@ const initialFormState: FormState = {
 export default function CreateForm() {
   const [form, setForm] = useState<FormState>(initialFormState);
   const [loading, setLoading] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
+  const [resetCounter, setResetCounter] = useState(0);
 
   const nameValidation = validateText(form.name, FIELD_CONFIG.name);
   const descValidation = validateText(form.description, FIELD_CONFIG.description);
@@ -49,13 +53,15 @@ export default function CreateForm() {
 
   const resetForm = useCallback(() => {
     setForm(initialFormState);
+    setResetCounter((c) => c + 1);
+    setShowWizard(false);
   }, []);
 
   const updateField = useCallback(<K extends keyof FormState>(field: K, value: FormState[K]) => {
     setForm(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const handleSubmit = useCallback(async () => {
+  const handleFinalSubmit = useCallback(async (wizardData: GamesFormData) => {
     if (!isFormValid || !form.image) return;
 
     setLoading(true);
@@ -75,10 +81,20 @@ export default function CreateForm() {
 
       const gameData = prepareGameCard(cardData);
 
+      const payload = {
+        type: "game",
+        data: gameData,
+        gameData: {
+          characters: wizardData.characters,
+          maps: wizardData.maps,
+          items: wizardData.items,
+        },
+      };
+
       await fetch("/api/push", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "game", data: gameData }),
+        body: JSON.stringify(payload),
       });
 
       resetForm();
@@ -106,6 +122,14 @@ export default function CreateForm() {
     }
     return null;
   };
+
+  if (showWizard) {
+    return (
+      <div className={formStyles.wrapper}>
+        <GamesFormWizard onComplete={handleFinalSubmit} loading={loading} />
+      </div>
+    );
+  }
 
   return (
     <div className={formStyles.wrapper}>
@@ -147,16 +171,17 @@ export default function CreateForm() {
           label="Image"
           onSelect={(file) => updateField("image", file)}
           onPreviewChange={(preview) => updateField("imagePreview", preview)}
+          resetKey={resetCounter}
         />
 
         {renderValidationMessage()}
 
         <button
-          onClick={handleSubmit}
+          onClick={() => setShowWizard(true)}
           disabled={loading || !isFormValid || !form.image}
           className={formStyles.button}
         >
-          {loading ? "Submitting..." : "Submit"}
+          Next
         </button>
       </div>
     </div>

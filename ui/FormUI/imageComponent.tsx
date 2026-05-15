@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import { ImageUploadProps } from "@/types/form";
 import formStyles from "@/styles/forms/form.module.css";
@@ -11,10 +11,16 @@ export default function ImageUpload({
   onPreviewChange,
   accept = "image/*",
   maxSizeMB = 3,
+  resetKey,
 }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setPreview(null);
+    setError("");
+  }, [resetKey]);
 
   function handleFile(file: File) {
     if (!file.type.startsWith("image/")) {
