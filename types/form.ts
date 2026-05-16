@@ -54,6 +54,7 @@ export interface ItemData {
 }
 
 export interface GamesFormData {
+  id: string; // UUID 7
   characters: CharacterData[];
   maps: MapData[];
   items: ItemData[];
@@ -93,6 +94,33 @@ export const MAP_VALIDATION = {
 export const ITEM_VALIDATION = {
   name: { minLength: 1, maxLength: 50, fieldName: "Item Name" },
 } as const;
+
+// Create Game Form Types
+export interface GameFormState {
+  name: string;
+  description: string;
+  image: File | null;
+  imagePreview: string;
+  selectedTags: string[];
+}
+
+export const PRE_EXISTING_TAGS = [
+  "Adventure", "Action", "New", "Thrills", "Isekai",
+  "Fantasy", "Sci-Fi", "Horror", "Romance", "Comedy"
+] as const;
+
+export const GAME_FORM_FIELD_CONFIG = {
+  name: { minLength: 4, maxLength: 100, fieldName: "Name" },
+  description: { minLength: 50, maxLength: 400, fieldName: "Description" },
+} as const;
+
+export const initialGameFormState: GameFormState = {
+  name: "",
+  description: "",
+  image: null,
+  imagePreview: "",
+  selectedTags: [],
+};
 
 
 

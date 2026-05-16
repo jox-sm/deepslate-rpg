@@ -2,14 +2,15 @@
 
 import { useState, useCallback } from "react";
 import { v7 as uuidV7 } from "uuid";
-import type { GamesFormData, CharacterData, MapData, ItemData, GamesFormStep } from "@/types/form";
-
-const initialFormData: GamesFormData = {
-  id:"",
-  characters: [],
-  maps: [],
-  items: [],
-};
+import {
+  type GamesFormData,
+  type CharacterData,
+  type MapData,
+  type ItemData,
+  type GamesFormStep,
+  type UseGamesFormReturn,
+  initialFormData,
+} from "@/types/gameForm";
 
 export function createEmptyCharacter(): CharacterData {
   return {
@@ -41,28 +42,6 @@ export function createEmptyItem(): ItemData {
   };
 }
 
-export interface UseGamesFormReturn {
-  currentStep: number;
-  formData: GamesFormData;
-  stepKey: GamesFormStep;
-  isFirstStep: boolean;
-  isLastStep: boolean;
-  setStep: (step: number) => void;
-  nextStep: () => void;
-  prevStep: () => void;
-  updateField: <K extends keyof GamesFormData>(field: K, value: GamesFormData[K]) => void;
-  reset: () => void;
-  addCharacter: () => void;
-  removeCharacter: (id: string) => void;
-  updateCharacter: (id: string, field: keyof CharacterData, value: unknown) => void;
-  addMap: () => void;
-  removeMap: (id: string) => void;
-  updateMap: (id: string, field: keyof MapData, value: unknown) => void;
-  addItem: () => void;
-  removeItem: (id: string) => void;
-  updateItem: (id: string, field: keyof ItemData, value: unknown) => void;
-}
-
 const STEP_KEYS: GamesFormStep[] = ["characters", "maps", "items"];
 const STEP_COUNT = STEP_KEYS.length;
 
@@ -92,7 +71,6 @@ export function useGamesForm(onComplete?: (data: GamesFormData) => void): UseGam
     setCurrentStep(0);
   }, []);
 
-  // Character helpers
   const addCharacter = useCallback(() => {
     setFormData((prev) => ({
       ...prev,
@@ -114,7 +92,6 @@ export function useGamesForm(onComplete?: (data: GamesFormData) => void): UseGam
     }));
   }, []);
 
-  // Map helpers
   const addMap = useCallback(() => {
     setFormData((prev) => ({
       ...prev,
@@ -136,7 +113,6 @@ export function useGamesForm(onComplete?: (data: GamesFormData) => void): UseGam
     }));
   }, []);
 
-  // Item helpers
   const addItem = useCallback(() => {
     setFormData((prev) => ({
       ...prev,

@@ -1,7 +1,7 @@
 "use client";
 import ImageUpload from "@/ui/FormUI/imageComponent";
 import { itemValidators } from "@/lib/gamesFormValidation";
-import { type ItemData } from "@/types/form";
+import { type ItemData } from "@/types/gameForm";
 import formStyles from "@/styles/forms/form.module.css";
 
 interface ItemsStepProps {

@@ -4,62 +4,25 @@ import ImageUpload from '@/ui/FormUI/imageComponent';
 import { validateText } from '@/utilities/FormUtils';
 import { prepareGameCard } from '@/utilities/utils';
 import { CardProps } from '@/types/cards';
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import formStyles from "@/styles/forms/form.module.css";
 import GamesFormWizard from '@/ui/gamesFormUi/form';
 import type { GamesFormData } from '@/types/form';
+import { GAME_FORM_FIELD_CONFIG, initialGameFormState, PRE_EXISTING_TAGS, type GameFormState as FormState } from '@/types/form';
+import { useGameForm } from '@/hooks/form';
 
-const PRE_EXISTING_TAGS = [
-  "Adventure", "Action", "New", "Thrills", "Isekai",
-  "Fantasy", "Sci-Fi", "Horror", "Romance", "Comedy"
-] as const;
-
-const FIELD_CONFIG = {
-  name: { minLength: 4, maxLength: 100, fieldName: "Name" },
-  description: { minLength: 50, maxLength: 400, fieldName: "Description" },
-} as const;
-
-const STATUS_COLOR_MAP = {
+const STATUS_COLOR_MAP= {
   success: formStyles.statusSuccess,
   warning: formStyles.statusWarning,
   error: formStyles.statusError,
 } as const;
 
-interface FormState {
-  name: string;
-  description: string;
-  image: File | null;
-  imagePreview: string;
-  selectedTags: string[];
-}
-
-const initialFormState: FormState = {
-  name: "",
-  description: "",
-  image: null,
-  imagePreview: "",
-  selectedTags: [],
-};
-
 export default function CreateForm() {
-  const [form, setForm] = useState<FormState>(initialFormState);
-  const [loading, setLoading] = useState(false);
-  const [showWizard, setShowWizard] = useState(false);
-  const [resetCounter, setResetCounter] = useState(0);
+  const { form, setForm, loading, setLoading, showWizard, setShowWizard, resetCounter, resetForm, updateField } = useGameForm(initialGameFormState);
 
-  const nameValidation = validateText(form.name, FIELD_CONFIG.name);
-  const descValidation = validateText(form.description, FIELD_CONFIG.description);
+  const nameValidation = validateText(form.name, GAME_FORM_FIELD_CONFIG.name);
+  const descValidation = validateText(form.description, GAME_FORM_FIELD_CONFIG.description);
   const isFormValid = nameValidation.isFormValid && descValidation.isFormValid;
-
-  const resetForm = useCallback(() => {
-    setForm(initialFormState);
-    setResetCounter((c) => c + 1);
-    setShowWizard(false);
-  }, []);
-
-  const updateField = useCallback(<K extends keyof FormState>(field: K, value: FormState[K]) => {
-    setForm(prev => ({ ...prev, [field]: value }));
-  }, []);
 
   const handleFinalSubmit = useCallback(async (wizardData: GamesFormData) => {
     if (!isFormValid || !form.image) return;
@@ -85,6 +48,7 @@ export default function CreateForm() {
         type: "game",
         data: gameData,
         gameData: {
+          id: gameData.id,
           characters: wizardData.characters,
           maps: wizardData.maps,
           items: wizardData.items,
@@ -141,8 +105,8 @@ export default function CreateForm() {
           value={form.name}
           onChange={(value) => updateField("name", value)}
           placeholder="Enter the name of the game"
-          minLength={FIELD_CONFIG.name.minLength}
-          maxLength={FIELD_CONFIG.name.maxLength}
+          minLength={GAME_FORM_FIELD_CONFIG.name.minLength}
+          maxLength={GAME_FORM_FIELD_CONFIG.name.maxLength}
           isValid={form.name.length === 0 ? undefined : nameValidation.isFormValid}
           errorMessage={nameValidation.errorMessage}
           statusColorClass={nameValidation.trueLength > 0 ? STATUS_COLOR_MAP[nameValidation.errorColor] : undefined}
@@ -153,8 +117,8 @@ export default function CreateForm() {
           value={form.description}
           onChange={(value) => updateField("description", value)}
           placeholder="Enter the short description of the game"
-          minLength={FIELD_CONFIG.description.minLength}
-          maxLength={FIELD_CONFIG.description.maxLength}
+          minLength={GAME_FORM_FIELD_CONFIG.description.minLength}
+          maxLength={GAME_FORM_FIELD_CONFIG.description.maxLength}
           isValid={form.description.length === 0 ? undefined : descValidation.isFormValid}
           errorMessage={descValidation.errorMessage}
           statusColorClass={descValidation.trueLength > 0 ? STATUS_COLOR_MAP[descValidation.errorColor] : undefined}

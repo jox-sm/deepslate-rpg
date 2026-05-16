@@ -1,6 +1,6 @@
 "use client";
-import { useGamesForm, createEmptyCharacter, createEmptyMap, createEmptyItem } from "@/lib/useGamesForm";
-import { GAMES_FORM_STEPS, type GamesFormData } from "@/types/form";
+import { useGamesForm, createEmptyCharacter, createEmptyMap, createEmptyItem } from "@/hooks/gameForm";
+import { GAMES_FORM_STEPS, type GamesFormData } from "@/types/gameForm";
 import CharactersStep from "./charactersStep";
 import MapsStep from "./mapsStep";
 import ItemsStep from "./itemsStep";

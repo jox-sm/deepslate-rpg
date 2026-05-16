@@ -1,7 +1,7 @@
 "use client";
 import ImageUpload from "@/ui/FormUI/imageComponent";
 import { mapValidators } from "@/lib/gamesFormValidation";
-import { type MapData } from "@/types/form";
+import { type MapData } from "@/types/gameForm";
 import formStyles from "@/styles/forms/form.module.css";
 
 interface MapsStepProps {
