@@ -86,3 +86,23 @@ export interface UseGamesFormReturn {
   removeItem: (id: string) => void;
   updateItem: (id: string, field: keyof ItemData, value: unknown) => void;
 }
+
+
+export type CharacterDataDB = Omit<CharacterData, 'image' | 'imagePreview'> & {
+  image: string;
+}
+
+export type MapDataDB = Omit<MapData, 'image' | 'imagePreview'> & {
+  image: string;
+}
+
+export type ItemDataDB = Omit<ItemData, 'image' | 'imagePreview'> & {
+  image: string;
+}
+
+export type GamesFormDataDB = Omit<GamesFormData, 'characters' | 'maps' | 'items'> & {
+  characters: CharacterDataDB[];
+  maps: MapDataDB[];
+  items: ItemDataDB[];
+}
+
