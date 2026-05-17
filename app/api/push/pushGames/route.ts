@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
-import {validateQueue, setToWorking, setToIdle, validateQueueWorking, pushGameToQueue} from "@/utilities/insertGame";
+import {validateQueue, setToWorking, setToIdle, validateQueueWorking, pushGameToQueue, GamesFormDataDB} from "@/utilities/insertGame";
 import {processGamesQueue} from "@/lib/GamesInsert";
 import { retry } from '@/lib/retry';
+import { GameDataJSON, convertComponentImagesJSON } from "@/utilities/insertGameImages";
+
 export async function POST(request: Request) {
   try {
-    const dbGameData = await request.json();
+    const gameDataJSON: GameDataJSON = await request.json();
+    const dbGameData: GamesFormDataDB = await convertComponentImagesJSON(gameDataJSON);
     await retry(() => pushGameToQueue(dbGameData), 3, 500); 
     if(await retry(() => validateQueueWorking(), 3, 500)){
       return NextResponse.json({

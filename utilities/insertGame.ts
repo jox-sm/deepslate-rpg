@@ -1,5 +1,7 @@
 import { redis } from '@/lib/queue';
-import {  GamesFormDataDB as dbGameData } from "@/types/gameForm";
+import { GamesFormDataDB } from "@/types/gameForm";
+
+export type { GamesFormDataDB };
 
 
 export async function validateQueue(): Promise<boolean> {
@@ -11,7 +13,7 @@ export async function validateQueueWorking(): Promise<boolean> {
   return workingLength > 0;
 }
 
-export async function pushGameToQueue(gameData: dbGameData): Promise<void> {
+export async function pushGameToQueue(gameData: GamesFormDataDB): Promise<void> {
   const payload = JSON.stringify({
     ...gameData,
     timestamp: Date.now(),
