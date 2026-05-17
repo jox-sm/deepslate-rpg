@@ -1,13 +1,14 @@
 "use client";
 import TextAreaField, { tagsComponent } from '@/ui/FormUI/textComponent';
 import ImageUpload from '@/ui/FormUI/imageComponent';
-import { validateText } from '@/utilities/FormUtils';
+import { validateText, fileToBase64 } from '@/utilities/FormUtils';
 import { prepareGameCard } from '@/utilities/utils';
 import { CardProps } from '@/types/cards';
 import { useCallback } from "react";
 import formStyles from "@/styles/forms/form.module.css";
 import GamesFormWizard from '@/ui/gamesFormUi/form';
-import type { GamesFormData } from '@/types/form';
+import type { GamesFormData } from '@/types/gameForm';
+import type { CharacterDataDB, MapDataDB, ItemDataDB,GamesFormDataDB } from '@/types/gameForm';
 import { GAME_FORM_FIELD_CONFIG, initialGameFormState, PRE_EXISTING_TAGS, type GameFormState as FormState } from '@/types/form';
 import { useGameForm } from '@/hooks/form';
 
@@ -34,6 +35,18 @@ export default function CreateForm() {
         body: form.image,
       }).then(res => res.json()).then(data => data.url);
 
+      const characterImages = await Promise.all(
+        wizardData.characters.map(c => c.image ? fileToBase64(c.image) : Promise.resolve(null))
+      );
+
+      const mapImages = await Promise.all(
+        wizardData.maps.map(m => m.image ? fileToBase64(m.image) : Promise.resolve(null))
+      );
+
+      const itemImages = await Promise.all(
+        wizardData.items.map(i => i.image ? fileToBase64(i.image) : Promise.resolve(null))
+      );
+
       const cardData: CardProps = {
         name: form.name,
         description: form.description,
@@ -44,14 +57,35 @@ export default function CreateForm() {
 
       const gameData = prepareGameCard(cardData);
 
+      const characters: CharacterDataDB[] = wizardData.characters.map((c, idx) => ({
+        id: c.id,
+        name: c.name,
+        description: c.description,
+        image: characterImages[idx] || "",
+      }));
+
+      const maps: MapDataDB[] = wizardData.maps.map((m, idx) => ({
+        id: m.id,
+        nameOfPlace: m.nameOfPlace,
+        image: mapImages[idx] || "",
+        sizeOfPlace: m.sizeOfPlace,
+        placesAtMap: m.placesAtMap,
+      }));
+
+      const items: ItemDataDB[] = wizardData.items.map((i, idx) => ({
+        id: i.id,
+        name: i.name,
+        image: itemImages[idx] || "",
+      }));
+
       const payload = {
         type: "game",
         data: gameData,
         gameData: {
           id: gameData.id,
-          characters: wizardData.characters,
-          maps: wizardData.maps,
-          items: wizardData.items,
+          characters,
+          maps,
+          items,
         },
       };
 
@@ -60,17 +94,19 @@ export default function CreateForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const dbGameData = await fetch("/api/convertUrl/ConvertGameImages", {
+
+      const convertedGame =await fetch("/api/convertUrl/ConvertGameImages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...payload.gameData }),
+        body: JSON.stringify({ id: gameData.id, characters, maps, items }),
       }).then(res => res.json());
+
 
       await fetch("/api/push/pushGames", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dbGameData),
-      });
+       headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(convertedGame),
+});
 
       resetForm();
     } catch (err) {

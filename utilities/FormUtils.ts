@@ -31,6 +31,15 @@ const WEIRD_CHARACTER_PATTERNS = [
   /(.)\1{4,}/,
 ];
 
+export async function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 export function validateText(
   text: string,
   options: ValidationOptions

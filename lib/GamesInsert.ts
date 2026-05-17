@@ -9,9 +9,10 @@ export async function processGamesQueue() {
       await connectDB();
       await sleep(850);
       const gamesQueue = await getGamesQueue();
+      console.log("\n\n\n Processing games queue, number of games to insert:", gamesQueue.length);
       await sleep(150);
       await Game.insertMany(gamesQueue, { ordered: false });
-
+      console.log("Finished processing games queue");
       await setToIdle();
     } 
   } catch (error) {

@@ -2,16 +2,13 @@ import { NextResponse } from 'next/server';
 import {validateQueue, setToWorking, setToIdle, validateQueueWorking, pushGameToQueue} from "@/utilities/insertGame";
 import {processGamesQueue} from "@/lib/GamesInsert";
 import { retry } from '@/lib/retry';
-import { GameDataJSON } from "@/types/gamedata";
 import { GamesFormDataDB } from "@/types/gameForm";
-import { convertComponentImagesJSON } from "@/utilities/insertGameImages";
 
 export async function POST(request: Request) {
   try {
-    const gameDataJSON: GameDataJSON = await request.json();
-    const dbGameData: GamesFormDataDB = await convertComponentImagesJSON(gameDataJSON);
-    console.log("dbGameData:", JSON.stringify(dbGameData));
-    await retry(() => pushGameToQueue(dbGameData), 3, 500); 
+    const gameData: GamesFormDataDB = await request.json();
+    console.log("hello from push games \n\n\n dbGameData:");
+    await retry(() => pushGameToQueue(gameData), 3, 500); 
     if(await retry(() => validateQueueWorking(), 3, 500)){
       return NextResponse.json({
         success: true,
