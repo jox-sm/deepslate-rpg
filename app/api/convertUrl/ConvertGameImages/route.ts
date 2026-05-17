@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
-import { convertComponentImages } from '@/utilities/insertGameImages';
+import { convertComponentImagesJSON } from '@/utilities/insertGameImages';
 import { GamesFormData as GameData } from "@/types/gameForm";
+import { GameDataJSON } from "@/types/gamedata";
+
 export async function POST(req: Request) {
   try {
-    const gameData: GameData = await req.json();
-    const dbGameData = await convertComponentImages(gameData);
+    const gameData: GameDataJSON = await req.json();
+    const dbGameData = await convertComponentImagesJSON(gameData);
     return NextResponse.json(dbGameData);
   } catch (error) {
     console.error(error);
