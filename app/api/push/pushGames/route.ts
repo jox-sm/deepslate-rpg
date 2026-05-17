@@ -10,6 +10,7 @@ export async function POST(request: Request) {
   try {
     const gameDataJSON: GameDataJSON = await request.json();
     const dbGameData: GamesFormDataDB = await convertComponentImagesJSON(gameDataJSON);
+    console.log("dbGameData:", JSON.stringify(dbGameData));
     await retry(() => pushGameToQueue(dbGameData), 3, 500); 
     if(await retry(() => validateQueueWorking(), 3, 500)){
       return NextResponse.json({

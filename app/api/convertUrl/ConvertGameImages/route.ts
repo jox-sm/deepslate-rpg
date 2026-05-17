@@ -6,7 +6,9 @@ import { GameDataJSON } from "@/types/gamedata";
 export async function POST(req: Request) {
   try {
     const gameData: GameDataJSON = await req.json();
+    console.log("gameData:", JSON.stringify(gameData));
     const dbGameData = await convertComponentImagesJSON(gameData);
+    console.log("dbGameData:", JSON.stringify(dbGameData));
     return NextResponse.json(dbGameData);
   } catch (error) {
     console.error(error);
