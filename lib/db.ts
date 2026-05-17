@@ -101,3 +101,26 @@ export async function getGames(minimumLikes: number, idx: number) {
     nextIdx: idx + 6
   };
 }
+
+export async function getGamesPaginated(limit: number, offset: number) {
+  const games = await sql`
+    SELECT * FROM games
+    ORDER BY created_at DESC
+    LIMIT ${limit} OFFSET ${offset};
+  ` as GameCardProps[];
+
+  const countResult = await sql`SELECT COUNT(*) as total FROM games`;
+  const total = Number(countResult[0]?.total || 0);
+
+  return { games, total };
+}
+
+export async function getGameById(id: string) {
+  const games = await sql`
+    SELECT * FROM games
+    WHERE id = ${id}
+    LIMIT 1;
+  ` as GameCardProps[];
+
+  return games[0] || null;
+}

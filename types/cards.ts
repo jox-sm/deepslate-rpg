@@ -21,3 +21,27 @@ type CardGrid = {
   cards: CardProps[];
 };
 export type {CardGrid};
+
+export interface ApiGameResponse {
+  id: string;
+  name: string;
+  description: string;
+  image?: string;
+  tags?: string[];
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ApiResponse {
+  success: boolean;
+  data: ApiGameResponse[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasMore: boolean;
+    source: string;
+  };
+}

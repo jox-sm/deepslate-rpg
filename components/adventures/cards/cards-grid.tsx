@@ -14,6 +14,8 @@ type CardsGridProps = {
   fetchCards: (offset: number) => Promise<CardProps[]>;
   /** How many cards to load per batch. Defaults to 6. */
   batchSize?: number;
+  /** Optional external refresh handler triggered on scroll */
+  onRefresh?: () => void;
 };
 
 type Batch = {
@@ -24,6 +26,7 @@ type Batch = {
 export default function CardsGrid({
   fetchCards,
   batchSize = 6,
+  onRefresh,
 }: CardsGridProps) {
   const [batches, setBatches] = useState<Batch[]>([{ id: 0, offset: 0 }]);
   const [isExhausted, setIsExhausted] = useState(false);
@@ -44,7 +47,11 @@ export default function CardsGrid({
 
     nextOffset.current += batchSize;
     batchCounter.current += 1;
-  }, [isLoading, isExhausted, batchSize]);
+
+    if (onRefresh) {
+      onRefresh();
+    }
+  }, [isLoading, isExhausted, batchSize, onRefresh]);
 
   /** Called by CardsLoad when a fetch returns fewer than batchSize cards */
   const handleExhausted = useCallback(() => {

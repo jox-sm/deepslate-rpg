@@ -3,6 +3,7 @@ import { pushGameToQueue, PushLikesToQueue } from '@/utilities/db';
 import { Likes } from '@/types/db';
 import { GameCardProps } from '@/types/cards';
 import { GET } from '@/utilities/pull';
+import { retry } from '@/lib/retry';
 
 
 
@@ -22,7 +23,7 @@ export async function POST(request: Request) {
         updated_at: data.updated_at,
       };
       
-      await pushGameToQueue(gameData);
+      await retry(() => pushGameToQueue(gameData), 3, 500);
       await GET();
       return NextResponse.json({
         success: true,
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
         likesDelta: data.likesDelta,
       };
       
-      await PushLikesToQueue(likeData);
+      await retry(() => PushLikesToQueue(likeData), 3, 500);
       await GET();
       return NextResponse.json({
         success: true,

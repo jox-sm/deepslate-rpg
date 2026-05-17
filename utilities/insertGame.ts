@@ -3,11 +3,11 @@ import {  GamesFormDataDB as dbGameData } from "@/types/gameForm";
 
 
 export async function validateQueue(): Promise<boolean> {
-  const gamesQueueLength = await redis.llen('InsertGames');
+  const gamesQueueLength = await redis.llen('InsertGamesmongodb');
   return gamesQueueLength > 0;
 }
 export async function validateQueueWorking(): Promise<boolean> {
-  const workingLength = await redis.llen('InsertGames:active');
+  const workingLength = await redis.llen('InsertGamesmongodb:active');
   return workingLength > 0;
 }
 
@@ -16,24 +16,24 @@ export async function pushGameToQueue(gameData: dbGameData): Promise<void> {
     ...gameData,
     timestamp: Date.now(),
   });
-  await redis.rpush('InsertGames', payload);
+  await redis.rpush('InsertGamesmongodb', payload);
 }
 
 
 export async function setToWorking(): Promise<void> {
-  await redis.rpush('InsertGames:active', "True");
+  await redis.rpush('InsertGamesmongodb:active', "True");
 }
 export async function setToIdle(): Promise<void> {
-  await redis.rpop('InsertGames:active',"True");
+  await redis.rpop('InsertGamesmongodb:active',"True");
 }
 
 
 
 export async function getGamesQueue() {
-  const tempKey = `InsertGames:processing:${Date.now()}`;
+  const tempKey = `InsertGamesmongodb:processing:${Date.now()}`;
 
   try {
-    await redis.rename('InsertGames', tempKey);
+    await redis.rename('InsertGamesmongodb', tempKey);
 
     const allGames = await redis.lrange(tempKey, 0, -1);
 

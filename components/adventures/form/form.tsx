@@ -60,6 +60,17 @@ export default function CreateForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+      const dbGameData = await fetch("/api/convertUrl/ConvertGameImages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...payload.gameData }),
+      }).then(res => res.json());
+
+      await fetch("/api/push/pushGames", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dbGameData),
+      });
 
       resetForm();
     } catch (err) {
