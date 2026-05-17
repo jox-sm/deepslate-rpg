@@ -1,34 +1,3 @@
-type TextAreaFieldProps = {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  isValid?: boolean;
-  minLength?: number;
-  maxLength?: number;
-  errorMessage?: string;
-  statusColorClass?: string;
-};
-
-type TagsComponentProps = {
-  label: string;
-  availableTags: string[];
-  selectedTags: string[];
-  onTagsChange: (tags: string[]) => void;
-};
-
-type ImageUploadProps = {
-  label: string;
-  onSelect: (file: File) => void;
-  onPreviewChange?: (url: string) => void;
-  accept?: string;
-  maxSizeMB?: number;
-  resetKey?: number;
-};
-
-export type { TextAreaFieldProps, ImageUploadProps, TagsComponentProps };
-
-// Games Form Types
 export interface CharacterData {
   id: string;
   name: string;
@@ -54,7 +23,7 @@ export interface ItemData {
 }
 
 export interface GamesFormData {
-  id: string; // UUID 7
+  id: string;
   characters: CharacterData[];
   maps: MapData[];
   items: ItemData[];
@@ -74,12 +43,6 @@ export const GAMES_FORM_STEPS: StepConfig[] = [
   { key: "items", title: "Items", maxItems: 50 },
 ];
 
-export type ValidationConfig = {
-  minLength: number;
-  maxLength: number;
-  fieldName: string;
-};
-
 export const CHARACTER_VALIDATION = {
   name: { minLength: 4, maxLength: 50, fieldName: "Character Name" },
   description: { minLength: 50, maxLength: 300, fieldName: "Character Description" },
@@ -95,32 +58,51 @@ export const ITEM_VALIDATION = {
   name: { minLength: 1, maxLength: 50, fieldName: "Item Name" },
 } as const;
 
-// Create Game Form Types
-export interface GameFormState {
-  name: string;
-  description: string;
-  image: File | null;
-  imagePreview: string;
-  selectedTags: string[];
-}
-
-export const PRE_EXISTING_TAGS = [
-  "Adventure", "Action", "New", "Thrills", "Isekai",
-  "Fantasy", "Sci-Fi", "Horror", "Romance", "Comedy"
-] as const;
-
-export const GAME_FORM_FIELD_CONFIG = {
-  name: { minLength: 4, maxLength: 100, fieldName: "Name" },
-  description: { minLength: 50, maxLength: 400, fieldName: "Description" },
-} as const;
-
-export const initialGameFormState: GameFormState = {
-  name: "",
-  description: "",
-  image: null,
-  imagePreview: "",
-  selectedTags: [],
+export const initialFormData: GamesFormData = {
+  id: "",
+  characters: [],
+  maps: [],
+  items: [],
 };
 
+export interface UseGamesFormReturn {
+  currentStep: number;
+  formData: GamesFormData;
+  stepKey: GamesFormStep;
+  isFirstStep: boolean;
+  isLastStep: boolean;
+  setStep: (step: number) => void;
+  nextStep: () => void;
+  prevStep: () => void;
+  updateField: <K extends keyof GamesFormData>(field: K, value: GamesFormData[K]) => void;
+  reset: () => void;
+  addCharacter: () => void;
+  removeCharacter: (id: string) => void;
+  updateCharacter: (id: string, field: keyof CharacterData, value: unknown) => void;
+  addMap: () => void;
+  removeMap: (id: string) => void;
+  updateMap: (id: string, field: keyof MapData, value: unknown) => void;
+  addItem: () => void;
+  removeItem: (id: string) => void;
+  updateItem: (id: string, field: keyof ItemData, value: unknown) => void;
+}
 
+
+export type CharacterDataDB = Omit<CharacterData, 'image' | 'imagePreview'> & {
+  image: string;
+}
+
+export type MapDataDB = Omit<MapData, 'image' | 'imagePreview'> & {
+  image: string;
+}
+
+export type ItemDataDB = Omit<ItemData, 'image' | 'imagePreview'> & {
+  image: string;
+}
+
+export type GamesFormDataDB = Omit<GamesFormData, 'characters' | 'maps' | 'items'> & {
+  characters: CharacterDataDB[];
+  maps: MapDataDB[];
+  items: ItemDataDB[];
+}
 
