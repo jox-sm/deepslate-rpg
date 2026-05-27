@@ -1,0 +1,35 @@
+.html {
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.body {
+  display: flex;
+  min-height: 100vh;
+}
+
+.background {
+  min-height: 100vh;
+  z-index: 0;
+  position: sticky;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(120, 119, 198, 0.15),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(255, 255, 255, 0.05),
+      transparent 25%
+    ),
+    #0f0f0f;
+  color: white;
+}
+
+.page {
+  flex: 1;
+  min-height: 100vh;
+  display: flex;
+}

@@ -1,26 +1,14 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import ProfileCard from '@/components/adventures/cards/cards';
 import style from '@/styles/cards/CardsGrid.module.css';
-import CardsLoad from '@/components/adventures/cards/cards-load';
+import rowStyle from '@/styles/cards/CardsLoad.module.css';
 import { CardProps } from '@/types/cards';
 
 type CardsGridProps = {
-  /**
-   * Async function that receives the current offset and returns
-   * the next batch of cards (6 per page).
-   * You configure the actual DB/API call — just match this signature.
-   */
   fetchCards: (offset: number) => Promise<CardProps[]>;
-  /** How many cards to load per batch. Defaults to 6. */
   batchSize?: number;
-  /** Optional external refresh handler triggered on scroll */
-  onRefresh?: () => void;
-};
-
-type Batch = {
-  id: number;
-  offset: number;
 };
 
 export default function CardsGrid({
@@ -28,68 +16,79 @@ export default function CardsGrid({
   batchSize = 6,
   onRefresh,
 }: CardsGridProps) {
-  const [batches, setBatches] = useState<Batch[]>([{ id: 0, offset: 0 }]);
-  const [isExhausted, setIsExhausted] = useState(false);
+  const [cards, setCards] = useState<CardProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const nextOffset = useRef<number>(batchSize);
-  const batchCounter = useRef<number>(1);
+  const [isExhausted, setIsExhausted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const offsetRef = useRef(0);
+  const isLoadingRef = useRef(false);
+  const isExhaustedRef = useRef(false);
 
-  const loadMore = useCallback(() => {
-    if (isLoading || isExhausted) return;
+   const loadMore = useCallback(async () => {
+     if (isLoadingRef.current || isExhaustedRef.current) return;
+     isLoadingRef.current = true;
+     setIsLoading(true);
+     setError(null);
 
-    setIsLoading(true);
-    const offset = nextOffset.current;
+     try {
+       const result = await fetchCards(offsetRef.current);
+       if (result.length < batchSize) {
+         isExhaustedRef.current = true;
+         setIsExhausted(true);
+       }
+       setCards((prev) => [...prev, ...result]);
+       offsetRef.current += result.length;
+     } catch (err) {
+       setError('Failed to load cards. Please try again.');
+       console.error('[CardsGrid] fetch error:', err);
+     } finally {
+       isLoadingRef.current = false;
+       setIsLoading(false);
+     }
+   }, [batchSize]);
 
-    setBatches((prev) => [
-      ...prev,
-      { id: batchCounter.current, offset },
-    ]);
+  const loadMoreRef = useRef(loadMore);
+  loadMoreRef.current = loadMore;
 
-    nextOffset.current += batchSize;
-    batchCounter.current += 1;
-
-    if (onRefresh) {
-      onRefresh();
-    }
-  }, [isLoading, isExhausted, batchSize, onRefresh]);
-
-  /** Called by CardsLoad when a fetch returns fewer than batchSize cards */
-  const handleExhausted = useCallback(() => {
-    setIsExhausted(true);
-    setIsLoading(false);
-  }, []);
-
-  /** Called by CardsLoad once it finishes rendering its batch */
-  const handleBatchReady = useCallback(() => {
-    setIsLoading(false);
+  useEffect(() => {
+    loadMoreRef.current();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.scrollY + window.innerHeight;
       const total = document.documentElement.scrollHeight;
-
-      // Trigger when within 300px of the bottom
       if (scrolled >= total - 300) {
-        loadMore();
+        loadMoreRef.current();
       }
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loadMore]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const rows: CardProps[][] = [];
+  for (let i = 0; i < cards.length; i += 3) {
+    rows.push(cards.slice(i, i + 3));
+  }
 
   return (
     <div className={style.grid}>
-      {batches.map((batch) => (
-        <CardsLoad
-          key={batch.id}
-          offset={batch.offset}
-          batchSize={batchSize}
-          fetchCards={fetchCards}
-          onBatchReady={handleBatchReady}
-          onExhausted={handleExhausted}
-        />
+      {rows.map((row, rowIndex) => (
+        <div key={rowIndex} className={rowStyle.row}>
+          {row.map((card, colIndex) => (
+            <div key={`${rowIndex}-${colIndex}`} className={rowStyle.cell}>
+              <ProfileCard
+                likes_count={card.likes_count}
+                image={card.image}
+                name={card.name}
+                description={card.description}
+                tags={card.tags}
+              />
+            </div>
+          ))}
+        </div>
       ))}
 
       {isLoading && (
@@ -99,6 +98,8 @@ export default function CardsGrid({
           <span className={style.loaderDot} />
         </div>
       )}
+
+      {error && <p className={rowStyle.error}>{error}</p>}
 
       {isExhausted && (
         <p className={style.exhausted}>You&apos;ve reached the end.</p>

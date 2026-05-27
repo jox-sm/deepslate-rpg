@@ -1,0 +1,58 @@
+.wrapper {
+  position: relative;
+}
+
+.loadingOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.loadingSpinner {
+  animation: spin 1s linear infinite;
+  color: white;
+}
+
+.banner {
+  background: rgba(15, 15, 15, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px 24px;
+}
+
+.bannerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bannerText {
+  text-align: left;
+}
+
+.bannerTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.bannerSubtitle {
+  margin-top: 2px;
+  font-size: 0.875rem;
+  color: rgba(161, 161, 170, 0.9);
+}
+
+.bannerButtons {
+  display: flex;
+  gap: 12px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

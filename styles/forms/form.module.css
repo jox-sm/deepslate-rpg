@@ -117,3 +117,9 @@
   border-color: rgb(161 161 170);
   color: white;
 }
+
+.validationMessage {
+  font-size: 0.875rem;
+  color: #ef4444;
+  text-align: center;
+}

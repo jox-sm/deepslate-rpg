@@ -1,11 +1,11 @@
 import {validateQueue, setToIdle, getGamesQueue} from "@/utilities/insertGame";
 import connectDB from "@/models/games/mongodb/client";
 import Game from "@/models/games/mongodb/schema";
+import { sleep } from "@/utilities/sleep";
 
 export async function processGamesQueue() {
   try {
     if (await validateQueue()) {
-      const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));  
       await connectDB();
       await sleep(850);
       const gamesQueue = await getGamesQueue();

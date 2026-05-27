@@ -54,6 +54,10 @@
 }
 
 
+.contentPadding {
+  padding: 20px;
+}
+
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -63,4 +67,12 @@
   font-size: 12px;
   color: #acaaaa;
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tagPill {
+  border-radius: 9999px;
+  background: #27272a;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  color: #d4d4d8;
 }

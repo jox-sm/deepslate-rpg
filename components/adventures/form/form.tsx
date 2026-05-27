@@ -119,14 +119,14 @@ export default function CreateForm() {
   const renderValidationMessage = () => {
     if (!isFormValid) {
       return (
-        <p className="text-sm text-red-500 text-center">
+        <p className={formStyles.validationMessage}>
           Please follow the length requirements for all fields
         </p>
       );
     }
     if (form.name.length > 0 && form.description.length > 0 && !form.image) {
       return (
-        <p className="text-sm text-red-500 text-center">
+        <p className={formStyles.validationMessage}>
           Please upload an image
         </p>
       );

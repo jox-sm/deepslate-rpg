@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getGamesQueue, getLikesQueue } from '@/utilities/db';
 import { insertGamesBatch, updateGamesLikesBatch } from '@/lib/db';
-import { redis } from '@/lib/queue'; 
+import { redis } from '@/lib/queue';
+import { sleep } from '@/utilities/sleep';
 
 
 export async function GET() {
-  const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));  
   await sleep(850);
 
   try {

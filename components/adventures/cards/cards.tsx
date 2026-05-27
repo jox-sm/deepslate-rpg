@@ -27,7 +27,7 @@ export default function ProfileCard({
       </div>
 
       {/* Content */}
-      <div className="p-5">
+      <div className={style.contentPadding}>
         {/* Name */}
         <h2 className={style.header}>{name}</h2>
 
@@ -36,17 +36,17 @@ export default function ProfileCard({
           {description}
         </p>
 
-        {/* Tags */}
-        <div className={style.tags}>
-          {tags.map((tag, index) => (
-            <span
-              key={index}
-              className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
+         {/* Tags */}
+         <div className={style.tags}>
+           {tags.map((tag) => (
+             <span
+               key={tag}
+               className={style.tagPill}
+             >
+               #{tag}
+             </span>
+           ))}
+         </div>
       </div>
     </div>
   );

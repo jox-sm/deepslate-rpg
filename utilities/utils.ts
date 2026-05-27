@@ -34,11 +34,11 @@ export async function fetchGamesFromApi(offset: number): Promise<CardProps[]> {
     return [];
   }
 
-  return json.data.map((game) => ({
-    name: game.name || 'Untitled',
-    description: game.description || '',
-    likes_count: 0,
-    tags: game.tags || [],
-    image: game.image || '/images/project.jpg',
-  }));
+return json.data.map((game) => ({
+  name: game.name || 'Untitled',
+  description: game.description || '',
+  likes_count: game.likes_count ?? 0,
+  tags: game.tags || [],
+  image: game.image || '/images/project.jpg',
+}));
 }
