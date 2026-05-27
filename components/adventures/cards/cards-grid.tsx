@@ -14,7 +14,6 @@ type CardsGridProps = {
 export default function CardsGrid({
   fetchCards,
   batchSize = 6,
-  onRefresh,
 }: CardsGridProps) {
   const [cards, setCards] = useState<CardProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
