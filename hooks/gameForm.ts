@@ -2,6 +2,7 @@
 
 import { useFormState } from "@/hooks/useFormState";
 import { v7 as uuidV7 } from "uuid";
+import { useState, useCallback } from "react";
 import {
   type GamesFormData,
   type CharacterData,
@@ -46,7 +47,7 @@ const STEP_KEYS: GamesFormStep[] = ["characters", "maps", "items"];
 const STEP_COUNT = STEP_KEYS.length;
 
 export function useGamesForm(onComplete?: (data: GamesFormData) => void): UseGamesFormReturn {
-  const { state: formData, setState: setFormData } = useFormState<GamesFormData>(initialFormData);
+  const { state: formData, updateField, reset, setLoading } = useFormState<GamesFormData>(initialFormData);
   const [currentStep, setCurrentStep] = useState(0);
 
   const setStep = useCallback((step: number) => {
@@ -62,97 +63,76 @@ export function useGamesForm(onComplete?: (data: GamesFormData) => void): UseGam
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   }, []);
 
-  const updateField = useCallback(<K extends keyof GamesFormData>(field: K, value: GamesFormData[K]) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  }, []);
-
-  const reset = useCallback(() => {
-    setFormData(initialFormData);
+  const resetForm = useCallback(() => {
+    reset();
     setCurrentStep(0);
   }, []);
 
   const addCharacter = useCallback(() => {
-    setFormData(prev => ({
-      ...prev,
-      characters: [...prev.characters, createEmptyCharacter()],
-    }));
-  }, []);
+    updateField("characters", [...formData.characters, createEmptyCharacter()]);
+    setCurrentStep(0);
+  }, [formData.characters]);
 
   const removeCharacter = useCallback((id: string) => {
-    setFormData(prev => ({
-      ...prev,
-      characters: prev.characters.filter((c) => c.id !== id),
-    }));
-  }, []);
+    updateField("characters", formData.characters.filter((c) => c.id !== id));
+  }, [formData.characters]);
 
   const updateCharacter = useCallback((id: string, field: keyof CharacterData, value: unknown) => {
-    setFormData(prev => ({
-      ...prev,
-      characters: prev.characters.map((c) => (c.id === id ? { ...c, [field]: value } : c)),
-    }));
-  }, []);
+    const updatedCharacters = formData.characters.map((c) => 
+      c.id === id ? { ...c, [field]: value } : c
+    );
+    updateField("characters", updatedCharacters);
+  }, [formData.characters]);
 
   const addMap = useCallback(() => {
-    setFormData(prev => ({
-      ...prev,
-      maps: [...prev.maps, createEmptyMap()],
-    }));
-  }, []);
+    updateField("maps", [...formData.maps, createEmptyMap()]);
+  }, [formData.maps]);
 
   const removeMap = useCallback((id: string) => {
-    setFormData(prev => ({
-      ...prev,
-      maps: prev.maps.filter((m) => m.id !== id),
-    }));
-  }, []);
+    updateField("maps", formData.maps.filter((m) => m.id !== id));
+  }, [formData.maps]);
 
   const updateMap = useCallback((id: string, field: keyof MapData, value: unknown) => {
-    setFormData(prev => ({
-      ...prev,
-      maps: prev.maps.map((m) => (m.id === id ? { ...m, [field]: value } : m)),
-    }));
-  }, []);
+    const updatedMaps = formData.maps.map((m) => 
+      m.id === id ? { ...m, [field]: value } : m
+    );
+    updateField("maps", updatedMaps);
+  }, [formData.maps]);
 
   const addItem = useCallback(() => {
-    setFormData(prev => ({
-      ...prev,
-      items: [...prev.items, createEmptyItem()],
-    }));
-  }, []);
+    updateField("items", [...formData.items, createEmptyItem()]);
+  }, [formData.items]);
 
   const removeItem = useCallback((id: string) => {
-    setFormData(prev => ({
-      ...prev,
-      items: prev.items.filter((i) => i.id !== id),
-    }));
-  }, []);
+    updateField("items", formData.items.filter((i) => i.id !== id));
+  }, [formData.items]);
 
   const updateItem = useCallback((id: string, field: keyof ItemData, value: unknown) => {
-    setFormData(prev => ({
-      ...prev,
-      items: prev.items.map((i) => (i.id === id ? { ...i, [field]: value } : i)),
-    }));
-  }, []);
+    const updatedItems = formData.items.map((i) => 
+      i.id === id ? { ...i, [field]: value } : i
+    );
+    updateField("items", updatedItems);
+  }, [formData.items]);
 
-  return {
-    currentStep,
-    formData,
-    stepKey: STEP_KEYS[currentStep],
-    isFirstStep: currentStep === 0,
-    isLastStep: currentStep === STEP_COUNT - 1,
-    setStep,
-    nextStep,
-    prevStep,
-    updateField,
-    reset,
-    addCharacter,
-    removeCharacter,
-    updateCharacter,
-    addMap,
-    removeMap,
-    updateMap,
-    addItem,
-    removeItem,
-    updateItem,
-  };
+   return {
+     currentStep,
+     formData,
+     stepKey: STEP_KEYS[currentStep],
+     isFirstStep: currentStep === 0,
+     isLastStep: currentStep === STEP_COUNT - 1,
+     setStep,
+     nextStep,
+     prevStep,
+     updateField,
+     resetForm,
+     addCharacter,
+     removeCharacter,
+     updateCharacter,
+     addMap,
+     removeMap,
+     updateMap,
+     addItem,
+     removeItem,
+     updateItem,
+   };
 }
