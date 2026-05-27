@@ -47,7 +47,7 @@ const STEP_KEYS: GamesFormStep[] = ["characters", "maps", "items"];
 const STEP_COUNT = STEP_KEYS.length;
 
 export function useGamesForm(onComplete?: (data: GamesFormData) => void): UseGamesFormReturn {
-  const { state: formData, updateField, reset, setLoading } = useFormState<GamesFormData>(initialFormData);
+  const { state: formData, updateField, reset: resetFormState, setLoading } = useFormState<GamesFormData>(initialFormData);
   const [currentStep, setCurrentStep] = useState(0);
 
   const setStep = useCallback((step: number) => {
@@ -63,8 +63,8 @@ export function useGamesForm(onComplete?: (data: GamesFormData) => void): UseGam
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   }, []);
 
-  const resetForm = useCallback(() => {
-    reset();
+  const reset = useCallback(() => {
+    resetFormState();
     setCurrentStep(0);
   }, []);
 
@@ -124,7 +124,7 @@ export function useGamesForm(onComplete?: (data: GamesFormData) => void): UseGam
      nextStep,
      prevStep,
      updateField,
-     resetForm,
+     reset,
      addCharacter,
      removeCharacter,
      updateCharacter,
