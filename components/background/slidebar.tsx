@@ -10,6 +10,7 @@ import style from '@/styles/sidebar/sidebar.module.css'
 import Link from "next/link";
 import posthog from "posthog-js";
 
+
 type SidebarItem = {
   icon: any
   label: string
@@ -92,6 +93,8 @@ export default function Sidebar({
         })}
 
       </nav>
+
+
 
     </aside>
   )
