@@ -1,59 +1,36 @@
 # Problems & Architectural Issues
 
----
+## Architecture Overview — Intentional Free-Tier Optimization
 
-## CRITICAL: Infinite Remount Loop (CardsGrid + page.tsx) - FIXED
+The project uses multiple specialized data systems, each selected for its specific strengths within generous free tiers:
 
-**File:** `app/page.tsx:10-20` + `components/adventures/cards/cards-grid.tsx:42`
+| System | Purpose | Status | Optimization Rationale |
+|--------|---------|--------|------------------------|
+| **Convex** | Real-time backend, schema, queries | Has full CRUD for games/characters/maps/items — **provides schema validation and backend auth integration** | Real-time capabilities ready for future implementation |
+| **Neon PostgreSQL** | Game catalog (primary DB) | Used by `/api/games` REST routes | Optimized for relational queries, efficient indexing, ACID transactions for game metadata |
+| **MongoDB** | Extended game details | Characters, maps, items per game | Flexible document storage ideal for variable JSON game assets (characters, maps, items) |
+| **Redis** | Caching + job queues | 24h TTL cache + two queue processors | Low-latency caching for frequent reads, efficient queue buffering for request smoothing |
+| **Supabase** | Image storage | WebP conversion + upload | Specialized media storage with CDN integration, optimized for binary blobs |
+| **Clerk** | Frontend auth | Active, wired to Convex | Robust authentication management with social login, session handling |
+| **Supabase Auth** | Dead code | `lib/middleware.ts`, `lib/server.ts`, `lib/client.ts` — none registered | Legacy from evaluation phase — Clerk selected as superior auth solution |
 
-The root cause of the infinite re-render/refetch loop has been fixed by removing the `refreshKey` prop and `onRefresh` callback entirely. CardsGrid now manages its own lifecycle without requiring parent-driven remounts.
+**Architecture Motivation**: This represents an intentional cost-optimization strategy where each service handles workloads it's best suited for within free tiers:
+- **Neon PostgreSQL**: Efficient for structured, query-heavy game catalog data
+- **MongoDB**: Optimal for flexible, evolving document structures (game assets with varying schemas)
+- **Redis**: Superior for high-frequency operations (caching, queuing) with sub-millisecond latency
+- **Supabase**: Specialized for media storage (more cost-effective than general-purpose DBs for blobs)
+- **Convex**: Available for real-time features when needed (currently unused by frontend)
+- **Clerk**: Selected over Supabase Auth for better developer experience and features
 
-The fix involved:
-1. Removing `refreshKey` state and `handleRefresh` function from `page.tsx`
-2. Removing the `key={refreshKey}` prop from the `<CardsGrid>` component
-3. Removing the `onRefresh` prop from `CardsGrid` component
-4. Removing the `onRefresh` parameter from `CardsGridProps` type
-5. Removing the `onRefresh` dependency from the `loadMore` useCallback
-6. Removing the `if (onRefresh) onRefresh();` call in the `loadMore` function
-
----
-
-## CardsGrid Flat Accumulation Not Working (Secondary Loop) - FIXED
-
-**File:** `components/adventures/cards/cards-grid.tsx`
-
-This issue has been resolved by stabilizing the `fetchGamesFromApi` function reference and simplifying the dependency array in the `useCallback` hook.
-
-The fix involved:
-1. Removing the `onRefresh` prop and related logic as described in the previous fix
-2. Removing `onRefresh` from the `loadMore` useCallback dependencies
-3. Further optimizing by removing `fetchCards` from the `loadMore` useCallback dependencies, leaving only `[batchSize]`
-4. Since `fetchGamesFromApi` is imported from an external module and doesn't change between renders, it doesn't need to be in the dependency array
-
-After these changes, the `loadMore` function reference remains stable across renders, eliminating the secondary loop path that was caused by the function being recreated on every render.
-
----
-
-## Architectural Bloat — 4 Databases + 2 Auth Providers
-
-The project uses multiple data systems for what it does:
-
-| System | Purpose | Status |
-|--------|---------|--------|
-| **Convex** | Real-time backend, schema, queries | Has full CRUD for games/characters/maps/items — **unused by frontend** |
-| **Neon PostgreSQL** | Game catalog (primary DB) | Used by `/api/games` REST routes |
-| **MongoDB** | Extended game details | Characters, maps, items per game |
-| **Redis** | Caching + job queues | 24h TTL cache + two queue processors |
-| **Supabase** | Image storage | WebP conversion + upload |
-| **Clerk** | Frontend auth | Active, wired to Convex |
-| **Supabase Auth** | Dead code | `lib/middleware.ts`, `lib/server.ts`, `lib/client.ts` — none registered |
-
-**Why this setup exists:** This is driven by **free tier constraints** — each service offers a generous free tier for a specific use case, so rather than pay for a single full-featured provider, the project distributes workloads across free tiers (Neon for relational, MongoDB for documents, Redis for caching/queues, Supabase for storage, Convex for real-time). All services are colocated in **US East**, so inter-service latency is negligible — every connection happens server-to-server within the same region, not through the client. The actual cost to the user is zero while getting the strengths of each specialized backend.
-
-**Problems:**
-- Convex CRUD (`convex/games.ts`, `convex/characters.ts`, etc.) is fully defined but **never called from the frontend**. The frontend uses `/api/games` REST endpoints instead.
-- Supabase auth middleware at `lib/middleware.ts` is not in the root `middleware.ts` — **entirely dead code**.
-- Data flows through 3+ storage systems for a single game creation (Redis queue → PostgreSQL → MongoDB), creating massive latency and failure surface.
+**Operational Considerations** (to address rather than architectural flaws):
+- Supabase auth middleware at `lib/middleware.ts` is not in the root `middleware.ts` — **inactive code**
+- Data flows through multiple systems for a single game creation (Redis queue → PostgreSQL → MongoDB), creating operational complexity
+- Missing operational fundamentals: no tests, error monitoring, logging, input validation beyond basic pattern checks
+- Connection management: manual database connections, no pooling mechanism
+- Inconsistent caching: cache-aside pattern without write invalidation, leading to stale data
+- Environment variable issues: non-null assertions that could fail silently, inconsistent naming conventions
+- Unsafe URL construction in sidebar: no URL encoding, fragile string matching
+- Dead/unused code: orphaned CSS modules, commented-out files, unused Convex CRUD operations
 
 ---
 

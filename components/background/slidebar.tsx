@@ -11,6 +11,11 @@ import style from '@/styles/sidebar/sidebar.module.css'
 import Link from "next/link";
 import posthog from "posthog-js";
 
+function toHref(label: string): string {
+  const slug = label.toLowerCase().replace(/\s+/g, "-")
+  return slug === "home" ? "/" : `/${slug}`
+}
+
 
 type SidebarItem = {
   icon: any
@@ -76,7 +81,7 @@ export default function Sidebar({
            return (
              <Link
                key={item.label}
-               href={item.label.toLowerCase() === "home" ? "/" : `${item.label.toLowerCase()}`}
+               href={toHref(item.label)}
                className={style.menuItem}
                onClick={() => posthog.capture('navigation_item_clicked', { label: item.label })}
              >

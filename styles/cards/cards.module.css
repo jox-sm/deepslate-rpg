@@ -1,6 +1,6 @@
 .card {
-  width: clamp(280px, 90%, 1200px);
-  margin: 20px auto; 
+  width: 100%;
+  break-inside: avoid;
   background: 
     radial-gradient(circle at bottom left, rgba(120, 119, 198, 0.15), transparent 30%),
     radial-gradient(circle at bottom right, rgba(27, 3, 70, 0.199), transparent 25%),
@@ -16,7 +16,7 @@
 
 .imagecontainer {
   width: 100%;
-  height: 56vh;
+  height: clamp(200px, 35vw, 400px);
   overflow: hidden;
 }
 

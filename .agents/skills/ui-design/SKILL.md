@@ -1,85 +1,336 @@
-# UI Design Skill
+---
+name: ui-design
+description: Guides Ai for best practices in UI design, tell them about the 8px grid system, responsive design, and component architecture, give hints about implementations and ready components for sites like shadcn/ui, Radix UI, and HeroUI.
+---
 
-This skill provides guidance on implementing UI designs following an 8-bit grid system and responsive design principles.
+## Component Library Selection
 
-## 8-Bit Grid System
+| Library | Type | Best For | Tradeoffs |
+|---------|------|----------|-----------|
+| **shadcn/ui** | Copy-paste primitives | Full control, Tailwind-native, customizable | Manual updates, no install command |
+| **Radix UI** | Headless primitives | Unstyled accessible components, maximum flexibility | Requires custom styling |
+| **HeroUI** | Pre-built styled components | Fast prototyping, batteries-included | Less customizable, heavier |
+| **React Bits** | Animated/interactive components | Micro-interactions, scroll effects, animated UI | Animation-heavy, may be overkill |
+| **Headless UI** | Unstyled accessible primitives | Simple accessible components (menus, dialogs) | Limited component set |
 
-The 8-bit grid (or 8px grid) is a design system where all spacing, sizing, and layout elements are multiples of 8 pixels. This creates visual harmony and consistency.
+### Decision Framework
 
-Key principles:
-- Base unit: 8px
-- All margins, padding, width, height, font sizes, etc. should be multiples of 8px
-- Common scales: 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, etc.
-- Helps with vertical rhythm and consistent spacing
-- Makes it easier to align elements and create balanced layouts
+- **Need full control + Tailwind?** → shadcn/ui
+- **Need unstyled + accessible?** → Radix UI
+- **Need fast prototyping?** → HeroUI
+- **Need animations/micro-interactions?** → React Bits
+- **Building a custom design system?** → Radix UI + Tailwind + React Bits for animations
 
-## Responsive Design Principles
+---
 
-Responsive design ensures that the UI adapts to different screen sizes and devices.
+## 8px Grid System
 
-Key concepts:
-- Mobile-first approach: Design for smallest screens first, then enhance for larger screens
-- Fluid grids: Use relative units (percentages, fr units) instead of fixed pixels where appropriate
-- Flexible images: Images should scale with their containers
-- Media queries: Apply different styles at different breakpoints
-- Breakpoints: Common breakpoints might be:
-  - Mobile: < 640px
-  - Tablet: 640px - 1024px
-  - Desktop: > 1024px
-- Touch considerations: Ensure touch targets are at least 48x48px (or 6x6 in 8px grid units)
+All spacing, sizing, and layout elements are multiples of 8 pixels.
 
-## Implementation in CSS/Next.js
+| Value | px | rem | Tailwind |
+|-------|-----|-----|----------|
+| 1 | 8px | 0.5rem | `p-2` / `m-2` |
+| 2 | 16px | 1rem | `p-4` / `m-4` |
+| 3 | 24px | 1.5rem | `p-6` / `m-6` |
+| 4 | 32px | 2rem | `p-8` / `m-8` |
+| 5 | 40px | 2.5rem | `p-10` / `m-10` |
+| 6 | 48px | 3rem | `p-12` / `m-12` |
+| 7 | 56px | 3.5rem | `p-14` / `m-14` |
+| 8 | 64px | 4rem | `p-16` / `m-16` |
 
-Using the 8px grid:
-```css
-/* Example spacing utilities */
-.m-1 { margin: 0.5rem; } /* 8px */
-.m-2 { margin: 1rem; }    /* 16px */
-.m-3 { margin: 1.5rem; }  /* 24px */
-.p-1 { padding: 0.5rem; }
-.p-2 { padding: 1rem; }
-.p-3 { padding: 1.5rem; }
+**Font scale (8px-aligned):**
 
-/Example font sizes*/
-.text-xs { font-size: 0.75rem; }   /* 12px */
-.text-sm { font-size: 0.875rem; }  /* 14px */
-.text-base { font-size: 1rem; }    /* 16px */
-.text-lg { font-size: 1.125rem; }  /* 18px */
-.text-xl { font-size: 1.25rem; }   /* 20px */
+| Size | px | Tailwind |
+|------|-----|----------|
+| xs | 12px | `text-xs` |
+| sm | 14px | `text-sm` |
+| base | 16px | `text-base` |
+| lg | 18px | `text-lg` |
+| xl | 20px | `text-xl` |
+| 2xl | 24px | `text-2xl` |
+| 3xl | 30px | `text-3xl` |
+
+---
+
+## Responsive Breakpoints
+
+| Breakpoint | Width | Tailwind Prefix |
+|------------|-------|-----------------|
+| Mobile | < 640px | (base) |
+| Tablet | 640–1024px | `md:` |
+| Desktop | 1024–1440px | `lg:` |
+| Ultra-wide | > 1440px | `xl:` |
+
+**Mobile-first pattern:**
+```
+class="p-4 md:p-6 lg:p-8"
 ```
 
-For responsive design in Next.js:
-- Use Tailwind CSS or similar utility-first CSS framework that supports responsive prefixes
-- Example with Tailwind: `class="p-4 md:p-6 lg:p-8"` (padding changes at breakpoints)
-- Or use CSS modules with media queries
+**Touch targets:** Minimum 48x48px (6x6 in 8px grid units).
 
-## Component Integration Patterns
+---
 
-### Integrating Third-Party Components (like Clerk UserButton)
-When integrating third-party authentication components:
-1. Remove fixed positioning from global layout/auth gate components
-2. Integrate the component within existing UI structures (sidebar, header, footer)
-3. Use CSS modules to scope styles and prevent conflicts
-4. Adjust component dimensions to align with 8px grid (e.g., 32px, 40px, 48px)
-5. Consider different states (collapsed/expanded) for responsive layouts
+## Component Architecture Patterns
 
-### Authentication Screen Layout
-For login/signup screens:
-1. Use flexbox or grid for perfect centering (both vertical and horizontal)
-2. Apply 8px multiples to all spacing, padding, and dimensions
-3. Create responsive breakpoints that maintain grid consistency
-4. Ensure touch targets meet minimum 48x48px (6x6 in 8px grid units)
-5. Use CSS custom properties or theme variables for consistent values
+### Layout Composition
 
-## Best Practices
+```tsx
+// App shell with shadcn/ui + Radix
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button"
 
-1. Start with mobile layout, then add breakpoints for larger screens
-2. Keep consistent spacing throughout the application
-3. Use the 8px grid for both horizontal and vertical measurements
-4. Test on various screen sizes
-5. Consider performance - avoid hiding large elements on mobile with CSS alone
-6. Ensure accessibility - sufficient touch target size, readable font sizes
-7. When integrating third-party components, wrap them in containers that follow your design system
-8. Use CSS modules or scoped styling to prevent style conflicts
-9. Document spacing values as multiples of your base unit (8px) for team consistency
-10. Create reusable utility classes for common spacing patterns (m-1, p-2, etc.)
+function AppShell({ children }) {
+  return (
+    <div className="grid grid-cols-[240px_1fr] min-h-screen">
+      <aside className="border-r p-6 hidden lg:block">
+        <Sidebar />
+      </aside>
+      <main className="p-4 md:p-6 lg:p-8">
+        {children}
+      </main>
+    </div>
+  )
+}
+```
+
+### Modal / Dialog Pattern
+
+```tsx
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog"
+
+function ConfirmDialog({ onConfirm }) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="destructive">Delete</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogTitle>Are you sure?</DialogTitle>
+        <p>This action cannot be undone.</p>
+        <div className="flex justify-end gap-4 mt-6">
+          <Button variant="outline">Cancel</Button>
+          <Button variant="destructive" onClick={onConfirm}>Delete</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+```
+
+### Form Pattern
+
+```tsx
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+
+function LoginForm() {
+  return (
+    <form className="space-y-6 max-w-sm mx-auto">
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input id="email" type="email" placeholder="you@example.com" />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="password">Password</Label>
+        <Input id="password" type="password" />
+      </div>
+      <Button type="submit" className="w-full">Sign in</Button>
+    </form>
+  )
+}
+```
+
+### Table Pattern
+
+```tsx
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+
+function DataTable({ data }) {
+  return (
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.email}</TableCell>
+              <TableCell className="text-right">
+                <Button variant="ghost" size="sm">Edit</Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+```
+
+---
+
+## React Bits Integration
+
+React Bits provides animated/interactive components. Use them for micro-interactions:
+
+```tsx
+// Scroll reveal animation
+import { Reveal } from "reactbits"
+
+function HeroSection() {
+  return (
+    <Reveal>
+      <h1 className="text-4xl font-bold">Welcome</h1>
+    </Reveal>
+  )
+}
+
+// Animated counter
+import { AnimatedCounter } from "reactbits"
+
+function Stats() {
+  return (
+    <div className="grid grid-cols-3 gap-8">
+      <div>
+        <AnimatedCounter target={1200} />
+        <p className="text-sm text-muted-foreground">Users</p>
+      </div>
+    </div>
+  )
+}
+
+// Tilt card effect
+import { Tilt } from "reactbits"
+
+function FeatureCard({ title, description }) {
+  return (
+    <Tilt>
+      <div className="p-6 border rounded-lg">
+        <h3 className="font-semibold mb-2">{title}</h3>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </div>
+    </Tilt>
+  )
+}
+```
+
+---
+
+## Theming & Design Tokens
+
+### CSS Custom Properties (works with all libraries)
+
+```css
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --border: 214.3 31.8% 91.4%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --border: 217.2 32.6% 17.5%;
+}
+```
+
+### Tailwind Config Extension
+
+```ts
+// tailwind.config.ts
+import type { Config } from "tailwindcss"
+
+const config: Config = {
+  theme: {
+    extend: {
+      spacing: {
+        // 8px grid alignment
+        '18': '4.5rem',
+        '22': '5.5rem',
+        '26': '6.5rem',
+        '30': '7.5rem',
+      },
+    },
+  },
+}
+```
+
+---
+
+## Integration Checklist
+
+When building a new feature:
+
+- [ ] Select component library based on project needs
+- [ ] Set up CSS custom properties for theming
+- [ ] Create layout with 8px grid spacing
+- [ ] Build responsive with mobile-first breakpoints
+- [ ] Add animations with React Bits where appropriate
+- [ ] Ensure touch targets ≥ 48px
+- [ ] Test on mobile, tablet, desktop
+- [ ] Add focus states for keyboard navigation
+
+---
+
+## Common Patterns
+
+### Card Grid
+
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {items.map(item => (
+    <Card key={item.id} className="p-6">
+      <CardHeader>
+        <CardTitle>{item.title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">{item.description}</p>
+      </CardContent>
+    </Card>
+  ))}
+</div>
+```
+
+### Sidebar + Content
+
+```tsx
+<div className="flex min-h-screen">
+  <aside className="w-64 border-r p-6 hidden lg:block">
+    <Sidebar />
+  </aside>
+  <main className="flex-1 p-4 md:p-6 lg:p-8">
+    {children}
+  </main>
+</div>
+```
+
+### Auth Pages (Centered)
+
+```tsx
+<div className="min-h-screen flex items-center justify-center p-4">
+  <Card className="w-full max-w-sm">
+    <CardHeader>
+      <CardTitle className="text-center">Sign in</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <LoginForm />
+    </CardContent>
+  </Card>
+</div>
+```

@@ -1,13 +1,12 @@
-/* ─── Outer wrapper ─────────────────────────────────────────────────────── */
 .grid {
-  display: flex;
-  flex-direction: column;
+  column-count: 3;
+  column-gap: 1.5rem;
   width: 100%;
-  gap: 0; /* rows manage their own vertical gap */
+  padding: 1.5rem 0;
 }
 
-/* ─── Infinite-scroll loader ─────────────────────────────────────────────── */
 .loader {
+  column-span: all;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,7 +19,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #71717a; /* zinc-500 */
+  background-color: #71717a;
   animation: bounce 1.2s ease-in-out infinite;
 }
 
@@ -43,12 +42,26 @@
   }
 }
 
-/* ─── End-of-feed message ────────────────────────────────────────────────── */
 .exhausted {
+  column-span: all;
   text-align: center;
   padding: 2rem 0 3rem;
-  color: #52525b; /* zinc-600 */
+  color: #52525b;
   font-size: 0.875rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    column-count: 2;
+    column-gap: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    column-count: 1;
+    column-gap: 0;
+  }
 }

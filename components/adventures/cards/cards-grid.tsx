@@ -11,6 +11,22 @@ type CardsGridProps = {
   batchSize?: number;
 };
 
+const CACHE_KEY = "cards-grid-cache";
+
+function saveCache(cards: CardProps[], offset: number, exhausted: boolean) {
+  try {
+    sessionStorage.setItem(CACHE_KEY, JSON.stringify({ cards, offset, exhausted }));
+  } catch { /* storage full — ignore */ }
+}
+
+function loadCache(): { cards: CardProps[]; offset: number; exhausted: boolean } | null {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+
 export default function CardsGrid({
   fetchCards,
   batchSize = 6,
@@ -22,6 +38,7 @@ export default function CardsGrid({
   const offsetRef = useRef(0);
   const isLoadingRef = useRef(false);
   const isExhaustedRef = useRef(false);
+  const initialLoaded = useRef(false);
 
    const loadMore = useCallback(async () => {
      if (isLoadingRef.current || isExhaustedRef.current) return;
@@ -31,11 +48,16 @@ export default function CardsGrid({
 
      try {
        const result = await fetchCards(offsetRef.current);
-       if (result.length < batchSize) {
+       const exhausted = result.length < batchSize;
+       if (exhausted) {
          isExhaustedRef.current = true;
          setIsExhausted(true);
        }
-       setCards((prev) => [...prev, ...result]);
+       setCards((prev) => {
+         const next = [...prev, ...result];
+         saveCache(next, offsetRef.current + result.length, exhausted);
+         return next;
+       });
        offsetRef.current += result.length;
      } catch (err) {
        setError('Failed to load cards. Please try again.');
@@ -50,7 +72,19 @@ export default function CardsGrid({
   loadMoreRef.current = loadMore;
 
   useEffect(() => {
-    loadMoreRef.current();
+    if (initialLoaded.current) return;
+    initialLoaded.current = true;
+    const cached = loadCache();
+    if (cached) {
+      setCards(cached.cards);
+      offsetRef.current = cached.offset;
+      if (cached.exhausted) {
+        isExhaustedRef.current = true;
+        setIsExhausted(true);
+      }
+    } else {
+      loadMoreRef.current();
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -67,26 +101,17 @@ export default function CardsGrid({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const rows: CardProps[][] = [];
-  for (let i = 0; i < cards.length; i += 3) {
-    rows.push(cards.slice(i, i + 3));
-  }
-
   return (
     <div className={style.grid}>
-      {rows.map((row, rowIndex) => (
-        <div key={rowIndex} className={rowStyle.row}>
-          {row.map((card, colIndex) => (
-            <div key={`${rowIndex}-${colIndex}`} className={rowStyle.cell}>
-              <ProfileCard
-                likes_count={card.likes_count}
-                image={card.image}
-                name={card.name}
-                description={card.description}
-                tags={card.tags}
-              />
-            </div>
-          ))}
+      {cards.map((card, i) => (
+        <div key={`${card.name}-${i}`} className={rowStyle.cardWrapper}>
+          <ProfileCard
+            likes_count={card.likes_count}
+            image={card.image}
+            name={card.name}
+            description={card.description}
+            tags={card.tags}
+          />
         </div>
       ))}
 

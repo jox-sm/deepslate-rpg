@@ -55,18 +55,19 @@ export default function GamesFormWizard({ onComplete, loading }: GamesFormWizard
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.stepIndicator}>
-        {GAMES_FORM_STEPS.map((step, index) => (
-          <div
-            key={step.key}
-            className={`${styles.step} ${index <= hook.currentStep ? styles.active : ""} ${index === hook.currentStep ? styles.current : ""}`}
-          >
-            <span className={styles.stepNumber}>{index + 1}</span>
-            <span className={styles.stepLabel}>{step.title}</span>
-          </div>
-        ))}
-      </div>
+      <div className={styles.container}>
+        <nav aria-label="Form steps" className={styles.stepIndicator}>
+          {GAMES_FORM_STEPS.map((step, index) => (
+            <div
+              key={step.key}
+              className={`${styles.step} ${index <= hook.currentStep ? styles.active : ""} ${index === hook.currentStep ? styles.current : ""}`}
+              aria-current={index === hook.currentStep ? "step" : undefined}
+            >
+              <span className={styles.stepNumber}>{index + 1}</span>
+              <span className={styles.stepLabel}>{step.title}</span>
+            </div>
+          ))}
+        </nav>
       {renderStep()}
     </div>
   );

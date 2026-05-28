@@ -4,13 +4,14 @@ import ImageUpload from '@/ui/FormUI/imageComponent';
 import { validateText, fileToBase64 } from '@/utilities/FormUtils';
 import { prepareGameCard } from '@/utilities/utils';
 import { CardProps } from '@/types/cards';
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import formStyles from "@/styles/forms/form.module.css";
 import GamesFormWizard from '@/ui/gamesFormUi/form';
 import type { GamesFormData } from '@/types/gameForm';
 import type { CharacterDataDB, MapDataDB, ItemDataDB,GamesFormDataDB } from '@/types/gameForm';
 import { GAME_FORM_FIELD_CONFIG, initialGameFormState, PRE_EXISTING_TAGS, type GameFormState as FormState } from '@/types/form';
 import { useGameForm } from '@/hooks/form';
+import { Button } from "@/ui/primitives/button";
 
 const STATUS_COLOR_MAP= {
   success: formStyles.statusSuccess,
@@ -19,20 +20,23 @@ const STATUS_COLOR_MAP= {
 } as const;
 
 export default function CreateForm() {
-  const { form, setForm, loading, setLoading, showWizard, setShowWizard, resetCounter, resetForm, updateField } = useGameForm(initialGameFormState);
+  const { form, loading, setLoading, showWizard, setShowWizard, resetCounter, resetForm, updateField } = useGameForm(initialGameFormState);
+  const formRef = useRef(form);
+  formRef.current = form;
 
   const nameValidation = validateText(form.name, GAME_FORM_FIELD_CONFIG.name);
   const descValidation = validateText(form.description, GAME_FORM_FIELD_CONFIG.description);
   const isFormValid = nameValidation.isFormValid && descValidation.isFormValid;
 
   const handleFinalSubmit = useCallback(async (wizardData: GamesFormData) => {
-    if (!isFormValid || !form.image) return;
+    const currentForm = formRef.current;
+    if (!isFormValid || !currentForm.image) return;
 
     setLoading(true);
     try {
       const imageUrl = await fetch("/api/convertUrl", {
         method: "POST",
-        body: form.image,
+        body: currentForm.image,
       }).then(res => res.json()).then(data => data.url);
 
       const characterImages = await Promise.all(
@@ -48,9 +52,9 @@ export default function CreateForm() {
       );
 
       const cardData: CardProps = {
-        name: form.name,
-        description: form.description,
-        tags: form.selectedTags,
+        name: currentForm.name,
+        description: currentForm.description,
+        tags: currentForm.selectedTags,
         image: imageUrl,
         likes_count: 0,
       };
@@ -114,7 +118,7 @@ export default function CreateForm() {
     } finally {
       setLoading(false);
     }
-  }, [isFormValid, form, resetForm]);
+  }, [isFormValid, resetForm]);
 
   const renderValidationMessage = () => {
     if (!isFormValid) {
@@ -187,13 +191,12 @@ export default function CreateForm() {
 
         {renderValidationMessage()}
 
-        <button
+        <Button
           onClick={() => setShowWizard(true)}
           disabled={loading || !isFormValid || !form.image}
-          className={formStyles.button}
         >
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );
