@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getGamesPaginated } from '@/lib/db';
 import { getCachedGameIds, getGameFromCache, warmUpCache } from '@/lib/cache-warmup';
 import { retry } from '@/lib/retry';
+import { validateJWTMiddleware } from '@/lib/jwt-validate';
 
 let cacheInitialized = false;
 
@@ -13,6 +14,10 @@ async function ensureCachePrimed(): Promise<void> {
 }
 
 export async function GET(request: NextRequest) {
+  // Validate JWT token
+  const { payload, error } = await validateJWTMiddleware(request);
+  if (error) return error;
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));

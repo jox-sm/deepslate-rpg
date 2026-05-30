@@ -8,12 +8,14 @@ import { useCallback, useRef } from "react";
 import formStyles from "@/styles/forms/form.module.css";
 import GamesFormWizard from '@/ui/gamesFormUi/form';
 import type { GamesFormData } from '@/types/gameForm';
-import type { CharacterDataDB, MapDataDB, ItemDataDB,GamesFormDataDB } from '@/types/gameForm';
+import type { CharacterDataDB, MapDataDB, ItemDataDB, GamesFormDataDB } from '@/types/gameForm';
 import { GAME_FORM_FIELD_CONFIG, initialGameFormState, PRE_EXISTING_TAGS, type GameFormState as FormState } from '@/types/form';
 import { useGameForm } from '@/hooks/form';
 import { Button } from "@/ui/primitives/button";
+import { useIdempotentRequest } from '@/hooks/useIdempotentRequest';
+import { v7 as uuidv7 } from 'uuid';
 
-const STATUS_COLOR_MAP= {
+const STATUS_COLOR_MAP = {
   success: formStyles.statusSuccess,
   warning: formStyles.statusWarning,
   error: formStyles.statusError,
@@ -23,6 +25,7 @@ export default function CreateForm() {
   const { form, loading, setLoading, showWizard, setShowWizard, resetCounter, resetForm, updateField } = useGameForm(initialGameFormState);
   const formRef = useRef(form);
   formRef.current = form;
+  const { sendRequest, abortAll } = useIdempotentRequest();
 
   const nameValidation = validateText(form.name, GAME_FORM_FIELD_CONFIG.name);
   const descValidation = validateText(form.description, GAME_FORM_FIELD_CONFIG.description);
@@ -34,10 +37,18 @@ export default function CreateForm() {
 
     setLoading(true);
     try {
-      const imageUrl = await fetch("/api/convertUrl", {
-        method: "POST",
-        body: currentForm.image,
-      }).then(res => res.json()).then(data => data.url);
+      // Generate idempotency keys for each request
+      const convertUrlKey = uuidv7();
+      const pushKey = uuidv7();
+      const convertImagesKey = uuidv7();
+      const pushGamesKey = uuidv7();
+
+      // Upload main image with idempotency
+      const imageUrl = await sendRequest<{ url: string }>(
+        "/api/convertUrl",
+        { image: currentForm.image },
+        { idempotencyKey: convertUrlKey }
+      ).then(data => data.url);
 
       const characterImages = await Promise.all(
         wizardData.characters.map(c => c.image ? fileToBase64(c.image) : Promise.resolve(null))
@@ -93,32 +104,28 @@ export default function CreateForm() {
         },
       };
 
-      await fetch("/api/push", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      // Push game to Redis queue with idempotency
+      await sendRequest("/api/push", payload, { idempotencyKey: pushKey });
 
-      const convertedGame =await fetch("/api/convertUrl/ConvertGameImages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: gameData.id, characters, maps, items }),
-      }).then(res => res.json());
+      // Convert game images with idempotency
+      const convertedGame = await sendRequest<GamesFormDataDB>(
+        "/api/convertUrl/ConvertGameImages",
+        { id: gameData.id, characters, maps, items },
+        { idempotencyKey: convertImagesKey }
+      );
 
-
-      await fetch("/api/push/pushGames", {
-        method: "POST",
-       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(convertedGame),
-});
+      // Push to MongoDB with idempotency
+      await sendRequest("/api/push/pushGames", convertedGame, { idempotencyKey: pushGamesKey });
 
       resetForm();
     } catch (err) {
       console.error(err);
+      // Optionally abort all pending requests on error
+      // abortAll();
     } finally {
       setLoading(false);
     }
-  }, [isFormValid, resetForm]);
+  }, [isFormValid, resetForm, sendRequest, abortAll]);
 
   const renderValidationMessage = () => {
     if (!isFormValid) {

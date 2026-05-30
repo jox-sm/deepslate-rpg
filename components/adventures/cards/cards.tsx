@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import style from "@/styles/cards/cards.module.css";
 import posthog from "posthog-js";
 import { CardProps } from "@/types/cards";
@@ -11,17 +11,28 @@ export default function ProfileCard({
   tags,
 }: CardProps) {
   const tagsKey = tags.join(',');
+  const [imageError, setImageError] = useState(false);
+
   useEffect(() => {
     posthog.capture('adventure_card_viewed', { name, tags });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, tagsKey]);
+
+  const handleImageError = () => {
+    setImageError(true);
+    // TODO: Call an API endpoint to report broken image and invalidate cache for this game/item
+    // Example: fetch(`/api/report-broken-image?imageUrl=${encodeURIComponent(image)}`, { method: 'POST' });
+    console.error(`Image failed to load: ${image}`);
+  };
+
   return (
     <div className={style.card}>
       {/* Photo Layout */}
       <div className={style.imagecontainer}>
         <img
-          src={image}
+          src={imageError ? '/images/project.jpg' : image}
           alt={name}
+          onError={handleImageError}
           className={style.img}
         />
       </div>
@@ -41,13 +52,12 @@ export default function ProfileCard({
            {tags.map((tag) => (
              <span
                key={tag}
-               className={style.tagPill}
-             >
+               >
                #{tag}
              </span>
            ))}
          </div>
-      </div>
-    </div>
-  );
-}
+       </div>
+     </div>
+   );
+ }

@@ -270,3 +270,68 @@ These changes ensure that React can correctly reconcile list items when they are
 - `types/cards.ts` uses separate `export type` statements instead of inline `export`.
 - Entire layout becomes effectively client-rendered because all children are `"use client"` — defeats App Router optimization.
 - Sidebar auth status (`AuthStatus` in `components/authentication/auth-status.tsx`) is imported by nothing after being removed from sidebar.
+
+---
+
+## Supabase Image Storage Issues
+
+### No Retry Mechanism on Supabase Operations
+**File:** `lib/storage.ts:15`
+**Problem:** The `uploadImage` function throws errors immediately without retry logic, unlike database and Redis operations which use `lib/retry.ts`. Network blips during image upload cause permanent failures.
+solution: add retry logic from utilities
+
+### Batch Upload Has No Error Isolation
+**File:** `utilities/insertGameImages.ts:5-30`
+**Problem:** Uses `Promise.all` for character, map, and item image uploads. A single failed image upload (e.g., corrupted file, network issue) fails the entire batch, preventing all images from being processed.
+Explanation: `Promise.all` rejects immediately when any of the promises rejects. This means if uploading one character's image fails, none of the maps or items images will be uploaded, even if they would succeed. We need to handle errors individually for each upload type so that successes in one category don't fail because of failures in another.
+sollution: Replace `Promise.all` with individual error handling for each array (characters, maps, items) using `map` with try/catch or similar error isolation techniques. Each upload category should be processed independently so failures in one don't block others.
+
+
+### Missing Image Error Handling in UI
+**File:** `components/adventures/cards/cards.tsx:22-26`
+**Problem:** `<img>` tags have no `onError` handler or fallback image. If a Supabase image URL returns 403/404 (bucket not public, file deleted, etc.), users see broken images with no recovery.
+sollution:if image crashes or anything crash remove the entire card data from being displayed and remove it from reddis cache
+
+
+### Supabase Client Created with Non-null Assertions
+**File:** `lib/supabase.ts:10-14`
+**Problem:** Uses `supabaseUrl!` and `supabaseKey!` non-null assertions. If environment variables are missing at runtime, the client is created with `undefined` values, causing silent failures.
+sollution: this is a production Beta which won't happen anytime soon no need to worry about it
+
+
+### Supabase Auth Code Is Dead/Unused
+**File:** `lib/middleware.ts`, `lib/server.ts`, `lib/client.ts`
+**Problem:** Supabase authentication middleware and client code exists but is unused (Clerk selected as auth solution). Creates confusion and maintenance overhead.
+sollution:use jwt tokens of clerk+convex with supabase , neon , and other services
+this creates a highly secured enviroment and ofc remove supabase authentication logic from the codebase
+
+
+### Image Upload Pipeline Uses Inefficient Data URL Conversion
+**File:** `utilities/insertGameImages.ts:40-44`
+**Problem:** Converts base64 data URLs → Buffer via `fetch()` → `arrayBuffer()`. Works but inefficient for large images due to double serialization (base64 → binary → base64 → binary).
+Explanation: The current flow converts File objects to base64 strings on the client, sends them as JSON strings to the API, then converts them back to binary Buffers via fetch() and arrayBuffer(). This means binary image data gets base64-encoded (increasing size by ~33%), sent as text in JSON, then decoded back to binary. For large images, this creates unnecessary CPU overhead and increases network payload size.
+sollution: convert image into binary directly and send it into api as json blob which is more efficient
+
+### Public URL Generation Doesn't Verify Bucket Access
+**File:** `node_modules/@supabase/storage-js/dist/index.d.cts:1438-1446` (via docs)
+**Problem:** `getPublicUrl()` constructs URLs without verifying the bucket is public. If `deepslate-rpg` bucket lacks public access, images will 404/403 despite returning valid-looking URLs.
+sollution: bucket is public without verification
+
+### No Image Upload Progress or Cancellation Support
+**Files:** `lib/storage.ts`, `app/api/convertUrl/route.ts`, `app/api/convertUrl/ConvertGameImages/route.ts`
+**Problem:** Uploads provide no progress feedback and cannot be cancelled, leading to poor UX on slow connections.
+sollution: add those operations into @/utilities/imagesUtils.ts and use it into the components and apis(if anything is unclear about it write an explination and i will provide what you need)
+
+### No CDN Cache Control on Uploaded Images
+**File:** `lib/storage.ts:10-13`
+**Problem:** Uploads use default cache control. No ability to set custom `Cache-Control` headers for performance tuning.
+sollution: add explanation first for this promblem so i can understand.
+
+### Supabase Storage Bucket Name Hardcoded
+**Files:** Multiple files reference `'deepslate-rpg'` directly
+**Problem:** Bucket name is hardcoded in multiple places, making it difficult to change or configure per environment.
+sollution: add a env variable for bucket name
+
+### supabase doesn't work
+problem: supabase storage doesn't accept any image or allow downloading any images
+sollution: go to supabase dashboard and do resume project (solved this problem)

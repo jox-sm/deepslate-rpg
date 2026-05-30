@@ -5,6 +5,7 @@ import connectDB from '@/models/games/mongodb/client';
 import Game from '@/models/games/mongodb/schema';
 import { getGameFromCache, setGameInCache } from '@/lib/cache-warmup';
 import { retry } from '@/lib/retry';
+import { validateJWTMiddleware } from '@/lib/jwt-validate';
 
 const CACHE_KEYS = {
   GAME_PREFIX: 'game:',
@@ -14,6 +15,10 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Validate JWT token
+  const { payload, error } = await validateJWTMiddleware(request);
+  if (error) return error;
+
   try {
     const { id } = await params;
 

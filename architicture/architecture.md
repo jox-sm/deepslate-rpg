@@ -1,8 +1,8 @@
-# Deepslate RPG — Architecture Document
+# Deepslate Dungeons — Architecture Document
 
 ## Overview
 
-A Next.js 16 (App Router) / React 19 application for a D&D RPG game creation platform. Users fill a multi-step wizard form (characters, maps, items) and submit game data that flows through a multi-database pipeline (Redis → PostgreSQL → MongoDB) with Supabase image hosting and PostHog analytics.
+A Next.js 16 (App Router) / React 19 application for a D&D RPG game creation platform. Users fill a multi-step wizard form (characters, maps, items) and submit game data that flows through a multi-database pipeline (Redis → PostgreSQL → MongoDB) with Supabase image hosting, Clerk authentication with JWT integration, and PostHog analytics.
 
 ---
 
@@ -19,8 +19,125 @@ A Next.js 16 (App Router) / React 19 application for a D&D RPG game creation pla
 | Cache / Queue | Redis (via ioredis) | Game caching (24h TTL) + async job queues |
 | Storage | Supabase Storage | Image hosting (WebP conversions via sharp) |
 | Analytics | PostHog (via posthog-js) | Event tracking, error capture |
-| Auth | Supabase Auth (partial, via `@supabase/ssr`) | Session middleware exists, flows incomplete |
+| Auth | Clerk (via `@clerk/nextjs`) | Authentication + JWT generation for external services |
+| Real-time | Convex (scaffolded) | Ready for future real-time features |
 | Tooling | eslint-config-next, Turbopack file cache, React Compiler | Lint, dev speed, optimization |
+
+---
+
+## Authentication Architecture
+
+### Overview
+
+We use **Clerk** as the primary authentication provider. Clerk handles user sign-up, sign-in, session management, and JWT generation for external services (Supabase, Neon, MongoDB).
+
+### How It Works
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     CLERK (Auth Provider)                    │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
+│  │  User Auth   │  │  Session    │  │  JWT Templates      │ │
+│  │  (Sign in)   │  │  Management │  │  (supabase, neon,   │ │
+│  │              │  │              │  │   mongodb)           │ │
+│  └──────┬──────┘  └──────┬──────┘  └──────────┬──────────┘ │
+└─────────┼────────────────┼─────────────────────┼────────────┘
+          │                │                     │
+          ▼                ▼                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    JWT FLOW                                  │
+│  1. User signs in to Clerk                                  │
+│  2. Clerk creates session token                            │
+│  3. getToken({ template: 'supabase' }) generates JWT       │
+│  4. JWT is passed in Authorization header to service        │
+│  5. Service validates JWT using Clerk's public key          │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### JWT Templates
+
+We create separate JWT templates in Clerk for each external service:
+
+#### supabase (Active)
+```json
+{
+  "app_metadata": {},
+  "aud": "authenticated",
+  "email": "{{user.primary_email_address}}",
+  "role": "authenticated",
+  "sub": "{{user.id}}",
+  "user_metadata": {}
+}
+```
+- Algorithm: RS256 (Clerk default)
+- Signing: Clerk's private key
+- Verification: Supabase fetches Clerk's public JWKS endpoint
+
+#### neon (Ready to configure)
+```json
+{
+  "aud": "neon",
+  "email": "{{user.primary_email_address}}",
+  "role": "authenticated",
+  "sub": "{{user.id}}"
+}
+```
+
+#### mongodb (Ready to configure)
+```json
+{
+  "aud": "mongodb",
+  "email": "{{user.primary_email_address}}",
+  "role": "authenticated",
+  "sub": "{{user.id}}"
+}
+```
+
+### RS256 vs HS256
+
+We use **RS256** (asymmetric) instead of HS256 (symmetric):
+
+| | RS256 (Our Choice) | HS256 |
+|---|---------------------|-------|
+| **Keys** | 2 (private + public) | 1 (shared secret) |
+| **Signing** | Clerk's private key | Shared secret |
+| **Verification** | Clerk's public JWKS endpoint | Same shared secret |
+| **Security** | Better (no shared secret) | Good |
+| **Setup** | Just add Clerk domain to Supabase | Paste JWT secret in Clerk |
+
+### Authentication Flow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  1. User visits protected route                             │
+│  2. proxy.ts (Clerk middleware) intercepts                  │
+│  3. auth.protect() checks session                          │
+│  4. If unauthenticated → redirect to login                 │
+│  5. If authenticated → continue to route                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `proxy.ts` | Clerk middleware for route protection |
+| `lib/auth.ts` | Unified auth utility (Supabase, Neon, MongoDB) |
+| `hooks/useAuth.ts` | Client-side hook for authenticated access |
+| `app/convex-client-provider.tsx` | Convex + Clerk integration |
+| `convex/auth.config.ts` | Convex auth configuration |
+
+### Environment Variables
+
+```env
+# Clerk
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+
+# Supabase (for JWT validation)
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=eyJ...
+```
 
 ---
 
@@ -33,18 +150,24 @@ A Next.js 16 (App Router) / React 19 application for a D&D RPG game creation pla
 │   │   ├── games/          # GET /api/games (paginated) + /api/games/[id]
 │   │   ├── push/           # POST /api/push (game + likes queues)
 │   │   │   └── pushGames/  # POST /api/push/pushGames (→ MongoDB queue)
-│   │   └── convertUrl/     # POST image upload + game image conversion
+│   │   ├── convertUrl/     # POST image upload + game image conversion
+│   │   │   └── ConvertGameImages/  # POST batch image conversion
+│   │   └── test-supabase-auth/     # GET test JWT integration
 │   ├── inventory/          # Game creation form page
 │   ├── profile/            # Placeholder
 │   ├── settings/           # Placeholder
 │   ├── layout.tsx          # Root layout (fonts, sidebar, structure)
 │   ├── page.tsx            # Home (game catalog with infinite scroll)
-│   └── globals.css         # Global reset & dark theme
+│   ├── globals.css         # Global reset & dark theme
+│   ├── auth-gate.tsx       # Convex auth gate (Authenticated/Unauthenticated)
+│   └── convex-client-provider.tsx  # Convex + Clerk provider
+├── proxy.ts                # Clerk middleware (route protection)
 ├── types/                  # TypeScript type definitions
 │   ├── cards.ts            # CardProps, GameCardProps, API response types
 │   ├── db.ts               # Likes type
 │   ├── form.ts             # Wizard types (CharacterData, MapData, ItemData, etc.)
-│   └── gameForm.ts         # DB variants + USE_GAMES_FORM return type
+│   ├── gameForm.ts         # DB variants + USE_GAMES_FORM return type
+│   └── images.ts           # UploadProgress, UploadOptions, ImageUploadOptions
 ├── db/                     # PostgreSQL schema + client
 │   ├── schema.sql          # CREATE TABLE games, indexes
 │   ├── client.ts           # Neon SQL client
@@ -54,6 +177,7 @@ A Next.js 16 (App Router) / React 19 application for a D&D RPG game creation pla
 │       ├── client.ts       # Mongoose connection
 │       └── schema.ts       # Character/Map/Item subdocs + Game schema
 ├── lib/                    # Core utilities & services
+│   ├── auth.ts             # Unified auth (Supabase, Neon, MongoDB JWT)
 │   ├── db.ts               # PostgreSQL query functions (CRUD, pagination, batch)
 │   ├── queue.ts            # Redis client singleton (ioredis)
 │   ├── cache-warmup.ts     # Redis caching (warmup, get/set cached games, 24h TTL)
@@ -62,37 +186,51 @@ A Next.js 16 (App Router) / React 19 application for a D&D RPG game creation pla
 │   ├── storage.ts          # Image upload → Supabase (WebP via sharp)
 │   ├── GamesInsert.ts      # MongoDB batch processor from Redis queue
 │   ├── gamesFormValidation.ts  # Field-level validators for wizard steps
-│   ├── useGamesForm.ts     # Re-export of wizard state hook
-│   ├── middleware.ts       # Supabase auth session check (unregistered)
-│   ├── server.ts           # Supabase server client factory
-│   ├── client.ts           # Supabase browser client (commented out)
 │   └── utils.ts            # cn() tailwind class merger
 ├── hooks/                  # Custom React hooks
 │   ├── form.ts             # useGameForm (basic game info state)
-│   └── gameForm.ts         # useGamesForm (wizard multi-step state)
+│   ├── gameForm.ts         # useGamesForm (wizard multi-step state)
+│   ├── useFormState.ts     # Shared form state primitive
+│   └── useAuth.ts          # Client-side authenticated access hook
 ├── utilities/              # Standalone helper functions
 │   ├── db.ts               # Redis queue push/pull for games & likes
 │   ├── insertGame.ts       # MongoDB-specific Redis queue operations
 │   ├── pull.ts             # Legacy queue processor (Redis → PG batch)
 │   ├── utils.ts            # Data prep (UUID v7, timestamps, API fetch)
 │   ├── FormUtils.ts        # text validation, fileToBase64 conversion
-│   ├── imagesUtils.ts      # sharp WebP conversion
-│   └── insertGameImages.ts # Base64 → Supabase URL pipeline
+│   ├── imagesUtils.ts      # sharp WebP conversion, progress tracking
+│   ├── insertGameImages.ts # Base64 → Supabase URL pipeline
+│   └── sleep.ts            # Shared sleep utility
 ├── components/             # React components
 │   ├── adventures/cards/   # CardsGrid (infinite scroll), CardsLoad (batch), ProfileCard
 │   ├── adventures/form/    # CreateForm (main form, 2-stage: info + wizard)
-│   └── background/         # Sidebar, Sbar (wrapper), ProfileMenu
+│   ├── adventures/cards/cards-grid-wrapper.tsx  # Server component wrapper
+│   ├── background/         # Sidebar, Sbar (wrapper), ProfileMenu
+│   └── authentication/     # Unauthenticated overlay
 ├── ui/                     # Reusable UI primitives
 │   ├── FormUI/             # TextAreaField, tagsComponent, ImageUpload
-│   └── gamesFormUi/        # GamesFormWizard, CharactersStep, MapsStep, ItemsStep
+│   ├── gamesFormUi/        # GamesFormWizard, CharactersStep, MapsStep, ItemsStep
+│   └── primitives/         # Button, Input, Textarea
 ├── styles/                 # CSS Modules
 │   ├── cards/              # Card, CardsGrid, CardsLoad styles
 │   ├── forms/              # Form and wizard styles
-│   └── sidebar/            # Sidebar toggle & navigation styles
+│   ├── sidebar/            # Sidebar toggle & navigation styles
+│   ├── layout/             # Layout structure styles
+│   ├── background/         # Background gradient styles
+│   ├── pages/              # Page-specific styles
+│   ├── auth/               # Auth styles (orphaned)
+│   └── authentication/     # Authentication styles
+├── convex/                 # Convex backend (scaffolded)
+│   ├── schema.ts           # Database schema (games, characters, maps, items)
+│   ├── games.ts            # CRUD operations (not used by frontend yet)
+│   ├── characters.ts       # CRUD operations
+│   ├── maps.ts             # CRUD operations
+│   ├── items.ts            # CRUD operations
+│   └── auth.config.ts      # Clerk auth configuration
 ├── public/                 # Static assets (SVGs, images)
 ├── architicture/           # Architecture docs
-└── .agents/                # Neon Postgres skill
-    └── .claude/            # PostHog integration skill + examples
+└── .agents/                # Agent skills
+    └── skills/             # Convex, Neon, PostHog skills
 ```
 
 ---
@@ -113,7 +251,12 @@ A Next.js 16 (App Router) / React 19 application for a D&D RPG game creation pla
 
 ### Database
 - **Games (Neon PG):** id (UUID PK), name, likes_count, description, image, tags[], timestamps
-- **Game (MongoDB):** id (indexed), characters[ {id, name, description, image} ], maps[ {id, nameOfPlace, sizeOfPlace, placesAtMap, image} ], items[ {id, name, image} ], status ("draft")
+- **Game (MongoDB):** id (indexed), characters[], maps[], items[], status ("draft")
+
+### Images
+- **UploadProgress:** loaded, total, percentage
+- **UploadOptions:** onProgress callback, signal (AbortSignal)
+- **ImageUploadOptions:** cacheControl header
 
 ---
 
@@ -126,10 +269,12 @@ User → CreateForm (name, description, tags, image)
   → Wizard: Characters step (add/remove/edit) → Maps step → Items step → Submit
 
 1. POST /api/convertUrl       → main image → Supabase Storage → returns URL
+   (uses Clerk JWT for authenticated upload)
 2. fileToBase64()             → all component images → base64 strings
 3. POST /api/push {type:game} → Redis queue "InsertGames"
    → pull.ts processes queue → Neon PostgreSQL INSERT
 4. POST /api/convertUrl/ConvertGameImages  → base64 images → Supabase URLs
+   (uses Clerk JWT for authenticated upload)
 5. POST /api/push/pushGames   → Redis queue "InsertGamesmongodb"
    → processGamesQueue()      → MongoDB Game.insertMany()
 ```
@@ -165,14 +310,31 @@ POST /api/push {type:like, data: {id, likesDelta}}
 ### Image Processing Pipeline
 
 ```
-Client base64 string
-  → POST /api/convertUrl/ConvertGameImages
+Client uploads image (base64/blob)
+  → POST /api/convertUrl (with Clerk JWT)
   → convertComponentImagesJSON()
   → For each image:
     fetch(base64) → Buffer
     → sharp WebP (quality 80)
     → uploadImage() → Supabase Storage "deepslate-rpg" bucket
     → Replace with public URL
+  → Returns authenticated URL
+```
+
+### JWT Authentication Pipeline
+
+```
+1. Client calls getToken({ template: 'supabase' })
+   ↓
+2. Clerk signs JWT with its private key (RS256)
+   ↓
+3. JWT is passed in Authorization header to Supabase
+   ↓
+4. Supabase fetches Clerk's public key from JWKS endpoint
+   ↓
+5. Supabase validates JWT signature
+   ↓
+6. RLS policies can use auth.jwt() ->> 'sub' to get user ID
 ```
 
 ---
@@ -205,19 +367,26 @@ Client base64 string
 
 ```
 RootLayout
-├── Sbar (Sidebar wrapper)
-│   └── Sidebar (collapsible nav with PostHog tracking)
-└── Children
-    ├── Home Page (/)
-    │   └── CardsGrid (infinite scroll orchestrator)
-    │       └── CardsLoad[] (batches of 6)
-    │           └── ProfileCard[] (3 per row)
-    └── Inventory Page (/inventory)
-        └── CreateForm (2-stage creation form)
-            └── GamesFormWizard (3-step: Characters → Maps → Items)
-                ├── CharactersStep (character CRUD)
-                ├── MapsStep (map CRUD)
-                └── ItemsStep (item CRUD + submit)
+├── ClerkProvider
+│   └── ConvexProviderWithClerk
+│       └── AuthGate
+│           ├── AuthLoading → Spinner
+│           ├── Unauthenticated → UnauthenticatedOverlay
+│           └── Authenticated
+│               ├── Sbar (Sidebar wrapper)
+│               │   └── Sidebar (collapsible nav with PostHog tracking)
+│               └── Children
+│                   ├── Home Page (/)
+│                   │   └── CardsGridWrapper (server component)
+│                   │       └── CardsGrid (infinite scroll orchestrator)
+│                   │           └── CardsLoad[] (batches of 6)
+│                   │               └── ProfileCard[] (3 per row)
+│                   └── Inventory Page (/inventory)
+│                       └── CreateForm (2-stage creation form)
+│                           └── GamesFormWizard (3-step: Characters → Maps → Items)
+│                               ├── CharactersStep (character CRUD)
+│                               ├── MapsStep (map CRUD)
+│                               └── ItemsStep (item CRUD + submit)
 ```
 
 ---
@@ -227,6 +396,7 @@ RootLayout
 - **100% local state** — no Redux, Zustand, or Context
 - `useGameForm` hook: manages basic game info (name, description, image, tags)
 - `useGamesForm` hook: manages wizard multi-step state (current step, characters[], maps[], items[])
+- `useFormState` hook: shared form primitive (extracted from duplicate hooks)
 - Props drilled through component trees at all levels
 
 ---
@@ -241,17 +411,6 @@ RootLayout
 | PostHog auto-capture | All | exceptions, pageviews |
 
 PostHog reverse-proxied via Next.js rewrites (`/ingest/*` → `us.i.posthog.com/*`).
-
----
-
-## Authentication (Incomplete)
-
-- `lib/middleware.ts` defines `updateSession()` using Supabase SSR cookies
-- Checks `supabase.auth.getClaims()`, redirects to `/auth/login` if unauthenticated
-- **Not registered** as Next.js middleware — auth is not enforced
-- `lib/server.ts` provides a server Supabase client factory
-- `lib/client.ts` browser client is commented out
-- No `/auth/*` route pages exist
 
 ---
 
@@ -274,17 +433,99 @@ PostHog reverse-proxied via Next.js rewrites (`/ingest/*` → `us.i.posthog.com/
 - SQL injection pattern detection in text validation
 - Client-side error rendering in CardsLoad (visible error messages)
 - MongoDB batch insert uses `{ ordered: false }` to continue despite individual failures
+- Image upload fallback: if Supabase upload fails, keeps original base64 data
 
 ---
 
 ## External Services Summary
 
-| Service | Integration Point | Status |
-|---------|------------------|--------|
-| Neon PostgreSQL | `@neondatabase/serverless` SQL driver | Active |
-| MongoDB Atlas | Mongoose ODM | Active |
-| Redis (Upstash) | ioredis | Active |
-| Supabase Storage | `@supabase/supabase-js` | Active |
-| Supabase Auth | `@supabase/ssr` | Partial |
-| PostHog | posthog-js | Active |
-| Vercel | Deployment target (inferred) | Configured |
+| Service | Integration Point | Status | Auth Method |
+|---------|------------------|--------|-------------|
+| Clerk | Authentication + JWT provider | Active | Primary auth |
+| Convex | Real-time backend | Scaffolded | Clerk JWT |
+| Neon PostgreSQL | `@neondatabase/serverless` SQL driver | Active | DATABASE_URL |
+| MongoDB Atlas | Mongoose ODM | Active | MONGODB_URI |
+| Redis (Upstash) | ioredis | Active | redisqueue |
+| Supabase Storage | `@supabase/supabase-js` | Active | Clerk JWT (RS256) |
+| PostHog | posthog-js | Active | NEXT_PUBLIC_POSTHOG_KEY |
+| Vercel | Deployment target | Configured | - |
+
+---
+
+## Security
+
+### JWT Integration
+- Clerk signs JWTs with RS256 (private key)
+- Services verify with Clerk's public JWKS endpoint
+- No shared secrets between services
+- Tokens have configurable lifetimes (default 60s)
+
+### Route Protection
+- `proxy.ts` middleware protects all routes except `/` and `/api/test-supabase-auth`
+- `auth.protect()` ensures only authenticated users access protected routes
+- Convex `AuthGate` provides client-side auth state
+
+### Environment Variables
+- `NEXT_PUBLIC_*` variables are client-safe (visible in browser)
+- Regular variables are server-only (hidden from browser)
+- Never put secrets in `NEXT_PUBLIC_*` variables
+
+---
+
+## Performance
+
+### Caching
+- Redis caching with 24h TTL reduces database queries
+- Cache warmup on first request seeds top 100 games
+- Cache-aside pattern with async backfill
+
+### Image Optimization
+- WebP format (25-35% smaller than JPEG)
+- Sharp library for server-side conversion
+- CDN delivery via Supabase Storage
+- Configurable cache control headers
+
+### Database
+- Neon PostgreSQL serverless (scales to zero)
+- MongoDB flexible schema for varying game structures
+- Redis sub-millisecond latency for caching
+
+---
+
+## Development
+
+```bash
+npm run dev      # Start dev server (Turbopack)
+npm run build    # Build for production
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
+
+---
+
+## Known Issues
+
+- TypeScript compiler runs out of memory (large codebase)
+- ESLint has pre-existing warnings (unused vars, hook dependencies)
+- Convex CRUD operations are scaffolded but not used by frontend
+- Some CSS conflicts in layout styles (position: sticky on body)
+- Redis queue has race condition potential (Date.now() collision)
+- Object URL memory leak in imageComponent.tsx (fixed)
+
+---
+
+## Future Improvements
+
+1. Complete Neon JWT integration
+2. Complete MongoDB JWT integration
+3. Add upload progress UI components
+4. Implement sophisticated retry policies (exponential backoff)
+5. Add comprehensive logging and metrics
+6. Write tests for critical paths
+7. Implement Convex real-time features
+8. Add image metadata tracking (dimensions, file size)
+9. Configure Supabase RLS policies for authenticated uploads
+
+---
+
+*Last updated: May 2026*

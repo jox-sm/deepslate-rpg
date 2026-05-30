@@ -1,26 +1,45 @@
-import { NextResponse } from 'next/server';
-import {validateQueue, setToWorking, setToIdle, validateQueueWorking, pushGameToQueue} from "@/utilities/insertGame";
-import {processGamesQueue} from "@/lib/GamesInsert";
+import { NextRequest, NextResponse } from 'next/server';
+import { validateQueue, setToWorking, setToIdle, validateQueueWorking, pushGameToQueue } from "@/utilities/insertGame";
+import { processGamesQueue } from "@/lib/GamesInsert";
 import { retry } from '@/lib/retry';
 import { GamesFormDataDB } from "@/types/gameForm";
+import { withIdempotency } from '@/utilities/idempotency';
+import { validateJWTMiddleware } from '@/lib/jwt-validate';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Validate JWT token
+  const { payload, error } = await validateJWTMiddleware(request);
+  if (error) return error;
+
   try {
-    const gameData: GamesFormDataDB = await request.json();
-    console.log("hello from push games \n\n\n dbGameData:");
-    await retry(() => pushGameToQueue(gameData), 3, 500); 
-    if(await retry(() => validateQueueWorking(), 3, 500)){
-      return NextResponse.json({
-        success: true,
-        message: 'Game data successfully pushed to Redis queue and is being processed',
-      });
-    }else{
+    const body = await request.json();
+    const { idempotencyKey, ...gameData } = body;
+
+    if (!idempotencyKey) {
+      return NextResponse.json(
+        { error: 'Missing idempotencyKey' },
+        { status: 400 }
+      );
+    }
+
+    const { result, cached } = await withIdempotency(idempotencyKey, async () => {
+      const dbGameData: GamesFormDataDB = gameData;
+      console.log("hello from push games \n\n\n dbGameData:");
+      await retry(() => pushGameToQueue(dbGameData), 3, 500); 
+      
+      if (await retry(() => validateQueueWorking(), 3, 500)) {
+        return { success: true, message: 'Game data successfully pushed to Redis queue and is being processed' };
+      } else {
         await retry(() => setToWorking(), 3, 500);
         await retry(() => processGamesQueue(), 3, 500);
-    }
+        return { success: true, message: 'Game data successfully pushed to Redis queue' };
+      }
+    });
+
     return NextResponse.json({
-      success: true,
-      message: 'Game data successfully pushed to Redis queue',
+      ...result,
+      idempotencyKey,
+      cached,
     });
   } catch (error: any) {
     console.error('Redis Push Error:', error);
