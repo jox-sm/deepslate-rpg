@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
            name: gameValidation.data.name,
            description: gameValidation.data.description,
            likes_count: gameValidation.data.likes_count || 0,
-           image: gameValidation.data.image,
+            image: gameValidation.data.image || '',
            tags: gameValidation.data.tags,
            created_at: gameValidation.data.created_at,
            updated_at: gameValidation.data.updated_at,
