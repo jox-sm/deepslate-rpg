@@ -2,7 +2,12 @@
 import TextAreaField, { tagsComponent } from '@/ui/FormUI/textComponent';
 import ImageUpload from '@/ui/FormUI/imageComponent';
 import { validateText } from '@/utilities/FormUtils';
+<<<<<<< Updated upstream
 import { arrayBufferToBase64 } from '@/utilities/imagesUtils';
+=======
+import { arrayBufferToBase64 } from '@/utilities/clientUtilities/imagesUtils';
+import { filterEntriesWithImages } from '@/utilities/clientUtilities/exceptions';
+>>>>>>> Stashed changes
 import { prepareGameCard } from '@/utilities/utils';
 import { CardProps } from '@/types/cards';
 import { useCallback, useRef } from "react";
@@ -108,10 +113,15 @@ export default function CreateForm() {
       // Push game to Redis queue with idempotency
       await sendRequest("/api/push", payload, { idempotencyKey: pushKey });
 
-      // Convert game images with idempotency
+      // Convert game images with idempotency — skip entries without images
       const convertedGame = await sendRequest<GamesFormDataDB>(
         "/api/convertUrl/ConvertGameImages",
-        { id: gameData.id, characters, maps, items },
+        {
+          id: gameData.id,
+          characters: filterEntriesWithImages(characters),
+          maps: filterEntriesWithImages(maps),
+          items: filterEntriesWithImages(items),
+        },
         { idempotencyKey: convertImagesKey }
       );
 

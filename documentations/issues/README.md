@@ -18,6 +18,8 @@ Complete documentation of all 22 unique GitHub issues for the Deepslate RPG proj
 
 | # | Issue | Status | Impact |
 |---|-------|--------|--------|
+| 75 | [Form styles - button, preview, wizard layout](./75-FORM-STYLES-BUTTON-PREVIEW-WIZARD.md) | ✅ | UI |
+| 74 | [Request aborted when no images](./74-REQUEST-ABORTED-NO-IMAGES.md) | ✅ | Runtime |
 | 70 | [Wasteful data URL fetch round-trip in image pipeline](./70-WASTEFUL-DATA-URL-FETCH-ROUND-TRIP-IN-IMAGE-PIPELINE.md) | ✅ | Performance |
 | 69 | [File object silently lost in JSON.stringify](./69-FILE-OBJECT-SILENTLY-LOST-IN-JSON-STRINGIFY.md) | ✅ | Data loss |
 | 68 | [Double-read request body in /api/convertUrl](./68-DOUBLE-READ-REQUEST-BODY-IN-API-CONVERTURL.md) | ✅ | Runtime error |
@@ -99,13 +101,17 @@ Complete documentation of all 22 unique GitHub issues for the Deepslate RPG proj
 
 ## 📊 Issue Statistics
 
+<<<<<<< Updated upstream
 - **Total Issues:** 22 (unique titles)
+=======
+- **Total Issues:** 27 (unique titles)
+>>>>>>> Stashed changes
 - **All Status:** ✅ CLOSED
 - **Performance Issues:** 4
 - **Security Issues:** 1
 - **Data Integrity Issues:** 2
 - **Frontend Issues:** 4
-- **UI/UX Issues:** 5
+- **UI/UX Issues:** 6
 - **Accessibility Issues:** 2
 - **Code Quality Issues:** 5
 - **Architecture Issues:** 1
