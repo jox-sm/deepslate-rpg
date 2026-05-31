@@ -8,13 +8,13 @@ export async function convertToWebp(buffer: Buffer): Promise<Buffer> {
     .toBuffer();
 }
 
-export async function convertFileToBinary(file: File): Promise<ArrayBuffer> {
-  return await file.arrayBuffer();
-}
-
-export async function convertDataUrlToBinary(dataUrl: string): Promise<ArrayBuffer> {
-  const response = await fetch(dataUrl);
-  return await response.arrayBuffer();
+export function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
 }
 
 export async function uploadImageWithProgress(

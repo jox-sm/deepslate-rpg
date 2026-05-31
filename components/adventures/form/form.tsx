@@ -1,7 +1,8 @@
 "use client";
 import TextAreaField, { tagsComponent } from '@/ui/FormUI/textComponent';
 import ImageUpload from '@/ui/FormUI/imageComponent';
-import { validateText, fileToBase64 } from '@/utilities/FormUtils';
+import { validateText } from '@/utilities/FormUtils';
+import { arrayBufferToBase64 } from '@/utilities/imagesUtils';
 import { prepareGameCard } from '@/utilities/utils';
 import { CardProps } from '@/types/cards';
 import { useCallback, useRef } from "react";
@@ -46,20 +47,20 @@ export default function CreateForm() {
       // Upload main image with idempotency
       const imageUrl = await sendRequest<{ url: string }>(
         "/api/convertUrl",
-        { image: currentForm.image },
+        { image: arrayBufferToBase64(currentForm.image) },
         { idempotencyKey: convertUrlKey }
       ).then(data => data.url);
 
-      const characterImages = await Promise.all(
-        wizardData.characters.map(c => c.image ? fileToBase64(c.image) : Promise.resolve(null))
+      const characterImages = wizardData.characters.map(c =>
+        c.image ? arrayBufferToBase64(c.image) : null
       );
 
-      const mapImages = await Promise.all(
-        wizardData.maps.map(m => m.image ? fileToBase64(m.image) : Promise.resolve(null))
+      const mapImages = wizardData.maps.map(m =>
+        m.image ? arrayBufferToBase64(m.image) : null
       );
 
-      const itemImages = await Promise.all(
-        wizardData.items.map(i => i.image ? fileToBase64(i.image) : Promise.resolve(null))
+      const itemImages = wizardData.items.map(i =>
+        i.image ? arrayBufferToBase64(i.image) : null
       );
 
       const cardData: CardProps = {

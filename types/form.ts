@@ -19,7 +19,7 @@ type TagsComponentProps = {
 
 type ImageUploadProps = {
   label: string;
-  onSelect: (file: File) => void;
+  onSelect: (buffer: ArrayBuffer) => void;
   onPreviewChange?: (url: string) => void;
   accept?: string;
   maxSizeMB?: number;
@@ -33,14 +33,14 @@ export interface CharacterData {
   id: string;
   name: string;
   description: string;
-  image: File | null;
+  image: ArrayBuffer | null;
   imagePreview: string;
 }
 
 export interface MapData {
   id: string;
   nameOfPlace: string;
-  image: File | null;
+  image: ArrayBuffer | null;
   imagePreview: string;
   sizeOfPlace: string;
   placesAtMap: string;
@@ -49,7 +49,7 @@ export interface MapData {
 export interface ItemData {
   id: string;
   name: string;
-  image: File | null;
+  image: ArrayBuffer | null;
   imagePreview: string;
 }
 
@@ -99,7 +99,7 @@ export const ITEM_VALIDATION = {
 export interface GameFormState {
   name: string;
   description: string;
-  image: File | null;
+  image: ArrayBuffer | null;
   imagePreview: string;
   selectedTags: string[];
 }

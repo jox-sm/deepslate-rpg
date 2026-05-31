@@ -1,0 +1,992 @@
+﻿[
+    {
+        "number":  70,
+        "title":  "Wasteful data URL fetch round-trip in image pipeline",
+        "body":  "## Problem\nImage pipeline: File to data URL (FileReader) on client, then fetch(dataUrl).arrayBuffer() on server to get Buffer. Wasteful round-trip.\n\n## Solution\nImageUpload converts File to ArrayBuffer directly. Form uses arrayBufferToBase64() for JSON. Server decodes with Buffer.from(base64, base64). Removed unused utilities.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "performance"
+                   ],
+        "created_at":  "2026-05-31T09:50:25Z",
+        "updated_at":  "2026-05-31T09:52:04Z"
+    },
+    {
+        "number":  69,
+        "title":  "File object silently lost in JSON.stringify",
+        "body":  "## Problem\nForm component sent currentForm.image (File object) as { image: currentForm.image }. JSON.stringify silently converts File to {} - image data lost without error.\n\n## Solution\nImageUpload now converts File to ArrayBuffer via file.arrayBuffer() before onSelect. Form types use ArrayBuffer instead of File. arrayBufferToBase64() utility encodes for JSON transport.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug"
+                   ],
+        "created_at":  "2026-05-31T09:50:22Z",
+        "updated_at":  "2026-05-31T09:52:04Z"
+    },
+    {
+        "number":  68,
+        "title":  "Double-read request body in /api/convertUrl",
+        "body":  "## Problem\nPOST handler called req.json() then req.blob() on same request. req.json() consumed the stream, req.blob() always failed.\n\n## Solution\nChanged to accept JSON body with image as base64 string: { image: base64, idempotencyKey }. Route reads req.json() once, decodes base64 to Buffer, uploads to Supabase.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug"
+                   ],
+        "created_at":  "2026-05-31T09:50:22Z",
+        "updated_at":  "2026-05-31T09:51:42Z"
+    },
+    {
+        "number":  67,
+        "title":  "N+1 Redis query in games API - individual GET per game ID",
+        "body":  "## Problem\nGames pagination endpoint looped over cached game IDs calling redis.get() individually for each ID, causing N+1 round-trips per request.\n\n## Solution\nReplaced per-ID redis.get() calls with single batch redis.mget(keys), reducing Redis round-trips from N to 1.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "performance"
+                   ],
+        "created_at":  "2026-05-31T09:50:21Z",
+        "updated_at":  "2026-05-31T09:51:41Z"
+    },
+    {
+        "number":  66,
+        "title":  "Wrong JWT auth approach - jsonwebtoken with Neon/MongoDB",
+        "body":  "## Problem\nUsed jsonwebtoken to manually verify tokens, plus added Neon and MongoDB JWT validators - Neon and MongoDB don\u0026#39;t use JWTs. Clerk already handles session management.\n\n## Solution\nReplaced with Clerk auth() from @clerk/nextjs/server. Removed all Neon/MongoDB JWT validators and jsonwebtoken dependency.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "security"
+                   ],
+        "created_at":  "2026-05-31T09:50:20Z",
+        "updated_at":  "2026-05-31T09:51:34Z"
+    },
+    {
+        "number":  65,
+        "title":  "Rate limiter uses wrong Bottleneck API",
+        "body":  "## Problem\nUsed import Bottleneck from bottleneck with new Bottleneck(...) and manual IP-key Map tracking. Bottleneck v2 uses Bottleneck.Group for per-key limiting.\n\n## Solution\nReplaced with Bottleneck.Group which auto-creates limiter per unique IP key. Each IP gets own reservoir (10/s), maxConcurrent=1, minTime=100ms.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug"
+                   ],
+        "created_at":  "2026-05-31T09:50:19Z",
+        "updated_at":  "2026-05-31T09:51:30Z"
+    },
+    {
+        "number":  64,
+        "title":  "Unnecessary Zod schema for simple query params",
+        "body":  "## Problem\nGames API route used Zod schema to parse page and limit query params - overkill for two integers.\n\n## Solution\nReplaced with Math.max(1, parseInt(...)) and Math.min(100, Math.max(1, parseInt(...))). Kept Zod only for structured request body validation in /api/push.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "comments":  1,
+        "created_at":  "2026-05-31T09:50:14Z",
+        "updated_at":  "2026-05-31T09:59:16Z"
+    },
+    {
+        "number":  63,
+        "title":  "Unnecessary Zod schema for simple query params",
+        "body":  "## Problem\nGames API route used Zod schema to parse page and limit query params - overkill for two integers.\n\n## Solution\nReplaced with Math.max(1, parseInt(...)) and Math.min(100, Math.max(1, parseInt(...))). Kept Zod only for structured request body validation in /api/push.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:48:56Z",
+        "updated_at":  "2026-05-31T09:51:28Z"
+    },
+    {
+        "number":  62,
+        "title":  "Added route-specific helpers to cache-warmup module",
+        "body":  "## Problem\ngetMultipleGamesFromCache and pipeline variant were added to lib/cache-warmup.ts, which is a cache initialization utility module.\n\n## Solution\nReverted cache-warmup.ts to original exports. Batch MGET logic inlined directly in the games API route where it belongs.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:48:54Z",
+        "updated_at":  "2026-05-31T09:51:27Z"
+    },
+    {
+        "number":  61,
+        "title":  "Likes count reset to 0 instead of using DB value",
+        "body":  "## Problem\nutilities/utils.ts always set likes_count: 0 instead of using the database value.\n\n## Solution\nChanged to likes_count: game.likes_count ?? 0 - uses DB value when available, falls back to 0 only when null/undefined.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug"
+                   ],
+        "created_at":  "2026-05-31T09:48:50Z",
+        "updated_at":  "2026-05-31T09:51:26Z"
+    },
+    {
+        "number":  60,
+        "title":  "Duplicate sleep utility defined in two files",
+        "body":  "## Problem\nsleep() was defined separately in lib/GamesInsert.ts and utilities/pull.ts.\n\n## Solution\nCreated shared utilities/sleep.ts and both files now import from it.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:48:41Z",
+        "updated_at":  "2026-05-31T09:51:24Z"
+    },
+    {
+        "number":  59,
+        "title":  "Array index as React key in list rendering",
+        "body":  "## Problem\ncomponents used array indices as React keys, causing reconciliation bugs on reorder/filter.\n\n## Solution\nReplaced key={index} with stable unique identifiers - tag string for tags, item.label for sidebar items.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug"
+                   ],
+        "created_at":  "2026-05-31T09:48:32Z",
+        "updated_at":  "2026-05-31T09:51:19Z"
+    },
+    {
+        "number":  58,
+        "title":  "Two nearly identical form hooks - code duplication",
+        "body":  "## Problem\nhooks/form.ts and hooks/gameForm.ts had nearly identical form state logic. lib/useGamesForm.ts was another re-export.\n\n## Solution\nCreated shared hooks/useFormState.ts primitive hook. Both form hooks now inherit from it, keeping only their domain-specific logic.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:48:29Z",
+        "updated_at":  "2026-05-31T09:51:18Z"
+    },
+    {
+        "number":  57,
+        "title":  "Excessive prop drilling in wizard form",
+        "body":  "## Problem\nForm state drilled through 3-4 levels. handleFinalSubmit recreated on every keystroke because it depended on full form state.\n\n## Solution\nUsed useRef to hold form state inside the callback. handleFinalSubmit now reads formRef.current instead of capturing form in closure, stabilizing the dependency array.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "performance"
+                   ],
+        "created_at":  "2026-05-31T09:48:28Z",
+        "updated_at":  "2026-05-31T09:51:11Z"
+    },
+    {
+        "number":  56,
+        "title":  "Object URL memory leak in ImageUpload",
+        "body":  "## Problem\nURL.createObjectURL(file) was never revoked - memory grew with each upload attempt.\n\n## Solution\nAdded prevPreviewRef with revokePreview() cleanup called on new file selection, component unmount, and resetKey change.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug"
+                   ],
+        "created_at":  "2026-05-31T09:48:27Z",
+        "updated_at":  "2026-05-31T09:51:05Z"
+    },
+    {
+        "number":  55,
+        "title":  "Inadequate state management - 100% local state, no caching",
+        "body":  "## Problem\nFull reliance on useState/useReducer with prop drilling. No server state caching, repeated API requests, manual loading state handling.\n\n## Solution\nStabilized handleFinalSubmit via useRef pattern to prevent re-render cascades. Added env var validation in Convex provider to prevent cryptic production failures.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:48:27Z",
+        "updated_at":  "2026-05-31T09:51:04Z"
+    },
+    {
+        "number":  54,
+        "title":  "Form accessibility deficiencies in ImageUpload and wizard",
+        "body":  "## Problem\nForm elements lacked proper labels, error announcements, accessible validation feedback.\n\n## Solution\nAdded htmlFor/id, aria-invalid, aria-describedby, role=alert across all form components. Added aria-label on upload button, tabIndex=-1 on hidden input, aria-current=step on wizard.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "accessibility"
+                   ],
+        "created_at":  "2026-05-31T09:48:26Z",
+        "updated_at":  "2026-05-31T09:51:01Z"
+    },
+    {
+        "number":  53,
+        "title":  "Accessibility gaps across interactive components",
+        "body":  "## Problem\nMissing keyboard navigation, ARIA attributes, focus management, proper form labels.\n\n## Solution\nAdded role=group/aria-label on cards, htmlFor/id on all labels/inputs, aria-invalid + aria-describedby for validation, role=alert on errors, aria-label on remove buttons, aria-current=step on wizard indicator.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "accessibility"
+                   ],
+        "created_at":  "2026-05-31T09:48:23Z",
+        "updated_at":  "2026-05-31T09:50:59Z"
+    },
+    {
+        "number":  52,
+        "title":  "Component coupling and reusability issues",
+        "body":  "## Problem\nModerate coupling between components, some tied to specific pages. Difficulty reusing components.\n\n## Solution\nCreated ui/primitives/ with 5 independent reusable UI components (Button, Input, Textarea, Label, Card). Removed unused setForm destructuring from form.tsx.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:48:22Z",
+        "updated_at":  "2026-05-31T09:50:56Z"
+    },
+    {
+        "number":  51,
+        "title":  "Responsiveness implementation gaps - no breakpoint strategy",
+        "body":  "## Problem\nNo explicit breakpoint strategy, no fluid typography, inconsistent container usage.\n\n## Solution\nAdded fluid typography scale with clamp(). Added responsive font-size at breakpoints. Created .container utility. Fixed card image height with clamp(). Fixed unsafe sidebar URL with toHref() helper.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "ui"
+                   ],
+        "created_at":  "2026-05-31T09:48:20Z",
+        "updated_at":  "2026-05-31T09:50:50Z"
+    },
+    {
+        "number":  50,
+        "title":  "Missing design system maturity - no shared primitives",
+        "body":  "## Problem\nNo design tokens, inconsistent styling (Tailwind + CSS Modules), no shared primitive components.\n\n## Solution\nCreated ui/primitives/ with 5 shared components (Button, Input, Textarea, Label, Card) using shadcn/ui patterns. Updated all wizard step components to use them.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "ui"
+                   ],
+        "created_at":  "2026-05-31T09:48:19Z",
+        "updated_at":  "2026-05-31T09:50:49Z"
+    },
+    {
+        "number":  49,
+        "title":  "Rendering strategy inefficiencies - all-client components",
+        "body":  "## Problem\nAll children marked use client preventing RSC benefits. Non-null assertion on NEXT_PUBLIC_CONVEX_URL fails silently in production.\n\n## Solution\nRemoved use client from page.tsx - extracted CardsGridWrapper client component for interactive parts. Added proper env var guard: if (!convexUrl) throw new Error(...).",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "performance"
+                   ],
+        "created_at":  "2026-05-31T09:48:18Z",
+        "updated_at":  "2026-05-31T09:50:44Z"
+    },
+    {
+        "number":  48,
+        "title":  "Inconsistent layout system - no 8px grid, arbitrary spacing",
+        "body":  "## Problem\nSpacing values mixed Tailwind arbitrary values (p-4, gap-6) with CSS Module values. No consistent 8px grid. Body had meaningless position: sticky and display: flex. Sidebar had 64px collapsed gap.\n\n## Solution\n- Removed position: sticky and display: flex from body\n- Normalized sidebar margins to 8px grid\n- Changed card width to 100% so grid controls sizing\n- Added vertical gap to card grid\n- Deleted orphaned auth-gate.module.css\n- Added sessionStorage cache for cards-grid",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "ui"
+                   ],
+        "created_at":  "2026-05-31T09:48:13Z",
+        "updated_at":  "2026-05-31T09:50:43Z"
+    },
+    {
+        "number":  47,
+        "title":  "Wasteful data URL fetch round-trip in image pipeline",
+        "body":  "## Problem\nImage pipeline: File to data URL (FileReader) on client, then fetch(dataUrl).arrayBuffer() on server to get Buffer. Wasteful round-trip through browser\u0026#39;s data URL parser.\n\n## Solution\nImageUpload converts File to ArrayBuffer directly. Form uses arrayBufferToBase64() for JSON. Server decodes with Buffer.from(base64, base64). Removed unused convertDataUrlToBinary and fileToBase64 utilities.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "performance"
+                   ],
+        "created_at":  "2026-05-31T09:45:45Z",
+        "updated_at":  "2026-05-31T10:02:22Z"
+    },
+    {
+        "number":  46,
+        "title":  "Double-read request body in /api/convertUrl",
+        "body":  "## Problem\nPOST handler called req.json() then req.blob() on same request. req.json() consumed the stream, req.blob() always failed.\n\n## Solution\nChanged to accept JSON body with image as base64 string: { image: base64, idempotencyKey }. Route reads req.json() once, decodes base64 to Buffer, uploads to Supabase.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate"
+                   ],
+        "created_at":  "2026-05-31T09:45:44Z",
+        "updated_at":  "2026-05-31T10:02:22Z"
+    },
+    {
+        "number":  45,
+        "title":  "N+1 Redis query in games API - individual GET per game ID",
+        "body":  "## Problem\nGames pagination endpoint looped over cached game IDs calling redis.get() individually for each ID, causing N+1 round-trips per request.\n\n## Solution\nReplaced per-ID redis.get() calls with single batch redis.mget(keys), reducing Redis round-trips from N to 1.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate",
+                       "performance"
+                   ],
+        "created_at":  "2026-05-31T09:45:43Z",
+        "updated_at":  "2026-05-31T09:57:22Z"
+    },
+    {
+        "number":  44,
+        "title":  "File object silently lost in JSON.stringify",
+        "body":  "## Problem\nForm component sent currentForm.image (File object) as { image: currentForm.image }. JSON.stringify silently converts File to {} - image data lost without error.\n\n## Solution\nImageUpload now converts File to ArrayBuffer via file.arrayBuffer() before onSelect. Form types use ArrayBuffer instead of File. arrayBufferToBase64() utility encodes for JSON transport.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate"
+                   ],
+        "created_at":  "2026-05-31T09:45:42Z",
+        "updated_at":  "2026-05-31T09:57:21Z"
+    },
+    {
+        "number":  43,
+        "title":  "Wrong JWT auth approach - jsonwebtoken with Neon/MongoDB",
+        "body":  "## Problem\nUsed jsonwebtoken to manually verify tokens, plus added Neon and MongoDB JWT validators - Neon and MongoDB don\u0026#39;t use JWTs. Clerk already handles session management.\n\n## Solution\nReplaced with Clerk auth() from @clerk/nextjs/server. Removed all Neon/MongoDB JWT validators and jsonwebtoken dependency.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate",
+                       "security"
+                   ],
+        "created_at":  "2026-05-31T09:45:42Z",
+        "updated_at":  "2026-05-31T09:57:21Z"
+    },
+    {
+        "number":  42,
+        "title":  "Rate limiter uses wrong Bottleneck API",
+        "body":  "## Problem\nUsed import Bottleneck from bottleneck with new Bottleneck(...) and manual IP-key Map tracking. Bottleneck v2 uses Bottleneck.Group for per-key limiting.\n\n## Solution\nReplaced with Bottleneck.Group which auto-creates limiter per unique IP key. Each IP gets own reservoir (10/s), maxConcurrent=1, minTime=100ms.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate"
+                   ],
+        "created_at":  "2026-05-31T09:45:41Z",
+        "updated_at":  "2026-05-31T09:57:21Z"
+    },
+    {
+        "number":  41,
+        "title":  "Unnecessary Zod schema for simple query params",
+        "body":  "## Problem\nGames API route used Zod schema to parse page and limit query params - overkill for two integers.\n\n## Solution\nReplaced with Math.max(1, parseInt(...)) and Math.min(100, Math.max(1, parseInt(...))). Kept Zod only for structured request body validation in /api/push.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:45:40Z",
+        "updated_at":  "2026-05-31T09:57:20Z"
+    },
+    {
+        "number":  40,
+        "title":  "Added route-specific helpers to cache-warmup module",
+        "body":  "## Problem\ngetMultipleGamesFromCache and pipeline variant were added to lib/cache-warmup.ts, which is a cache initialization utility module.\n\n## Solution\nReverted cache-warmup.ts to original exports. Batch MGET logic inlined directly in the games API route where it belongs.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:45:39Z",
+        "updated_at":  "2026-05-31T09:57:20Z"
+    },
+    {
+        "number":  39,
+        "title":  "Likes count reset to 0 instead of using DB value",
+        "body":  "## Problem\nutilities/utils.ts always set likes_count: 0 instead of using the database value.\n\n## Solution\nChanged to likes_count: game.likes_count ?? 0 - uses DB value when available, falls back to 0 only when null/undefined.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate"
+                   ],
+        "created_at":  "2026-05-31T09:45:39Z",
+        "updated_at":  "2026-05-31T09:57:20Z"
+    },
+    {
+        "number":  38,
+        "title":  "Duplicate sleep utility defined in two files",
+        "body":  "## Problem\nsleep() was defined separately in lib/GamesInsert.ts and utilities/pull.ts.\n\n## Solution\nCreated shared utilities/sleep.ts and both files now import from it.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:45:38Z",
+        "updated_at":  "2026-05-31T09:57:19Z"
+    },
+    {
+        "number":  37,
+        "title":  "Array index as React key in list rendering",
+        "body":  "## Problem\ncomponents used array indices as React keys, causing reconciliation bugs on reorder/filter.\n\n## Solution\nReplaced key={index} with stable unique identifiers - tag string for tags, item.label for sidebar items.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate"
+                   ],
+        "created_at":  "2026-05-31T09:45:37Z",
+        "updated_at":  "2026-05-31T09:57:19Z"
+    },
+    {
+        "number":  36,
+        "title":  "Two nearly identical form hooks - code duplication",
+        "body":  "## Problem\nhooks/form.ts and hooks/gameForm.ts had nearly identical form state logic. lib/useGamesForm.ts was another re-export.\n\n## Solution\nCreated shared hooks/useFormState.ts primitive hook. Both form hooks now inherit from it, keeping only their domain-specific logic.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:45:37Z",
+        "updated_at":  "2026-05-31T09:57:19Z"
+    },
+    {
+        "number":  35,
+        "title":  "Excessive prop drilling in wizard form",
+        "body":  "## Problem\nForm state drilled through 3-4 levels. handleFinalSubmit recreated on every keystroke because it depended on full form state.\n\n## Solution\nUsed useRef to hold form state inside the callback. handleFinalSubmit now reads formRef.current instead of capturing form in closure, stabilizing the dependency array.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "performance"
+                   ],
+        "created_at":  "2026-05-31T09:45:36Z",
+        "updated_at":  "2026-05-31T09:57:18Z"
+    },
+    {
+        "number":  34,
+        "title":  "Object URL memory leak in ImageUpload",
+        "body":  "## Problem\nURL.createObjectURL(file) was never revoked - memory grew with each upload attempt.\n\n## Solution\nAdded prevPreviewRef with revokePreview() cleanup called on new file selection, component unmount, and resetKey change.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate"
+                   ],
+        "created_at":  "2026-05-31T09:45:36Z",
+        "updated_at":  "2026-05-31T09:57:18Z"
+    },
+    {
+        "number":  33,
+        "title":  "Inadequate state management - 100% local state, no caching",
+        "body":  "## Problem\nFull reliance on useState/useReducer with prop drilling. No server state caching, repeated API requests, manual loading state handling.\n\n## Solution\nStabilized handleFinalSubmit via useRef pattern to prevent re-render cascades. Added env var validation in Convex provider to prevent cryptic production failures.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:45:35Z",
+        "updated_at":  "2026-05-31T09:57:18Z"
+    },
+    {
+        "number":  32,
+        "title":  "Form accessibility deficiencies in ImageUpload and wizard",
+        "body":  "## Problem\nForm elements lacked proper labels, error announcements, accessible validation feedback.\n\n## Solution\nAdded htmlFor/id, aria-invalid, aria-describedby, role=alert across all form components. Added aria-label on upload button, tabIndex=-1 on hidden input, aria-current=step on wizard.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "accessibility"
+                   ],
+        "created_at":  "2026-05-31T09:45:34Z",
+        "updated_at":  "2026-05-31T09:57:17Z"
+    },
+    {
+        "number":  31,
+        "title":  "Component coupling and reusability issues",
+        "body":  "## Problem\nModerate coupling between components, some tied to specific pages. Difficulty reusing components.\n\n## Solution\nCreated ui/primitives/ with 5 independent reusable UI components (Button, Input, Textarea, Label, Card). Removed unused setForm destructuring from form.tsx.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:45:34Z",
+        "updated_at":  "2026-05-31T09:57:17Z"
+    },
+    {
+        "number":  30,
+        "title":  "Accessibility gaps across interactive components",
+        "body":  "## Problem\nMissing keyboard navigation, ARIA attributes, focus management, proper form labels.\n\n## Solution\nAdded role=group/aria-label on cards, htmlFor/id on all labels/inputs, aria-invalid + aria-describedby for validation, role=alert on errors, aria-label on remove buttons, aria-current=step on wizard indicator.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "accessibility"
+                   ],
+        "created_at":  "2026-05-31T09:45:33Z",
+        "updated_at":  "2026-05-31T09:57:17Z"
+    },
+    {
+        "number":  29,
+        "title":  "Responsiveness implementation gaps - no breakpoint strategy",
+        "body":  "## Problem\nNo explicit breakpoint strategy, no fluid typography, inconsistent container usage.\n\n## Solution\nAdded fluid typography scale with clamp(). Added responsive font-size at breakpoints. Created .container utility. Fixed card image height with clamp(). Fixed unsafe sidebar URL with toHref() helper.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "ui"
+                   ],
+        "created_at":  "2026-05-31T09:45:33Z",
+        "updated_at":  "2026-05-31T09:57:16Z"
+    },
+    {
+        "number":  28,
+        "title":  "Missing design system maturity - no shared primitives",
+        "body":  "## Problem\nNo design tokens, inconsistent styling (Tailwind + CSS Modules), no shared primitive components.\n\n## Solution\nCreated ui/primitives/ with 5 shared components (Button, Input, Textarea, Label, Card) using shadcn/ui patterns. Updated all wizard step components to use them.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "ui"
+                   ],
+        "created_at":  "2026-05-31T09:45:32Z",
+        "updated_at":  "2026-05-31T09:57:16Z"
+    },
+    {
+        "number":  27,
+        "title":  "Rendering strategy inefficiencies - all-client components",
+        "body":  "## Problem\nAll children marked use client preventing RSC benefits. Non-null assertion on NEXT_PUBLIC_CONVEX_URL fails silently in production.\n\n## Solution\nRemoved use client from page.tsx - extracted CardsGridWrapper client component for interactive parts. Added proper env var guard: if (!convexUrl) throw new Error(...).",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "performance"
+                   ],
+        "created_at":  "2026-05-31T09:45:31Z",
+        "updated_at":  "2026-05-31T09:57:16Z"
+    },
+    {
+        "number":  26,
+        "title":  "Inconsistent layout system - no 8px grid, arbitrary spacing",
+        "body":  "## Problem\nSpacing values mixed Tailwind arbitrary values (p-4, gap-6) with CSS Module values. No consistent 8px grid. Body had meaningless position: sticky and display: flex. Sidebar had 64px collapsed gap.\n\n## Solution\n- Removed position: sticky and display: flex from body\n- Normalized sidebar margins to 8px grid\n- Changed card width to 100% so grid controls sizing\n- Added vertical gap to card grid\n- Deleted orphaned auth-gate.module.css\n- Added sessionStorage cache for cards-grid",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "ui"
+                   ],
+        "created_at":  "2026-05-31T09:45:31Z",
+        "updated_at":  "2026-05-31T09:57:15Z"
+    },
+    {
+        "number":  25,
+        "title":  "Form accessibility deficiencies in ImageUpload and wizard",
+        "body":  "## Problem\nForm elements lacked proper labels, error announcements, accessible validation feedback.\n\n## Solution\nAdded htmlFor/id, aria-invalid, aria-describedby, role=alert across all form components. Added aria-label on upload button, tabIndex=-1 on hidden input, aria-current=step on wizard.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "accessibility"
+                   ],
+        "created_at":  "2026-05-31T09:41:52Z",
+        "updated_at":  "2026-05-31T09:57:15Z"
+    },
+    {
+        "number":  24,
+        "title":  "Component coupling and reusability issues",
+        "body":  "## Problem\nModerate coupling between components, some tied to specific pages. Difficulty reusing components.\n\n## Solution\nCreated ui/primitives/ with 5 independent reusable UI components (Button, Input, Textarea, Label, Card). Removed unused setForm destructuring from form.tsx.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:41:50Z",
+        "updated_at":  "2026-05-31T09:57:15Z"
+    },
+    {
+        "number":  23,
+        "title":  "Responsiveness implementation gaps - no breakpoint strategy",
+        "body":  "## Problem\nNo explicit breakpoint strategy, no fluid typography, inconsistent container usage.\n\n## Solution\nAdded fluid typography scale with clamp(). Added responsive font-size at breakpoints. Created .container utility. Fixed card image height with clamp(). Fixed unsafe sidebar URL with toHref() helper.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "ui"
+                   ],
+        "created_at":  "2026-05-31T09:41:50Z",
+        "updated_at":  "2026-05-31T09:57:14Z"
+    },
+    {
+        "number":  22,
+        "title":  "Inadequate state management - 100% local state, no caching",
+        "body":  "## Problem\nFull reliance on useState/useReducer with prop drilling. No server state caching, repeated API requests, manual loading state handling.\n\n## Solution\nStabilized handleFinalSubmit via useRef pattern to prevent re-render cascades. Added env var validation in Convex provider to prevent cryptic production failures.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:41:48Z",
+        "updated_at":  "2026-05-31T09:57:14Z"
+    },
+    {
+        "number":  21,
+        "title":  "Object URL memory leak in ImageUpload",
+        "body":  "## Problem\nURL.createObjectURL(file) was never revoked - memory grew with each upload attempt.\n\n## Solution\nAdded prevPreviewRef with revokePreview() cleanup called on new file selection, component unmount, and resetKey change.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate"
+                   ],
+        "created_at":  "2026-05-31T09:41:47Z",
+        "updated_at":  "2026-05-31T09:57:14Z"
+    },
+    {
+        "number":  20,
+        "title":  "Rendering strategy inefficiencies - all-client components",
+        "body":  "## Problem\nAll children marked use client preventing RSC benefits. Non-null assertion on NEXT_PUBLIC_CONVEX_URL fails silently in production.\n\n## Solution\nRemoved use client from page.tsx - extracted CardsGridWrapper client component for interactive parts. Added proper env var guard: if (!convexUrl) throw new Error(...).",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "performance"
+                   ],
+        "created_at":  "2026-05-31T09:41:46Z",
+        "updated_at":  "2026-05-31T09:56:40Z"
+    },
+    {
+        "number":  19,
+        "title":  "Accessibility gaps across interactive components",
+        "body":  "## Problem\nMissing keyboard navigation, ARIA attributes, focus management, proper form labels.\n\n## Solution\nAdded role=group/aria-label on cards, htmlFor/id on all labels/inputs, aria-invalid + aria-describedby for validation, role=alert on errors, aria-label on remove buttons, aria-current=step on wizard indicator.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "accessibility"
+                   ],
+        "created_at":  "2026-05-31T09:41:46Z",
+        "updated_at":  "2026-05-31T09:56:39Z"
+    },
+    {
+        "number":  18,
+        "title":  "Missing design system maturity - no shared primitives",
+        "body":  "## Problem\nNo design tokens, inconsistent styling (Tailwind + CSS Modules), no shared primitive components.\n\n## Solution\nCreated ui/primitives/ with 5 shared components (Button, Input, Textarea, Label, Card) using shadcn/ui patterns. Updated all wizard step components to use them.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "ui"
+                   ],
+        "created_at":  "2026-05-31T09:41:45Z",
+        "updated_at":  "2026-05-31T09:56:39Z"
+    },
+    {
+        "number":  17,
+        "title":  "Excessive prop drilling in wizard form",
+        "body":  "## Problem\nForm state drilled through 3-4 levels. handleFinalSubmit recreated on every keystroke because it depended on full form state.\n\n## Solution\nUsed useRef to hold form state inside the callback. handleFinalSubmit now reads formRef.current instead of capturing form in closure, stabilizing the dependency array.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "performance"
+                   ],
+        "created_at":  "2026-05-31T09:41:43Z",
+        "updated_at":  "2026-05-31T09:56:38Z"
+    },
+    {
+        "number":  16,
+        "title":  "Inconsistent layout system - no 8px grid, arbitrary spacing",
+        "body":  "## Problem\nSpacing values mixed Tailwind arbitrary values (p-4, gap-6) with CSS Module values. No consistent 8px grid. Body had meaningless position: sticky and display: flex. Sidebar had 64px collapsed gap.\n\n## Solution\n- Removed position: sticky and display: flex from body\n- Normalized sidebar margins to 8px grid\n- Changed card width to 100% so grid controls sizing\n- Added vertical gap to card grid\n- Deleted orphaned auth-gate.module.css\n- Added sessionStorage cache for cards-grid",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "ui"
+                   ],
+        "created_at":  "2026-05-31T09:41:43Z",
+        "updated_at":  "2026-05-31T09:56:38Z"
+    },
+    {
+        "number":  15,
+        "title":  "Duplicate sleep utility defined in two files",
+        "body":  "## Problem\\nsleep() was defined separately in lib/GamesInsert.ts and utilities/pull.ts.\\n\\n## Solution\\nCreated shared utilities/sleep.ts and both files now import from it.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:40:47Z",
+        "updated_at":  "2026-05-31T09:56:38Z"
+    },
+    {
+        "number":  14,
+        "title":  "Array index as React key in list rendering",
+        "body":  "## Problem\\ncomponents/adventures/cards/cards.tsx:43 and components/background/slidebar.tsx:77 used array indices as React keys, causing reconciliation bugs on reorder/filter.\\n\\n## Solution\\nReplaced key={index} with stable unique identifiers - tag string for tags, item.label for sidebar items.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate"
+                   ],
+        "created_at":  "2026-05-31T09:40:46Z",
+        "updated_at":  "2026-05-31T09:56:37Z"
+    },
+    {
+        "number":  13,
+        "title":  "Two nearly identical form hooks - code duplication",
+        "body":  "## Problem\\nhooks/form.ts and hooks/gameForm.ts had nearly identical form state logic (useState, field updates, reset). lib/useGamesForm.ts was another re-export.\\n\\n## Solution\\nCreated a shared hooks/useFormState.ts primitive hook. Both form hooks now inherit from it, keeping only their domain-specific logic (wizard step management, CRUD operations).",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:40:46Z",
+        "updated_at":  "2026-05-31T09:56:37Z"
+    },
+    {
+        "number":  12,
+        "title":  "Likes count reset to 0 instead of using DB value",
+        "body":  "## Problem\\nutilities/utils.ts:40 always set likes_count: 0 instead of using the database value.\\n\\n## Solution\\nChanged to likes_count: game.likes_count ?? 0 - uses DB value when available, falls back to 0 only when null/undefined.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate"
+                   ],
+        "created_at":  "2026-05-31T09:40:45Z",
+        "updated_at":  "2026-05-31T09:56:36Z"
+    },
+    {
+        "number":  11,
+        "title":  "Added route-specific helpers to cache-warmup module",
+        "body":  "## Problem\ngetMultipleGamesFromCache and getMultipleGamesFromCachePipeline were added to lib/cache-warmup.ts, which is supposed to be a cache initialization and single-item utility module. Route-specific batch operations don\u0026#39;t belong there - they violate separation of concerns.\n\n## Solution\nReverted cache-warmup.ts to its original exports (warmUpCache, getCachedGameIds, getGameFromCache, setGameInCache). The batch MGET logic is now inlined directly in the games API route where it belongs.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:36:12Z",
+        "updated_at":  "2026-05-31T09:56:36Z"
+    },
+    {
+        "number":  10,
+        "title":  "Wasteful data URL fetch round-trip in image pipeline",
+        "body":  "## Problem\nThe image upload pipeline converted File?data URL (via FileReader.readAsDataURL) on the client, then fetched that data URL back on the server (via \fetch(dataUrl).arrayBuffer()) to get a Buffer for Supabase upload. This was a wasteful round-trip through the browser\u0026#39;s data URL parser.\n\n## Solution\nEliminated the round-trip. The ImageUpload component now converts File?ArrayBuffer directly. The form uses \u0007rrayBufferToBase64() to encode for JSON transport. The server decodes with Buffer.from(base64, \u0026#39;base64\u0026#39;) - no fetch, no intermediate data URL. Also removed the now-unused convertDataUrlToBinary and \fileToBase64 utilities.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "performance"
+                   ],
+        "created_at":  "2026-05-31T09:36:11Z",
+        "updated_at":  "2026-05-31T09:56:35Z"
+    },
+    {
+        "number":  9,
+        "title":  "File object silently lost in JSON.stringify",
+        "body":  "## Problem\nThe form component sent currentForm.image (a File object) as { image: currentForm.image } to the API. JSON.stringify silently converts File objects to {} because they have no enumerable own properties - the image data was lost without any error.\n\n## Solution\nThe ImageUpload component now converts the File to ArrayBuffer via \file.arrayBuffer() before passing it to the form state. Form types use ArrayBuffer | null instead of File | null. When sending to the API, the \u0007rrayBufferToBase64 utility converts it to a raw base64 string that serializes correctly in JSON.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate"
+                   ],
+        "created_at":  "2026-05-31T09:36:08Z",
+        "updated_at":  "2026-05-31T09:56:35Z"
+    },
+    {
+        "number":  8,
+        "title":  "Double-read request body in /api/convertUrl",
+        "body":  "## Problem\nThe /api/convertUrl POST handler called \neq.json() to extract idempotencyKey, then called \neq.blob() to get the image data. Since \neq.json() already consumed the request body stream, \neq.blob() always failed with a drained stream error.\n\n## Solution\nChanged the API to accept a JSON body with the image as a base64 string: { image: \u0026#34;\u0026#34;, idempotencyKey: \u0026#34;...\u0026#34; }. The route reads \neq.json() once, decodes the base64 to a Buffer, and uploads to Supabase. No multipart, no double-read.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate"
+                   ],
+        "created_at":  "2026-05-31T09:36:06Z",
+        "updated_at":  "2026-05-31T09:56:34Z"
+    },
+    {
+        "number":  7,
+        "title":  "Unnecessary Zod schema for simple query params",
+        "body":  "## Problem\nThe games API route used a Zod schema to parse page and limit query parameters - a schema object with z.coerce.number().int().positive() etc. This was overkill for two simple integer params with obvious defaults.\n\n## Solution\nReplaced Zod parsing with simple one-liners: Math.max(1, parseInt(searchParams.get(\u0026#39;page\u0026#39;) || \u0026#39;1\u0026#39;, 10)) and Math.min(100, Math.max(1, parseInt(searchParams.get(\u0026#39;limit\u0026#39;) || \u0026#39;10\u0026#39;, 10))). Kept Zod only where it adds real value (structured request body validation in /api/push).",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "duplicate",
+                       "refactor"
+                   ],
+        "created_at":  "2026-05-31T09:36:05Z",
+        "updated_at":  "2026-05-31T09:56:34Z"
+    },
+    {
+        "number":  6,
+        "title":  "Wrong JWT auth approach - jsonwebtoken with Neon/MongoDB",
+        "body":  "## Problem\nThe JWT validation utility used jsonwebtoken package to manually verify tokens, plus added Neon and MongoDB JWT validator functions that made no sense - Neon and MongoDB don\u0026#39;t use JWTs. Clerk already handles session management server-side.\n\n## Solution\nReplaced all manual JWT logic with Clerk\u0026#39;s \u0007uth() from @clerk/nextjs/server. The \u000balidateJWTMiddleware function now calls \u0007uth() to get the session, which Clerk verifies automatically. Removed all Neon/MongoDB JWT validators and the jsonwebtoken dependency.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate",
+                       "security"
+                   ],
+        "created_at":  "2026-05-31T09:36:03Z",
+        "updated_at":  "2026-05-31T09:56:33Z"
+    },
+    {
+        "number":  5,
+        "title":  "Rate limiter uses wrong Bottleneck API",
+        "body":  "## Problem\nThe rate limiter used import Bottleneck from \u0026#39;bottleneck\u0026#39; with \new Bottleneck(...) and manual IP-key tracking via a Map, but Bottleneck v2 uses Bottleneck.Group for per-key rate limiting. The implementation didn\u0026#39;t use the library\u0026#39;s built-in group functionality.\n\n## Solution\nReplaced with Bottleneck.Group which automatically creates a limiter per unique key (IP address). Each IP gets its own reservoir (10 requests/second), maxConcurrent=1, minTime=100ms. The group\u0026#39;s key() method handles per-IP throttling natively.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate"
+                   ],
+        "created_at":  "2026-05-31T09:36:01Z",
+        "updated_at":  "2026-05-31T09:56:33Z"
+    },
+    {
+        "number":  4,
+        "title":  "N+1 Redis query in games API - individual GET per game ID",
+        "body":  "## Problem\nThe games pagination endpoint looped over cached game IDs calling \nedis.get() individually for each ID, causing N+1 round-trips to Redis per request.\n\n## Solution\nReplaced per-ID \nedis.get() calls with a single batch \nedis.mget(keys) call, reducing Redis round-trips from N to 1.",
+        "state":  "CLOSED",
+        "user":  {
+                     "login":  "jox-sm"
+                 },
+        "labels":  [
+                       "bug",
+                       "duplicate",
+                       "performance"
+                   ],
+        "created_at":  "2026-05-31T09:36:00Z",
+        "updated_at":  "2026-05-31T09:56:32Z"
+    }
+]

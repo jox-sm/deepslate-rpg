@@ -135,7 +135,6 @@ export async function GET(request: NextRequest) {
 - Vary limits by user tier
 
 ---
-
 ### 4. SQL Injection in Database Queries
 
 **Severity:** CRITICAL  

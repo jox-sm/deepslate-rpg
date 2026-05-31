@@ -38,7 +38,7 @@ export default function ImageUpload({
     return () => revokePreview();
   }, [revokePreview]);
 
-  function handleFile(file: File) {
+  async function handleFile(file: File) {
     if (!file.type.startsWith("image/")) {
       setError("File must be an image.");
       return;
@@ -55,7 +55,8 @@ export default function ImageUpload({
     const imageUrl = URL.createObjectURL(file);
     prevPreviewRef.current = imageUrl;
     setPreview(imageUrl);
-    onSelect(file);
+    const buffer = await file.arrayBuffer();
+    onSelect(buffer);
     onPreviewChange?.(imageUrl);
   }
 
