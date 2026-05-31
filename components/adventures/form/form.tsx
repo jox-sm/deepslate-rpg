@@ -2,12 +2,8 @@
 import TextAreaField, { tagsComponent } from '@/ui/FormUI/textComponent';
 import ImageUpload from '@/ui/FormUI/imageComponent';
 import { validateText } from '@/utilities/FormUtils';
-<<<<<<< Updated upstream
-import { arrayBufferToBase64 } from '@/utilities/imagesUtils';
-=======
 import { arrayBufferToBase64 } from '@/utilities/clientUtilities/imagesUtils';
 import { filterEntriesWithImages } from '@/utilities/clientUtilities/exceptions';
->>>>>>> Stashed changes
 import { prepareGameCard } from '@/utilities/utils';
 import { CardProps } from '@/types/cards';
 import { useCallback, useRef } from "react";

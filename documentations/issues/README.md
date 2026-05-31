@@ -18,6 +18,8 @@ Complete documentation of all 25 unique GitHub issues for the Deepslate RPG proj
 
 | # | Issue | Status | Impact |
 |---|-------|--------|--------|
+| 77 | [Centralized Zod validation — security and consistency](./77-ZOD-VALIDATION-CENTRALIZATION.md) | ✅ | Security |
+| 76 | [Build fixes: useAuth import, client/server split, Zod validation](./76-DOCUMENTATION-AND-BUGFIXES.md) | ✅ | Build |
 | 75 | [Form styles - button, preview, wizard layout](./75-FORM-STYLES-BUTTON-PREVIEW-WIZARD.md) | ✅ | UI |
 | 74 | [Request aborted when no images](./74-REQUEST-ABORTED-NO-IMAGES.md) | ✅ | Runtime |
 | 70 | [Wasteful data URL fetch round-trip in image pipeline](./70-WASTEFUL-DATA-URL-FETCH-ROUND-TRIP-IN-IMAGE-PIPELINE.md) | ✅ | Performance |
