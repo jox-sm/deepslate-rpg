@@ -1,7 +1,7 @@
 // hooks/useAuth.ts
 "use client";
 
-import { useAuth } from '@clerk/nextjs';
+import { useAuth as useClerkAuth } from '@clerk/nextjs';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { useState, useEffect, useCallback } from 'react';
 
@@ -15,7 +15,7 @@ export interface AuthState {
 }
 
 export function useAuth() {
-  const { getToken, isLoaded, isSignedIn } = useAuth();
+  const { getToken, isLoaded, isSignedIn } = useClerkAuth();
   const [state, setState] = useState<AuthState>({
     supabase: null,
     isLoading: true,
