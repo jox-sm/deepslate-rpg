@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
      const validationResult = pushRequestSchema.safeParse(body);
      if (!validationResult.success) {
        return NextResponse.json(
-         { error: 'Invalid request body', details: validationResult.error.errors },
+         { error: 'Invalid request body', details: validationResult.error.issues },
          { status: 400 }
        );
      }
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
          const gameValidation = gameSchema.safeParse(data);
          if (!gameValidation.success) {
            return NextResponse.json(
-             { error: 'Invalid game data', details: gameValidation.error.errors },
+             { error: 'Invalid game data', details: gameValidation.error.issues },
              { status: 400 }
            );
          }
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
          const likeValidation = likeSchema.safeParse(data);
          if (!likeValidation.success) {
            return NextResponse.json(
-             { error: 'Invalid like data', details: likeValidation.error.errors },
+             { error: 'Invalid like data', details: likeValidation.error.issues },
              { status: 400 }
            );
          }
