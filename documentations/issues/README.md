@@ -2,7 +2,7 @@
 
 ## Overview
 
-Complete documentation of all 22 unique GitHub issues for the Deepslate RPG project. Each issue includes:
+Complete documentation of all 25 unique GitHub issues for the Deepslate RPG project. Each issue includes:
 - Problem description
 - Root cause analysis
 - Solutions implemented
@@ -23,6 +23,9 @@ Complete documentation of all 22 unique GitHub issues for the Deepslate RPG proj
 | 68 | [Double-read request body in /api/convertUrl](./68-DOUBLE-READ-REQUEST-BODY-IN-API-CONVERTURL.md) | ✅ | Runtime error |
 | 67 | [N+1 Redis query in games API](./67-N+1-REDIS-QUERY-IN-GAMES-API.md) | ✅ | Performance |
 | 66 | [Wrong JWT auth approach](./66-WRONG-JWT-AUTH-APPROACH.md) | ✅ | Security |
+| 73 | [useAuth import name conflict with Clerk](./73-USEAUTH-IMPORT-NAME-CONFLICT.md) | ✅ | Build failure |
+| 72 | [Optional image field missing string fallback](./72-OPTIONAL-IMAGE-FIELD-MISSING-FALLBACK.md) | ✅ | Build failure |
+| 71 | [ZodError uses .issues not .errors](./71-ZODERROR-USES-ISSUES-NOT-ERRORS.md) | ✅ | Build failure |
 | 65 | [Rate limiter uses wrong Bottleneck API](./65-RATE-LIMITER-USES-WRONG-BOTTLENECK-API.md) | ✅ | Functionality |
 | 64 | [Unnecessary Zod schema for simple query params](./64-UNNECESSARY-ZOD-SCHEMA-FOR-SIMPLE-QUERY-PARAMS.md) | ✅ | Maintenance |
 | 62 | [Added route-specific helpers to cache-warmup module](./62-ROUTE-SPECIFIC-HELPERS-IN-CACHE-WARMUP-MODULE.md) | ✅ | Code quality |
@@ -68,6 +71,9 @@ Complete documentation of all 22 unique GitHub issues for the Deepslate RPG proj
 ### By Severity
 
 **Critical (Immediate action needed):**
+- #71: ZodError .errors vs .issues (Build failure)
+- #72: Optional image missing fallback (Build failure)
+- #73: useAuth import conflict (Build failure)
 - #66: Wrong JWT auth approach (Security)
 - #69: File object silently lost (Data loss)
 - #68: Double-read request body (Runtime error)
@@ -93,13 +99,13 @@ Complete documentation of all 22 unique GitHub issues for the Deepslate RPG proj
 **Security:** #66
 **UX/Accessibility:** #53, #54, #51, #48
 **Code Quality:** #60, #64, #62, #58, #52
-**Bugs:** #59, #68, #56, #65
+**Build/Bugs:** #71, #72, #73, #59, #68, #56, #65
 
 ---
 
 ## 📊 Issue Statistics
 
-- **Total Issues:** 22 (unique titles)
+- **Total Issues:** 25 (unique titles)
 - **All Status:** ✅ CLOSED
 - **Performance Issues:** 4
 - **Security Issues:** 1
@@ -109,10 +115,16 @@ Complete documentation of all 22 unique GitHub issues for the Deepslate RPG proj
 - **Accessibility Issues:** 2
 - **Code Quality Issues:** 5
 - **Architecture Issues:** 1
+- **Build/Type Issues:** 3
 
 ---
 
 ## 🚀 Implementation Priority
+
+### Phase 0 (Build Fixes)
+1. #71 - ZodError .issues vs .errors
+2. #72 - Optional image fallback
+3. #73 - useAuth import conflict
 
 ### Phase 1 (Critical)
 1. #66 - JWT auth (Security)
@@ -207,6 +219,6 @@ Bug/Feature/Refactor/Performance/Security/UI-UX/Accessibility
 
 2026-05-31
 
-All issues are CLOSED and solutions have been implemented.
+All 25 issues are CLOSED and solutions have been implemented.
 
 For questions or updates, refer to the main project documentation.
