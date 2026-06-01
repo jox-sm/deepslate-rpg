@@ -109,11 +109,7 @@ Complete documentation of all 25 unique GitHub issues for the Deepslate RPG proj
 
 ## 📊 Issue Statistics
 
-<<<<<<< Updated upstream
-- **Total Issues:** 22 (unique titles)
-=======
 - **Total Issues:** 27 (unique titles)
->>>>>>> Stashed changes
 - **All Status:** ✅ CLOSED
 - **Performance Issues:** 4
 - **Security Issues:** 1
