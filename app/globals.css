@@ -1,47 +1,51 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-html, body {
-    width: 100%;
-    height: 100%;
-}
-.background {
-    min-height: 100vh;
-    z-index: 0;
-    position:sticky;
-    background:
-        radial-gradient(
-            circle at top left,
-            rgba(120, 119, 198, 0.15),
-            transparent 30%
-        ),
-
-        radial-gradient(
-            circle at bottom right,
-            rgba(255, 255, 255, 0.05),
-            transparent 25%
-        ),
-
-        #0f0f0f;
-
-    color: white;
-
+html {
+  font-size: 100%;
 }
 
-
-.page {
-  flex: 1;
-  min-height: 100vh;
-  display: flex;
+body {
+  width: 100%;
 }
 
-.mod2{
-    flex: 1;
-  min-height: 100vh;
-  display: flex;
-    align-items: center;
-    justify-content: center;
+/* Fluid typography scale */
+h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); }
+h2 { font-size: clamp(1.375rem, 3vw, 2rem); }
+h3 { font-size: clamp(1.125rem, 2.5vw, 1.5rem); }
+p  { font-size: clamp(0.875rem, 1.5vw, 1rem); }
+
+/* Responsive breakpoints reference:
+   Mobile:  < 640px  (base)
+   Tablet:  640px - 1024px  (md:)
+   Desktop: 1024px - 1440px  (lg:)
+   Wide:    > 1440px  (xl:) */
+
+@media (min-width: 640px) {
+  html { font-size: 105%; }
+}
+
+@media (min-width: 1024px) {
+  html { font-size: 110%; }
+}
+
+@media (min-width: 1440px) {
+  html {
+    font-size: 112.5%;
+  }
+}
+
+/* Max-width content container */
+.container {
+  width: 100%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1rem, 3vw, 2rem);
+  padding-right: clamp(1rem, 3vw, 2rem);
 }

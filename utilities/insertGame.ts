@@ -26,7 +26,7 @@ export async function setToWorking(): Promise<void> {
   await redis.rpush('InsertGamesmongodb:active', "True");
 }
 export async function setToIdle(): Promise<void> {
-  await redis.rpop('InsertGamesmongodb:active',"True");
+  await redis.rpop('InsertGamesmongodb:active');
 }
 
 
@@ -38,7 +38,7 @@ export async function getGamesQueue() {
     await redis.rename('InsertGamesmongodb', tempKey);
 
     const allGames = await redis.lrange(tempKey, 0, -1);
-
+    console.log(allGames)
     if (allGames.length > 0) {
       const parsedGames = allGames.map(dbGameData => JSON.parse(dbGameData));
       //later we add a retry mechanism here to requeue failed tasks, for now we just delete the temp key after processing

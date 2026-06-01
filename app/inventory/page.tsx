@@ -1,9 +1,10 @@
 import React from 'react'
 import CreateForm from "@/components/adventures/form/form";
+import style from '@/styles/pages/inventory.module.css';
 
 const page = () => {
   return (
-    <div className='mod2'>
+    <div className={style.container}>
       <CreateForm />
     </div>
   )

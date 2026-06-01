@@ -3,6 +3,9 @@ import ImageUpload from "@/ui/FormUI/imageComponent";
 import { itemValidators } from "@/lib/gamesFormValidation";
 import { type ItemData } from "@/types/gameForm";
 import formStyles from "@/styles/forms/form.module.css";
+import { Button } from "@/ui/primitives/button";
+import { Input } from "@/ui/primitives/input";
+import { Label } from "@/ui/primitives/label";
 
 interface ItemsStepProps {
   items: ItemData[];
@@ -33,28 +36,33 @@ export default function ItemsStep({
 
       {items.map((item, index) => {
         const nameValidation = itemValidators.name(item.name);
+        const nameErrorId = `item-${item.id}-name-error`;
 
         return (
-          <div key={item.id} className="border border-zinc-700 rounded-lg p-3 flex flex-col gap-2">
+          <div key={item.id} className="border border-zinc-700 rounded-lg p-3 flex flex-col gap-2" role="group" aria-label={`Item ${index + 1}`}>
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs text-zinc-500">#{index + 1}</span>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => onRemove(item.id)}
-                className="text-xs text-red-400 hover:text-red-300"
+                aria-label={`Remove item ${index + 1}`}
               >
                 Remove
-              </button>
+              </Button>
             </div>
             <div className="flex flex-col gap-1 flex-1">
-              <input
+              <Label htmlFor={`item-${item.id}-name`}>Name</Label>
+              <Input
+                id={`item-${item.id}-name`}
                 value={item.name}
                 onChange={(e) => onUpdate(item.id, "name", e.target.value)}
                 placeholder="Item name"
-                className={formStyles.input}
+                aria-invalid={item.name.length > 0 && !nameValidation.isFormValid}
+                aria-describedby={item.name.length > 0 ? nameErrorId : undefined}
               />
               {item.name.length > 0 && (
-                <span className={formStyles[nameValidation.isFormValid ? "statusSuccess" : nameValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
+                <span id={nameErrorId} role="alert" className={formStyles[nameValidation.isFormValid ? "statusSuccess" : nameValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
                   {nameValidation.errorMessage}
                 </span>
               )}
@@ -68,22 +76,17 @@ export default function ItemsStep({
         );
       })}
 
-      <button type="button" onClick={onAdd} className={formStyles.button}>
+      <Button onClick={onAdd}>
         Make New Item
-      </button>
+      </Button>
 
       <div className="flex gap-2 justify-between mt-4">
-        <button type="button" onClick={onBack} className={formStyles.button}>
+        <Button variant="outline" onClick={onBack}>
           Back
-        </button>
-        <button
-          type="button"
-          onClick={onSubmit}
-          disabled={loading}
-          className={formStyles.button}
-        >
+        </Button>
+        <Button onClick={onSubmit} disabled={loading}>
           {loading ? "Submitting..." : "Submit"}
-        </button>
+        </Button>
       </div>
     </div>
   );

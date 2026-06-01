@@ -1,86 +1,81 @@
 import { uploadImage } from '@/lib/storage';
-import { GamesFormDataDB as dbGameData } from "@/types/gameForm";
-import { GameDataJSON } from "@/types/gamedata";
+import { GamesFormDataDB as dbGameData, CharacterDataDB, MapDataDB, ItemDataDB } from "@/types/gameForm";
+import type { SupabaseClient } from '@supabase/supabase-js';
 
-export type { GameDataJSON };
+export async function convertComponentImagesJSON(
+  gameData: dbGameData,
+  authenticatedClient?: SupabaseClient
+): Promise<dbGameData> {
+  const characters: CharacterDataDB[] = [];
+  for (const char of gameData.characters) {
+    try {
+      const buffer = Buffer.from(char.image, 'base64');
+      const image = await uploadImage(buffer, char.name, undefined, authenticatedClient);
+      characters.push({
+        id: char.id,
+        name: char.name,
+        description: char.description,
+        image,
+      });
+    } catch (error) {
+      console.error(`Failed to upload image for character ${char.name}:`, error);
+      characters.push({
+        id: char.id,
+        name: char.name,
+        description: char.description,
+        image: '',
+      });
+    }
+  }
 
-export async function convertComponentImages(gameData: GameDataJSON): Promise<dbGameData> {
-  const characters = await Promise.all(
-    gameData.characters.map(async (char) => ({
-      id: char.id,
-      name: char.name,
-      description: char.description,
-      image: char.image ? await uploadImage(await convertImageToBuffer(char.image), char.name) : "null",
-    }))
-  );
-  
-  const maps = await Promise.all(
-    gameData.maps.map(async (map) => ({
-      id: map.id,
-      nameOfPlace: map.nameOfPlace,
-      image: map.image ? await uploadImage(await convertImageToBuffer(map.image), map.nameOfPlace) : "null",
-      sizeOfPlace: map.sizeOfPlace,
-      placesAtMap: map.placesAtMap,
-    }))
-  );
+  const maps: MapDataDB[] = [];
+  for (const map of gameData.maps) {
+    try {
+      const buffer = Buffer.from(map.image, 'base64');
+      const image = await uploadImage(buffer, map.nameOfPlace, undefined, authenticatedClient);
+      maps.push({
+        id: map.id,
+        nameOfPlace: map.nameOfPlace,
+        image,
+        sizeOfPlace: map.sizeOfPlace,
+        placesAtMap: map.placesAtMap,
+      });
+    } catch (error) {
+      console.error(`Failed to upload image for map ${map.nameOfPlace}:`, error);
+      maps.push({
+        id: map.id,
+        nameOfPlace: map.nameOfPlace,
+        image: '',
+        sizeOfPlace: map.sizeOfPlace,
+        placesAtMap: map.placesAtMap,
+      });
+    }
+  }
 
-  const items = await Promise.all(
-    gameData.items.map(async (item) => ({
-      id: item.id,
-      name: item.name,
-      image: item.image ? await uploadImage(await convertImageToBuffer(item.image), item.name) : "null",
-    }))
-  );
+  const items: ItemDataDB[] = [];
+  for (const item of gameData.items) {
+    try {
+      const buffer = Buffer.from(item.image, 'base64');
+      const image = await uploadImage(buffer, item.name, undefined, authenticatedClient);
+      items.push({
+        id: item.id,
+        name: item.name,
+        image,
+      });
+    } catch (error) {
+      console.error(`Failed to upload image for item ${item.name}:`, error);
+      items.push({
+        id: item.id,
+        name: item.name,
+        image: '',
+      });
+    }
+  }
 
-  const dbGamedata: dbGameData = {
+  return {
     id: gameData.id,
     characters,
     maps,
     items,
   };
-
-  return dbGamedata;
-}
-
-export async function convertComponentImagesJSON(gameData: GameDataJSON): Promise<dbGameData> {
-  const characters = await Promise.all(
-    gameData.characters.map(async (char) => ({
-      id: char.id,
-      name: char.name,
-      description: char.description,
-      image: char.image ? await uploadImage(await convertImageToBuffer(char.image), char.name) : "null",
-    }))
-  );
-  
-  const maps = await Promise.all(
-    gameData.maps.map(async (map) => ({
-      id: map.id,
-      nameOfPlace: map.nameOfPlace,
-      image: map.image ? await uploadImage(await convertImageToBuffer(map.image), map.nameOfPlace) : "null",
-      sizeOfPlace: map.sizeOfPlace,
-      placesAtMap: map.placesAtMap,
-    }))
-  );
-
-  const items = await Promise.all(
-    gameData.items.map(async (item) => ({
-      id: item.id,
-      name: item.name,
-      image: item.image ? await uploadImage(await convertImageToBuffer(item.image), item.name) : "null",
-    }))
-  );
-
-  const dbGamedata: dbGameData = {
-    id: gameData.id,
-    characters,
-    maps,
-    items,
-  };
-
-  return dbGamedata;
-}
-
-async function convertImageToBuffer(base64: string): Promise<Buffer> {
-  const base64Data = base64.split(',')[1];
-  return Buffer.from(base64Data, 'base64');
 }

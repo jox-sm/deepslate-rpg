@@ -2,95 +2,149 @@
 import TextAreaField, { tagsComponent } from '@/ui/FormUI/textComponent';
 import ImageUpload from '@/ui/FormUI/imageComponent';
 import { validateText } from '@/utilities/FormUtils';
+import { arrayBufferToBase64 } from '@/utilities/clientUtilities/imagesUtils';
+import { filterEntriesWithImages } from '@/utilities/clientUtilities/exceptions';
 import { prepareGameCard } from '@/utilities/utils';
 import { CardProps } from '@/types/cards';
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import formStyles from "@/styles/forms/form.module.css";
 import GamesFormWizard from '@/ui/gamesFormUi/form';
-import type { GamesFormData } from '@/types/form';
+import type { GamesFormData } from '@/types/gameForm';
+import type { CharacterDataDB, MapDataDB, ItemDataDB, GamesFormDataDB } from '@/types/gameForm';
 import { GAME_FORM_FIELD_CONFIG, initialGameFormState, PRE_EXISTING_TAGS, type GameFormState as FormState } from '@/types/form';
 import { useGameForm } from '@/hooks/form';
+import { Button } from "@/ui/primitives/button";
+import { useIdempotentRequest } from '@/hooks/useIdempotentRequest';
+import { v7 as uuidv7 } from 'uuid';
 
-const STATUS_COLOR_MAP= {
+const STATUS_COLOR_MAP = {
   success: formStyles.statusSuccess,
   warning: formStyles.statusWarning,
   error: formStyles.statusError,
 } as const;
 
 export default function CreateForm() {
-  const { form, setForm, loading, setLoading, showWizard, setShowWizard, resetCounter, resetForm, updateField } = useGameForm(initialGameFormState);
+  const { form, loading, setLoading, showWizard, setShowWizard, resetCounter, resetForm, updateField } = useGameForm(initialGameFormState);
+  const formRef = useRef(form);
+  formRef.current = form;
+  const { sendRequest, abortAll } = useIdempotentRequest();
 
   const nameValidation = validateText(form.name, GAME_FORM_FIELD_CONFIG.name);
   const descValidation = validateText(form.description, GAME_FORM_FIELD_CONFIG.description);
   const isFormValid = nameValidation.isFormValid && descValidation.isFormValid;
 
   const handleFinalSubmit = useCallback(async (wizardData: GamesFormData) => {
-    if (!isFormValid || !form.image) return;
+    const currentForm = formRef.current;
+    if (!isFormValid || !currentForm.image) return;
 
     setLoading(true);
     try {
-      const imageUrl = await fetch("/api/convertUrl", {
-        method: "POST",
-        body: form.image,
-      }).then(res => res.json()).then(data => data.url);
+      // Generate idempotency keys for each request
+      const convertUrlKey = uuidv7();
+      const pushKey = uuidv7();
+      const convertImagesKey = uuidv7();
+      const pushGamesKey = uuidv7();
+
+      // Upload main image with idempotency
+      const imageUrl = await sendRequest<{ url: string }>(
+        "/api/convertUrl",
+        { image: arrayBufferToBase64(currentForm.image) },
+        { idempotencyKey: convertUrlKey }
+      ).then(data => data.url);
+
+      const characterImages = wizardData.characters.map(c =>
+        c.image ? arrayBufferToBase64(c.image) : null
+      );
+
+      const mapImages = wizardData.maps.map(m =>
+        m.image ? arrayBufferToBase64(m.image) : null
+      );
+
+      const itemImages = wizardData.items.map(i =>
+        i.image ? arrayBufferToBase64(i.image) : null
+      );
 
       const cardData: CardProps = {
-        name: form.name,
-        description: form.description,
-        tags: form.selectedTags,
+        name: currentForm.name,
+        description: currentForm.description,
+        tags: currentForm.selectedTags,
         image: imageUrl,
         likes_count: 0,
       };
 
       const gameData = prepareGameCard(cardData);
 
+      const characters: CharacterDataDB[] = wizardData.characters.map((c, idx) => ({
+        id: c.id,
+        name: c.name,
+        description: c.description,
+        image: characterImages[idx] || "",
+      }));
+
+      const maps: MapDataDB[] = wizardData.maps.map((m, idx) => ({
+        id: m.id,
+        nameOfPlace: m.nameOfPlace,
+        image: mapImages[idx] || "",
+        sizeOfPlace: m.sizeOfPlace,
+        placesAtMap: m.placesAtMap,
+      }));
+
+      const items: ItemDataDB[] = wizardData.items.map((i, idx) => ({
+        id: i.id,
+        name: i.name,
+        image: itemImages[idx] || "",
+      }));
+
       const payload = {
         type: "game",
         data: gameData,
         gameData: {
           id: gameData.id,
-          characters: wizardData.characters,
-          maps: wizardData.maps,
-          items: wizardData.items,
+          characters,
+          maps,
+          items,
         },
       };
 
-      await fetch("/api/push", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const dbGameData = await fetch("/api/convertUrl/ConvertGameImages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...payload.gameData }),
-      }).then(res => res.json());
+      // Push game to Redis queue with idempotency
+      await sendRequest("/api/push", payload, { idempotencyKey: pushKey });
 
-      await fetch("/api/push/pushGames", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dbGameData),
-      });
+      // Convert game images with idempotency — skip entries without images
+      const convertedGame = await sendRequest<GamesFormDataDB>(
+        "/api/convertUrl/ConvertGameImages",
+        {
+          id: gameData.id,
+          characters: filterEntriesWithImages(characters),
+          maps: filterEntriesWithImages(maps),
+          items: filterEntriesWithImages(items),
+        },
+        { idempotencyKey: convertImagesKey }
+      );
+
+      // Push to MongoDB with idempotency
+      await sendRequest("/api/push/pushGames", convertedGame, { idempotencyKey: pushGamesKey });
 
       resetForm();
     } catch (err) {
       console.error(err);
+      // Optionally abort all pending requests on error
+      // abortAll();
     } finally {
       setLoading(false);
     }
-  }, [isFormValid, form, resetForm]);
+  }, [isFormValid, resetForm, sendRequest, abortAll]);
 
   const renderValidationMessage = () => {
     if (!isFormValid) {
       return (
-        <p className="text-sm text-red-500 text-center">
+        <p className={formStyles.validationMessage}>
           Please follow the length requirements for all fields
         </p>
       );
     }
     if (form.name.length > 0 && form.description.length > 0 && !form.image) {
       return (
-        <p className="text-sm text-red-500 text-center">
+        <p className={formStyles.validationMessage}>
           Please upload an image
         </p>
       );
@@ -151,13 +205,12 @@ export default function CreateForm() {
 
         {renderValidationMessage()}
 
-        <button
+        <Button
           onClick={() => setShowWizard(true)}
           disabled={loading || !isFormValid || !form.image}
-          className={formStyles.button}
         >
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );

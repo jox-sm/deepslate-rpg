@@ -3,6 +3,10 @@ import ImageUpload from "@/ui/FormUI/imageComponent";
 import { mapValidators } from "@/lib/gamesFormValidation";
 import { type MapData } from "@/types/gameForm";
 import formStyles from "@/styles/forms/form.module.css";
+import { Button } from "@/ui/primitives/button";
+import { Input } from "@/ui/primitives/input";
+import { Textarea } from "@/ui/primitives/textarea";
+import { Label } from "@/ui/primitives/label";
 
 interface MapsStepProps {
   maps: MapData[];
@@ -26,30 +30,36 @@ export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBa
         const nameValidation = mapValidators.nameOfPlace(mapItem.nameOfPlace);
         const sizeValidation = mapValidators.sizeOfPlace(mapItem.sizeOfPlace);
         const placesValidation = mapValidators.placesAtMap(mapItem.placesAtMap);
+        const nameErrorId = `map-${mapItem.id}-name-error`;
+        const sizeErrorId = `map-${mapItem.id}-size-error`;
+        const placesErrorId = `map-${mapItem.id}-places-error`;
 
         return (
-          <div key={mapItem.id} className="border border-zinc-700 rounded-lg p-4 flex flex-col gap-3">
+          <div key={mapItem.id} className="border border-zinc-700 rounded-lg p-4 flex flex-col gap-3" role="group" aria-label={`Map ${index + 1}`}>
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-semibold text-zinc-300">Map {index + 1}</h3>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => onRemove(mapItem.id)}
-                className="text-xs text-red-400 hover:text-red-300"
+                aria-label={`Remove map ${index + 1}`}
               >
                 Remove
-              </button>
+              </Button>
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium">Name of Place</label>
-              <input
+              <Label htmlFor={`map-${mapItem.id}-name`}>Name of Place</Label>
+              <Input
+                id={`map-${mapItem.id}-name`}
                 value={mapItem.nameOfPlace}
                 onChange={(e) => onUpdate(mapItem.id, "nameOfPlace", e.target.value)}
                 placeholder="Place name"
-                className={formStyles.input}
+                aria-invalid={mapItem.nameOfPlace.length > 0 && !nameValidation.isFormValid}
+                aria-describedby={mapItem.nameOfPlace.length > 0 ? nameErrorId : undefined}
               />
               {mapItem.nameOfPlace.length > 0 && (
-                <span className={formStyles[nameValidation.isFormValid ? "statusSuccess" : nameValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
+                <span id={nameErrorId} role="alert" className={formStyles[nameValidation.isFormValid ? "statusSuccess" : nameValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
                   {nameValidation.errorMessage}
                 </span>
               )}
@@ -62,31 +72,35 @@ export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBa
             />
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium">Size of Place</label>
-              <input
+              <Label htmlFor={`map-${mapItem.id}-size`}>Size of Place</Label>
+              <Input
+                id={`map-${mapItem.id}-size`}
                 value={mapItem.sizeOfPlace}
                 onChange={(e) => onUpdate(mapItem.id, "sizeOfPlace", e.target.value)}
                 placeholder="e.g. 1000 sq km"
-                className={formStyles.input}
+                aria-invalid={mapItem.sizeOfPlace.length > 0 && !sizeValidation.isFormValid}
+                aria-describedby={mapItem.sizeOfPlace.length > 0 ? sizeErrorId : undefined}
               />
               {mapItem.sizeOfPlace.length > 0 && (
-                <span className={formStyles[sizeValidation.isFormValid ? "statusSuccess" : sizeValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
+                <span id={sizeErrorId} role="alert" className={formStyles[sizeValidation.isFormValid ? "statusSuccess" : sizeValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
                   {sizeValidation.errorMessage}
                 </span>
               )}
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium">Places at Map</label>
-              <textarea
+              <Label htmlFor={`map-${mapItem.id}-places`}>Places at Map</Label>
+              <Textarea
+                id={`map-${mapItem.id}-places`}
                 value={mapItem.placesAtMap}
                 onChange={(e) => onUpdate(mapItem.id, "placesAtMap", e.target.value)}
                 placeholder="Describe notable places in this map"
-                className={formStyles.input}
                 rows={4}
+                aria-invalid={mapItem.placesAtMap.length > 0 && !placesValidation.isFormValid}
+                aria-describedby={mapItem.placesAtMap.length > 0 ? placesErrorId : undefined}
               />
               {mapItem.placesAtMap.length > 0 && (
-                <span className={formStyles[placesValidation.isFormValid ? "statusSuccess" : placesValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
+                <span id={placesErrorId} role="alert" className={formStyles[placesValidation.isFormValid ? "statusSuccess" : placesValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
                   {placesValidation.errorMessage}
                 </span>
               )}
@@ -95,17 +109,17 @@ export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBa
         );
       })}
 
-      <button type="button" onClick={onAdd} className={formStyles.button}>
+      <Button onClick={onAdd}>
         Add New Map
-      </button>
+      </Button>
 
       <div className="flex gap-2 justify-between">
-        <button type="button" onClick={onBack} className={formStyles.button}>
+        <Button variant="outline" onClick={onBack}>
           Back
-        </button>
-        <button type="button" onClick={onNext} className={formStyles.button}>
+        </Button>
+        <Button onClick={onNext}>
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );

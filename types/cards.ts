@@ -31,6 +31,7 @@ export interface ApiGameResponse {
   status?: string;
   createdAt?: string;
   updatedAt?: string;
+  likes_count?: number;
 }
 
 export interface ApiResponse {

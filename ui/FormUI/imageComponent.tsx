@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 import { ImageUploadProps } from "@/types/form";
 import formStyles from "@/styles/forms/form.module.css";
+
+let imageInputIdCounter = 0;
 
 export default function ImageUpload({
   label,
@@ -14,15 +16,29 @@ export default function ImageUpload({
   resetKey,
 }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const inputIdRef = useRef(`image-upload-${++imageInputIdCounter}`);
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const prevPreviewRef = useRef<string | null>(null);
+
+  const revokePreview = useCallback(() => {
+    if (prevPreviewRef.current) {
+      URL.revokeObjectURL(prevPreviewRef.current);
+      prevPreviewRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
+    revokePreview();
     setPreview(null);
     setError("");
-  }, [resetKey]);
+  }, [resetKey, revokePreview]);
 
-  function handleFile(file: File) {
+  useEffect(() => {
+    return () => revokePreview();
+  }, [revokePreview]);
+
+  async function handleFile(file: File) {
     if (!file.type.startsWith("image/")) {
       setError("File must be an image.");
       return;
@@ -35,20 +51,24 @@ export default function ImageUpload({
     }
 
     setError("");
+    revokePreview();
     const imageUrl = URL.createObjectURL(file);
+    prevPreviewRef.current = imageUrl;
     setPreview(imageUrl);
-    onSelect(file);
+    const buffer = await file.arrayBuffer();
+    onSelect(buffer);
     onPreviewChange?.(imageUrl);
   }
 
   return (
     <div className="flex flex-col gap-3">
-      <label className="text-sm font-medium">{label}</label>
+      <label htmlFor={inputIdRef.current} className="text-sm font-medium">{label}</label>
 
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
         className={formStyles.button}
+        aria-label={`Upload ${label}`}
       >
         {preview ? (
           <img
@@ -63,9 +83,11 @@ export default function ImageUpload({
 
       <input
         ref={inputRef}
+        id={inputIdRef.current}
         type="file"
         accept={accept}
         className={formStyles.hiddenInput}
+        tabIndex={-1}
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (!file) return;

@@ -1,4 +1,5 @@
 import Sidebar from "@/components/background/slidebar"
+import style from "@/styles/sidebar/sidebar.module.css";
 
 import {
   Home,
@@ -10,7 +11,7 @@ import {
 export default function profilemenu() {
 
   return (
-    <div className="flex">
+    <div className={style.sidebarWrapper}>
 
       <Sidebar
         logo="Hollow Depths"
@@ -22,7 +23,7 @@ export default function profilemenu() {
         ]}
       />
 
-      <main className="flex-1 p-6">
+      <main className={style.sidebarWrapper}>
         Main Content
       </main>
 

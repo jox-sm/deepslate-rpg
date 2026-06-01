@@ -5,10 +5,17 @@ import {
   Menu,
   ChevronLeft,
 } from "lucide-react"
+import { UserButton } from "@clerk/nextjs"
 
 import style from '@/styles/sidebar/sidebar.module.css'
 import Link from "next/link";
 import posthog from "posthog-js";
+
+function toHref(label: string): string {
+  const slug = label.toLowerCase().replace(/\s+/g, "-")
+  return slug === "home" ? "/" : `/${slug}`
+}
+
 
 type SidebarItem = {
   icon: any
@@ -65,33 +72,41 @@ export default function Sidebar({
       </div>
 
       {/* MENU */}
-      <nav className={style.menu}>
-
-        {items.map((item, index) => {
-
-          const Icon = item.icon
-
-          return (
-            <Link
-              key={index}
-              href={item.label.toLowerCase() === "home" ? "/" : `${item.label.toLowerCase()}`}
-              className={style.menuItem}
-              onClick={() => posthog.capture('navigation_item_clicked', { label: item.label })}
-            >
-
-              <div className={style.icon}>
-                <Icon size={24} />
-              </div>
-
-              <span className={style.label}>
-                {item.label}
-              </span>
-
-            </Link>
-          )
-        })}
-
+       <nav className={style.menu}>
+ 
+         {items.map((item) => {
+ 
+           const Icon = item.icon
+ 
+           return (
+             <Link
+               key={item.label}
+               href={toHref(item.label)}
+               className={style.menuItem}
+               onClick={() => posthog.capture('navigation_item_clicked', { label: item.label })}
+             >
+ 
+               <div className={style.icon}>
+                 <Icon size={24} />
+               </div>
+ 
+               <span className={style.label}>
+                 {item.label}
+               </span>
+ 
+             </Link>
+           )
+         })}
+ 
       </nav>
+
+      {/* FOOTER WITH USER BUTTON */}
+      <div className={style.footer}>
+        <div className={style.userButtonContainer}>
+          <UserButton />
+        </div>
+      </div>
+
 
     </aside>
   )
