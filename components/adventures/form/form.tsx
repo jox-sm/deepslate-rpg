@@ -17,6 +17,7 @@ import { useIdempotentRequest } from '@/hooks/useIdempotentRequest';
 import { v7 as uuidv7 } from 'uuid';
 import { cn } from '@/lib/utils';
 import styles from "@/styles/forms/form.module.css";
+import { classifyError } from '@/utilities/errorHandler';
 
 const STATUS_COLOR_MAP = {
   success: styles.statusSuccess,
@@ -106,7 +107,8 @@ export default function CreateForm() {
       await sendRequest("/api/push/pushGames", convertedGame, { idempotencyKey: pushGamesKey });
       resetForm();
     } catch (err) {
-      console.error(err);
+      const classified = classifyError(err, "CreateForm.handleFinalSubmit");
+      console.error(classified.message);
     } finally {
       setLoading(false);
     }

@@ -4,6 +4,7 @@
 import { v7 as uuidv7 } from 'uuid';
 import { useRef, useCallback } from 'react';
 import { REQUEST_TIMEOUT_MS } from '@/types/api';
+import { classifyError } from '@/utilities/errorHandler';
 
 interface AbortableRequest {
   controller: AbortController;
@@ -53,11 +54,11 @@ export function useIdempotentRequest() {
       return response.json();
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
-        console.log(`Request aborted for key: ${key}`);
+        const classified = classifyError(error, `useIdempotentRequest.abort-${key}`);
+        console.log(`Request aborted for key: ${key}`, classified.message);
         
         if (retryOnAbort) {
           console.log(`Retrying with same idempotency key: ${key}`);
-          // Retry with same idempotency key
           return sendRequest(url, data, { ...options, idempotencyKey: key, retryOnAbort: false });
         }
         

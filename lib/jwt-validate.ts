@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
+import { classifyError } from '@/utilities/errorHandler';
 
 export interface JWTPayload {
   userId: string;
@@ -28,13 +29,11 @@ export async function validateJWTMiddleware(
       error: null,
     };
   } catch (error) {
+    const classified = classifyError(error, "jwt-validate.validateJWTMiddleware");
     return {
       payload: null,
       error: NextResponse.json(
-        {
-          success: false,
-          error: error instanceof Error ? error.message : 'Authentication failed',
-        },
+        { success: false, error: classified.message },
         { status: 401 }
       ),
     };

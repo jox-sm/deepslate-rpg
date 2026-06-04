@@ -1,6 +1,7 @@
 import { sql } from '@/db/client';
 import { GameCardProps } from '@/types/cards';
 import { retry } from './retry';
+import { classifyError } from '@/utilities/errorHandler';
 
 
 export async function insertGame(game: GameCardProps) {
@@ -15,7 +16,8 @@ export async function insertGame(game: GameCardProps) {
     }, 2, 500);
     return result[0];
   } catch (error) {
-    console.error("Error in insertGame:", error);
+    const classified = classifyError(error, "db.insertGame");
+    console.error("Error in insertGame:", classified.message);
     throw error;
   }
 }
@@ -45,13 +47,9 @@ const result = await retry(async () => {
   return rows;
 }, 2, 500);
   return result;
-  }  catch (error: any) {
-    console.error("insertGamesBatch failed:");
-    console.error("Message:", error.message);
-    console.error("Code:", error.code);
-    console.error("Detail:", error.detail);
-    console.error("Hint:", error.hint);
-    console.error("Position:", error.position);
+  } catch (error: unknown) {
+    const classified = classifyError(error, "db.insertGamesBatch");
+    console.error("insertGamesBatch failed:", classified.message);
     console.error("Data sent:", JSON.stringify(games, null, 2));
     throw error;
   }
@@ -72,7 +70,8 @@ export async function updateGameLikes(id: string) {
     }, 2, 500);
     return result[0];
   } catch (error) {
-    console.error("Error in updateGameLikes:", error);
+    const classified = classifyError(error, "db.updateGameLikes");
+    console.error("Error in updateGameLikes:", classified.message);
     throw error;
   }
 }

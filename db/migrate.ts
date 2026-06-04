@@ -2,6 +2,7 @@ import { neon } from '@neondatabase/serverless';
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
+import { classifyError } from '@/utilities/errorHandler';
 
 dotenv.config();
 
@@ -31,7 +32,8 @@ async function runMigration() {
 
     console.log("Migration done!");
   } catch (error) {
-    console.error("Error during migration:", error);
+    const classified = classifyError(error, "migrate.runMigration");
+    console.error("Error during migration:", classified.message);
   }
 }
 

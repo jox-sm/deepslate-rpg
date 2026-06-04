@@ -2,6 +2,7 @@
 import { v7 as uuidv7 } from 'uuid';
 import { redis } from '@/lib/queue';
 import { IDEMPOTENCY_TTL_SECONDS } from '@/types/api';
+import { tryOrErrorSync, classifyError } from '@/utilities/errorHandler';
 
 // Generate a new idempotency key (UUID v7)
 export function generateIdempotencyKey(): string {
@@ -18,11 +19,8 @@ export async function isRequestProcessed(key: string): Promise<boolean> {
 export async function getCachedResult<T>(key: string): Promise<T | null> {
   const cached = await redis.get(`idempotency:${key}`);
   if (cached) {
-    try {
-      return JSON.parse(cached) as T;
-    } catch {
-      return null;
-    }
+    const result = tryOrErrorSync(() => JSON.parse(cached) as T, { context: "idempotency.getCachedResult" });
+    return result.ok ? result.data : null;
   }
   return null;
 }
@@ -64,22 +62,19 @@ export async function withIdempotencySafe<T>(
   fn: () => Promise<T>
 ): Promise<{ result: T | null; cached: boolean; error?: string }> {
   try {
-    // Check if already processed
     const cached = await getCachedResult<T>(key);
     if (cached !== null) {
       return { result: cached, cached: true };
     }
     
-    // Execute the function
     const result = await fn();
     
-    // Cache the result
     await cacheResult(key, result);
     
     return { result, cached: false };
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return { result: null, cached: false, error: errorMessage };
+    const classified = classifyError(error, "idempotency.withIdempotencySafe");
+    return { result: null, cached: false, error: classified.message };
   }
 }
 

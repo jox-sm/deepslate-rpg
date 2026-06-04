@@ -5,6 +5,7 @@ import ProfileCard from '@/components/adventures/cards/cards';
 import { CardProps } from '@/types/cards';
 import { cn } from '@/lib/utils';
 import gridStyles from "@/styles/cards/CardsGrid.module.css";
+import { tryOrErrorSync, classifyError } from '@/utilities/errorHandler';
 
 type CardsGridProps = {
   fetchCards: (offset: number) => Promise<CardProps[]>;
@@ -14,17 +15,18 @@ type CardsGridProps = {
 const CACHE_KEY = "cards-grid-cache";
 
 function saveCache(cards: CardProps[], offset: number, exhausted: boolean) {
-  try {
+  tryOrErrorSync(() => {
     sessionStorage.setItem(CACHE_KEY, JSON.stringify({ cards, offset, exhausted }));
-  } catch { /* storage full — ignore */ }
+  }, { context: "CardsGrid.saveCache" });
 }
 
 function loadCache(): { cards: CardProps[]; offset: number; exhausted: boolean } | null {
-  try {
+  const result = tryOrErrorSync(() => {
     const raw = sessionStorage.getItem(CACHE_KEY);
     if (!raw) return null;
     return JSON.parse(raw);
-  } catch { return null; }
+  }, { context: "CardsGrid.loadCache" });
+  return result.ok ? result.data : null;
 }
 
 export default function CardsGrid({
@@ -61,7 +63,8 @@ export default function CardsGrid({
       offsetRef.current += result.length;
     } catch (err) {
       setError('Failed to load cards. Please try again.');
-      console.error('[CardsGrid] fetch error:', err);
+      const classified = classifyError(err, "CardsGrid.fetch");
+      console.error('[CardsGrid] fetch error:', classified.message);
     } finally {
       isLoadingRef.current = false;
       setIsLoading(false);

@@ -3,6 +3,7 @@ import { getGameById } from '@/lib/db';
 import connectDB from '@/models/games/mongodb/client';
 import Game from '@/models/games/mongodb/schema';
 import { retry } from '@/lib/retry';
+import { tryOrErrorSync, classifyError } from '@/utilities/errorHandler';
 
 /**
  * Batch Game Fetch Pipeline
@@ -50,7 +51,8 @@ export async function queueGameFetch(
     const request: FetchRequest = { requestId, uuid };
     await redis.lpush(QUEUE_KEYS.FETCH_QUEUE, JSON.stringify(request));
   } catch (error) {
-    console.error('[GameFetchPipeline] Error queuing fetch:', error);
+    const classified = classifyError(error, "GameFetchPipeline.queueGameFetch");
+    console.error('[GameFetchPipeline] Error queuing fetch:', classified.message);
     throw error;
   }
 }
@@ -76,11 +78,8 @@ export async function processBatch(): Promise<void> {
 
     const requests: FetchRequest[] = requestsJson
       .map((json) => {
-        try {
-          return JSON.parse(json);
-        } catch {
-          return null;
-        }
+        const result = tryOrErrorSync(() => JSON.parse(json), { context: "parseFetchRequest" });
+        return result.ok ? result.data as FetchRequest : null;
       })
       .filter((req): req is FetchRequest => req !== null);
 
@@ -158,7 +157,8 @@ export async function processBatch(): Promise<void> {
       `[GameFetchPipeline] Batch processed, results stored for ${requests.length} requests`
     );
   } catch (error) {
-    console.error('[GameFetchPipeline] Error processing batch:', error);
+    const classified = classifyError(error, "GameFetchPipeline.processBatch");
+    console.error('[GameFetchPipeline] Error processing batch:', classified.message);
   }
 }
 
@@ -177,13 +177,13 @@ export async function waitForFetchResult(
     const result = await redis.get(resultKey);
 
     if (result) {
-      try {
-        const data = JSON.parse(result);
-        await redis.del(resultKey); // Clean up
+      const parseResult = tryOrErrorSync(() => JSON.parse(result), { context: "parseFetchResult" });
+      if (parseResult.ok) {
+        await redis.del(resultKey);
+        const data = parseResult.data;
         return data.success === false ? null : data;
-      } catch {
-        return null;
       }
+      return null;
     }
 
     // Wait before retrying (exponential backoff up to 100ms)
@@ -211,7 +211,8 @@ export async function getGameWithBatchQueue(
 
     return result;
   } catch (error) {
-    console.error('[GameFetchPipeline] Error getting game with batch queue:', error);
+    const classified = classifyError(error, "GameFetchPipeline.getGameWithBatchQueue");
+    console.error('[GameFetchPipeline] Error getting game with batch queue:', classified.message);
     return null;
   }
 }
@@ -226,7 +227,8 @@ export async function getQueueStats(): Promise<{
     const queueLength = await redis.llen(QUEUE_KEYS.FETCH_QUEUE);
     return { queueLength };
   } catch (error) {
-    console.error('[GameFetchPipeline] Error getting queue stats:', error);
+    const classified = classifyError(error, "GameFetchPipeline.getQueueStats");
+    console.error('[GameFetchPipeline] Error getting queue stats:', classified.message);
     return { queueLength: 0 };
   }
 }
@@ -239,6 +241,7 @@ export async function clearQueue(): Promise<void> {
     await redis.del(QUEUE_KEYS.FETCH_QUEUE);
     console.log('[GameFetchPipeline] Queue cleared');
   } catch (error) {
-    console.error('[GameFetchPipeline] Error clearing queue:', error);
+    const classified = classifyError(error, "GameFetchPipeline.clearQueue");
+    console.error('[GameFetchPipeline] Error clearing queue:', classified.message);
   }
 }
