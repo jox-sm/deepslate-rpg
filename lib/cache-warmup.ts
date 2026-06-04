@@ -1,5 +1,6 @@
 import { redis } from './queue';
 import { getGamesPaginated } from './db';
+import { retry } from './retry';
 
 const CACHE_KEYS = {
   GAME_PREFIX: 'game:',
@@ -29,7 +30,7 @@ export async function warmUpCache(): Promise<boolean> {
 
     console.log('[CacheWarmup] Starting cache warm-up...');
 
-    const { games } = await getGamesPaginated(WARMUP_LIMIT, 0);
+    const { games } = await retry(() => getGamesPaginated(WARMUP_LIMIT, 0), 3, 1000);
 
     if (games.length === 0) {
       console.log('[CacheWarmup] No games found in PostgreSQL');

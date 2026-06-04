@@ -29,6 +29,11 @@ How everything is connected and works together.
   - Troubleshooting Guide
 
 - **03-DATA_FLOW.md** - Complete request/response flows
+- **04-UI_DESIGN_SYSTEM.md** - Dark fantasy design system, tokens, styling architecture
+  - Design Tokens (abyss/ember palette, typography, effects)
+  - CSS Modules + cn() hybrid pattern
+  - Component architecture (cards grid, sidebar, primitives)
+  - Gradient usage patterns and file locations
   - Game Lifecycle
   - API Request/Response Flows
   - Inter-Service Communication
@@ -98,6 +103,9 @@ Example:
 - "How does caching work?" → 01-ARCHITECTURE.md (Caching Strategy section)
 - "How do users authenticate?" → 02-AUTHENTICATION.md
 - "What happens when I create a game?" → 03-DATA_FLOW.md (Game Creation Flow)
+- "How is the UI styled?" → 04-UI_DESIGN_SYSTEM.md
+- "What gradients are available?" → 04-UI_DESIGN_SYSTEM.md (Gradient Usage Patterns)
+- "Where are error pages?" → 04-UI_DESIGN_SYSTEM.md (Error & Notification System)
 
 ### "How do I do X?"
 → Look in **Guides/** folder
@@ -106,6 +114,9 @@ Example:
 - "How do I set up JWT?" → 01-JWT_SETUP.md
 - "How do I create an API route?" → 02-API_IMPLEMENTATION.md
 - "How do I handle errors?" → 02-API_IMPLEMENTATION.md (Error Handling section)
+- "How do I use the hybrid CSS Modules + Tailwind pattern?" → 04-UI_DESIGN_SYSTEM.md (CSS Modules + cn() Pattern)
+- "How do I add a new toast notification?" → 04-UI_DESIGN_SYSTEM.md (Toast System)
+- "How do I create a new card component?" → 04-UI_DESIGN_SYSTEM.md (Cards Grid)
 
 ### "What could go wrong?"
 → Look in **Problems/** folder
@@ -191,13 +202,18 @@ documentations/
 ├── documentations/
 │   ├── 01-ARCHITECTURE.md
 │   ├── 02-AUTHENTICATION.md
-│   └── 03-DATA_FLOW.md
+│   ├── 03-DATA_FLOW.md
+│   └── 04-UI_DESIGN_SYSTEM.md
 ├── guides/
 │   ├── 01-JWT_SETUP.md
 │   └── 02-API_IMPLEMENTATION.md
-└── problems/
-    ├── 01-SECURITY_VULNERABILITIES.md
-    └── 02-KNOWN_ISSUES.md
+├── problems/
+│   ├── 01-SECURITY_VULNERABILITIES.md
+│   └── 02-KNOWN_ISSUES.md
+├── features/
+│   └── GamePage/
+└── issues/
+    └── (numbered issue reports)
 ```
 
 ---
@@ -208,13 +224,15 @@ documentations/
 - **JWT_VALIDATION_GUIDE.md** - Detailed JWT validation documentation
 - **PLAN.md** - Development plan
 - **architicture/architecture.md** - Architecture overview
+- **CLAUDE.md** - Agent instructions with anchored project summary
+- **.agents/skills/project-reference/Skill.md** - Project reference index (this file)
 
 ---
 
 ## Last Updated
 
 Created: 2026-05-30
-Last Review: 2026-05-30
+Last Review: 2026-06-04
 
 ---
 

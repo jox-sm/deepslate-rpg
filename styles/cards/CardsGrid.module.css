@@ -1,8 +1,13 @@
 .grid {
   column-count: 3;
-  column-gap: 1.5rem;
+  column-gap: 1.25rem;
   width: 100%;
   padding: 1.5rem 0;
+}
+
+.cardWrapper {
+  break-inside: avoid;
+  margin-bottom: 1.25rem;
 }
 
 .loader {
@@ -19,7 +24,8 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #71717a;
+  background-color: var(--color-torch-400);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-torch-400) 40%, transparent);
   animation: bounce 1.2s ease-in-out infinite;
 }
 
@@ -46,7 +52,7 @@
   column-span: all;
   text-align: center;
   padding: 2rem 0 3rem;
-  color: #52525b;
+  color: var(--color-text-muted);
   font-size: 0.875rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;

@@ -2,1126 +2,1231 @@
   "D:\\deepslate dungeons\\.kilo\\package.json": {
     "mtime": 1779596302.4864824,
     "ast_hash": "f6a56ce15a06a3042ca75a53903b85b3",
-    "semantic_hash": ""
+    "semantic_hash": "f6a56ce15a06a3042ca75a53903b85b3"
   },
   "D:\\deepslate dungeons\\.opencode\\opencode.json": {
-    "mtime": 1780318899.4967022,
-    "ast_hash": "f2ae21510d07365eb2bce8159272c7a0",
-    "semantic_hash": ""
+    "mtime": 1780329800.914716,
+    "ast_hash": "19a51febeea85351e9fcc679b3df35f4",
+    "semantic_hash": "19a51febeea85351e9fcc679b3df35f4"
   },
   "D:\\deepslate dungeons\\.opencode\\plugins\\graphify.js": {
-    "mtime": 1780318899.496166,
+    "mtime": 1780329800.914716,
     "ast_hash": "32b67963417a30cb80544e0b2a56a98d",
-    "semantic_hash": ""
+    "semantic_hash": "32b67963417a30cb80544e0b2a56a98d"
   },
   "D:\\deepslate dungeons\\.vscode\\settings.json": {
     "mtime": 1778066781.8852253,
     "ast_hash": "161b55fd37b6c51163c56c5396ae3368",
-    "semantic_hash": ""
+    "semantic_hash": "161b55fd37b6c51163c56c5396ae3368"
   },
   "D:\\deepslate dungeons\\app\\api\\convertUrl\\ConvertGameImages\\route.ts": {
     "mtime": 1780316466.9454896,
     "ast_hash": "85cec5d3c8f93be364cac78989caf66f",
-    "semantic_hash": ""
+    "semantic_hash": "85cec5d3c8f93be364cac78989caf66f"
   },
   "D:\\deepslate dungeons\\app\\api\\convertUrl\\route.ts": {
     "mtime": 1780316356.969026,
     "ast_hash": "fea78c30d073a93215d617bc300e4775",
-    "semantic_hash": ""
+    "semantic_hash": "fea78c30d073a93215d617bc300e4775"
   },
   "D:\\deepslate dungeons\\app\\api\\games\\[id]\\route.ts": {
     "mtime": 1780316356.97025,
     "ast_hash": "e56e305f0af1c2af5e1918c544b08bd1",
-    "semantic_hash": ""
+    "semantic_hash": "e56e305f0af1c2af5e1918c544b08bd1"
   },
   "D:\\deepslate dungeons\\app\\api\\games\\route.ts": {
-    "mtime": 1780316356.971091,
-    "ast_hash": "cd97634e24233ea6edae29e57f1e97c4",
-    "semantic_hash": ""
+    "mtime": 1780564146.116886,
+    "ast_hash": "4761e4469b71ba179d38b1e6483d50ad",
+    "semantic_hash": "4761e4469b71ba179d38b1e6483d50ad"
   },
   "D:\\deepslate dungeons\\app\\api\\push\\pushGames\\route.ts": {
     "mtime": 1780316476.171177,
     "ast_hash": "f4b9b93e5a4866c5b7df2f2b15379581",
-    "semantic_hash": ""
+    "semantic_hash": "f4b9b93e5a4866c5b7df2f2b15379581"
   },
   "D:\\deepslate dungeons\\app\\api\\push\\route.ts": {
-    "mtime": 1780316356.9738607,
+    "mtime": 1780320772.9434123,
     "ast_hash": "994a6abf72fa1e12f32d6366d6485b78",
-    "semantic_hash": ""
+    "semantic_hash": "994a6abf72fa1e12f32d6366d6485b78"
   },
   "D:\\deepslate dungeons\\app\\api\\test-supabase-auth\\route.ts": {
     "mtime": 1780316356.974854,
     "ast_hash": "3be4ea85b16065ab0a589bd6e08cc5ea",
-    "semantic_hash": ""
+    "semantic_hash": "3be4ea85b16065ab0a589bd6e08cc5ea"
   },
   "D:\\deepslate dungeons\\app\\auth-gate.tsx": {
     "mtime": 1780316356.9758527,
     "ast_hash": "2b8b9a9eb6e428a9df985765637be96b",
-    "semantic_hash": ""
+    "semantic_hash": "2b8b9a9eb6e428a9df985765637be96b"
   },
   "D:\\deepslate dungeons\\app\\convex-client-provider.tsx": {
     "mtime": 1780316356.9778621,
     "ast_hash": "aefb7da7a30a25f9586e04560d76e12f",
-    "semantic_hash": ""
+    "semantic_hash": "aefb7da7a30a25f9586e04560d76e12f"
   },
   "D:\\deepslate dungeons\\app\\inventory\\page.tsx": {
     "mtime": 1780316356.9810078,
     "ast_hash": "9e0c9547dd986299e6fbbfa9d5c770bb",
-    "semantic_hash": ""
+    "semantic_hash": "9e0c9547dd986299e6fbbfa9d5c770bb"
   },
   "D:\\deepslate dungeons\\app\\layout.tsx": {
     "mtime": 1780316356.9820077,
     "ast_hash": "0a4f7545ed8903f7b88958a086684bfd",
-    "semantic_hash": ""
+    "semantic_hash": "0a4f7545ed8903f7b88958a086684bfd"
   },
   "D:\\deepslate dungeons\\app\\page.tsx": {
     "mtime": 1780316356.9839761,
     "ast_hash": "ebfe4889d975319de68c1ca634d73bf8",
-    "semantic_hash": ""
+    "semantic_hash": "ebfe4889d975319de68c1ca634d73bf8"
   },
   "D:\\deepslate dungeons\\app\\profile\\[[...rest]]\\page.tsx": {
     "mtime": 1780316356.9864185,
     "ast_hash": "c2314cdc1d0a941938f7eb97e4540899",
-    "semantic_hash": ""
+    "semantic_hash": "c2314cdc1d0a941938f7eb97e4540899"
   },
   "D:\\deepslate dungeons\\app\\settings\\page.tsx": {
     "mtime": 1778083088.0708187,
     "ast_hash": "098d59f12478a2d3e83f869ef4769c11",
-    "semantic_hash": ""
+    "semantic_hash": "098d59f12478a2d3e83f869ef4769c11"
   },
   "D:\\deepslate dungeons\\components.json": {
     "mtime": 1780316356.9896083,
     "ast_hash": "b69cca1bdfe99a7dc0b4e833790ef76b",
-    "semantic_hash": ""
+    "semantic_hash": "b69cca1bdfe99a7dc0b4e833790ef76b"
   },
   "D:\\deepslate dungeons\\components\\adventures\\cards\\cards-grid-wrapper.tsx": {
     "mtime": 1780316356.9906168,
     "ast_hash": "bd1b9a64dc2c9140063c6f1715933575",
-    "semantic_hash": ""
+    "semantic_hash": "bd1b9a64dc2c9140063c6f1715933575"
   },
   "D:\\deepslate dungeons\\components\\adventures\\cards\\cards-grid.tsx": {
-    "mtime": 1780316356.9916096,
-    "ast_hash": "cc3f6c8757d613dacb3aec6755d167f8",
-    "semantic_hash": ""
+    "mtime": 1780396305.1146119,
+    "ast_hash": "07eaea092ebafd1cc050e2bb2ef31fac",
+    "semantic_hash": "07eaea092ebafd1cc050e2bb2ef31fac"
   },
   "D:\\deepslate dungeons\\components\\adventures\\cards\\cards.tsx": {
-    "mtime": 1780316356.992801,
-    "ast_hash": "1f3af772ad91daa4845d018ae3888acb",
-    "semantic_hash": ""
+    "mtime": 1780396326.7995098,
+    "ast_hash": "d50ee4fc850340b1f6bf0edf9ff32249",
+    "semantic_hash": "d50ee4fc850340b1f6bf0edf9ff32249"
   },
   "D:\\deepslate dungeons\\components\\adventures\\form\\form.tsx": {
-    "mtime": 1780316356.9937978,
-    "ast_hash": "db876d93edef967ab4ab4982e3098036",
-    "semantic_hash": ""
+    "mtime": 1780396806.4354389,
+    "ast_hash": "c621d47ac041a2e9b448ee368b0f0272",
+    "semantic_hash": "c621d47ac041a2e9b448ee368b0f0272"
   },
   "D:\\deepslate dungeons\\components\\authentication\\auth-status.tsx": {
     "mtime": 1780316356.9957492,
     "ast_hash": "fcb76a96a4122627b3512830b37dbd3f",
-    "semantic_hash": ""
+    "semantic_hash": "fcb76a96a4122627b3512830b37dbd3f"
   },
   "D:\\deepslate dungeons\\components\\authentication\\login.tsx": {
     "mtime": 1780316356.9968011,
     "ast_hash": "5c6f38fe5a1493d0a09f595fc9d499de",
-    "semantic_hash": ""
+    "semantic_hash": "5c6f38fe5a1493d0a09f595fc9d499de"
   },
   "D:\\deepslate dungeons\\components\\authentication\\signup.tsx": {
     "mtime": 1780316356.997592,
     "ast_hash": "7638643b74ec688136c99ec795117d46",
-    "semantic_hash": ""
+    "semantic_hash": "7638643b74ec688136c99ec795117d46"
   },
   "D:\\deepslate dungeons\\components\\authentication\\unauthenticated.tsx": {
     "mtime": 1780316356.9990637,
     "ast_hash": "2ec9de0796133966e1bdd8fc5931d54b",
-    "semantic_hash": ""
+    "semantic_hash": "2ec9de0796133966e1bdd8fc5931d54b"
   },
   "D:\\deepslate dungeons\\components\\background\\profilemenu.tsx": {
     "mtime": 1780316357.0005066,
     "ast_hash": "f8ebaed3b19f38c28aadc4af94eef165",
-    "semantic_hash": ""
+    "semantic_hash": "f8ebaed3b19f38c28aadc4af94eef165"
   },
   "D:\\deepslate dungeons\\components\\background\\sidebar\\sidebar.tsx": {
     "mtime": 1780316357.0022652,
     "ast_hash": "47bfac22c5b42da9894734231b8db055",
-    "semantic_hash": ""
+    "semantic_hash": "47bfac22c5b42da9894734231b8db055"
   },
   "D:\\deepslate dungeons\\components\\background\\slidebar.tsx": {
     "mtime": 1780316357.0037227,
     "ast_hash": "ea45b89e0238a073a65544ad859d7f4a",
-    "semantic_hash": ""
+    "semantic_hash": "ea45b89e0238a073a65544ad859d7f4a"
   },
   "D:\\deepslate dungeons\\convex\\_generated\\ai\\ai-files.state.json": {
     "mtime": 1780316357.0057693,
     "ast_hash": "b64b0d165e5f3ef5c128af48715049ab",
-    "semantic_hash": ""
+    "semantic_hash": "b64b0d165e5f3ef5c128af48715049ab"
   },
   "D:\\deepslate dungeons\\convex\\_generated\\api.d.ts": {
     "mtime": 1780316357.0079732,
     "ast_hash": "25ed9291462d19af37baf2ae6ce18ba4",
-    "semantic_hash": ""
+    "semantic_hash": "25ed9291462d19af37baf2ae6ce18ba4"
   },
   "D:\\deepslate dungeons\\convex\\_generated\\api.js": {
     "mtime": 1780316357.0092406,
     "ast_hash": "73afe00c4a51eda44ae8282ea9dcb5c1",
-    "semantic_hash": ""
+    "semantic_hash": "73afe00c4a51eda44ae8282ea9dcb5c1"
   },
   "D:\\deepslate dungeons\\convex\\_generated\\dataModel.d.ts": {
     "mtime": 1780316357.0103817,
     "ast_hash": "e91bcb1afc142207fb499b1c638ade3f",
-    "semantic_hash": ""
+    "semantic_hash": "e91bcb1afc142207fb499b1c638ade3f"
   },
   "D:\\deepslate dungeons\\convex\\_generated\\server.d.ts": {
     "mtime": 1780316357.0114255,
     "ast_hash": "c07e23f203b7f1cb73fba01c3818b5ae",
-    "semantic_hash": ""
+    "semantic_hash": "c07e23f203b7f1cb73fba01c3818b5ae"
   },
   "D:\\deepslate dungeons\\convex\\_generated\\server.js": {
     "mtime": 1780316357.0123904,
     "ast_hash": "c6cba40f799989193d9878a8740b20a6",
-    "semantic_hash": ""
+    "semantic_hash": "c6cba40f799989193d9878a8740b20a6"
   },
   "D:\\deepslate dungeons\\convex\\auth.config.ts": {
     "mtime": 1780316357.0136082,
     "ast_hash": "460a9ad658f86c866c1e6e5c6a4111d1",
-    "semantic_hash": ""
+    "semantic_hash": "460a9ad658f86c866c1e6e5c6a4111d1"
   },
   "D:\\deepslate dungeons\\convex\\characters.ts": {
     "mtime": 1780316357.01445,
     "ast_hash": "e86284b811dfbd8a93f871889b076b5d",
-    "semantic_hash": ""
+    "semantic_hash": "e86284b811dfbd8a93f871889b076b5d"
   },
   "D:\\deepslate dungeons\\convex\\games.ts": {
     "mtime": 1780316357.0156167,
     "ast_hash": "2e0a95762e24036095f0719ccf68ca4e",
-    "semantic_hash": ""
+    "semantic_hash": "2e0a95762e24036095f0719ccf68ca4e"
   },
   "D:\\deepslate dungeons\\convex\\items.ts": {
     "mtime": 1780316357.0167909,
     "ast_hash": "8d4bdd47b0f8e8a328c23e8c1761df8c",
-    "semantic_hash": ""
+    "semantic_hash": "8d4bdd47b0f8e8a328c23e8c1761df8c"
   },
   "D:\\deepslate dungeons\\convex\\maps.ts": {
     "mtime": 1780316357.0175817,
     "ast_hash": "d0675fe1a35fc832afcaf2bb7fea2e5f",
-    "semantic_hash": ""
+    "semantic_hash": "d0675fe1a35fc832afcaf2bb7fea2e5f"
   },
   "D:\\deepslate dungeons\\convex\\schema.ts": {
     "mtime": 1780316357.0185838,
     "ast_hash": "2515b693c3ba061a7b75bfcc26164c8a",
-    "semantic_hash": ""
+    "semantic_hash": "2515b693c3ba061a7b75bfcc26164c8a"
   },
   "D:\\deepslate dungeons\\db\\client.ts": {
     "mtime": 1780145250.5636506,
     "ast_hash": "461bea0f29217ce86331894e40a6b960",
-    "semantic_hash": ""
+    "semantic_hash": "461bea0f29217ce86331894e40a6b960"
   },
   "D:\\deepslate dungeons\\db\\migrate.ts": {
     "mtime": 1778787345.9449553,
     "ast_hash": "a9db6d12b24b1fd2b9b4add7890d1261",
-    "semantic_hash": ""
+    "semantic_hash": "a9db6d12b24b1fd2b9b4add7890d1261"
   },
   "D:\\deepslate dungeons\\db\\schema.sql": {
     "mtime": 1778787345.9449553,
     "ast_hash": "12db616e2a4ce9c9b6b956f7fc3c391e",
-    "semantic_hash": ""
+    "semantic_hash": "12db616e2a4ce9c9b6b956f7fc3c391e"
   },
   "D:\\deepslate dungeons\\eslint.config.mjs": {
     "mtime": 1778065407.3130493,
     "ast_hash": "dfa1f5f6a7037bf39dc510f30b180002",
-    "semantic_hash": ""
+    "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
   },
   "D:\\deepslate dungeons\\final_unique_issues.json": {
     "mtime": 1780316357.0597625,
     "ast_hash": "cb4f07a7dbc388d664fd8823dea444d1",
-    "semantic_hash": ""
+    "semantic_hash": "cb4f07a7dbc388d664fd8823dea444d1"
   },
   "D:\\deepslate dungeons\\hooks\\form.ts": {
     "mtime": 1780316357.0614426,
     "ast_hash": "9e06aa59676b608ba307e5661cd4890b",
-    "semantic_hash": ""
+    "semantic_hash": "9e06aa59676b608ba307e5661cd4890b"
   },
   "D:\\deepslate dungeons\\hooks\\gameForm.ts": {
     "mtime": 1780316357.062786,
     "ast_hash": "36be4e463ce2a1d6e1e24300bc04d419",
-    "semantic_hash": ""
+    "semantic_hash": "36be4e463ce2a1d6e1e24300bc04d419"
   },
   "D:\\deepslate dungeons\\hooks\\useAuth.ts": {
     "mtime": 1780316357.064227,
     "ast_hash": "e4ac6fc0637d071d74b0593779892274",
-    "semantic_hash": ""
+    "semantic_hash": "e4ac6fc0637d071d74b0593779892274"
   },
   "D:\\deepslate dungeons\\hooks\\useFormState.ts": {
     "mtime": 1780316357.064879,
     "ast_hash": "b9ff3294c4b65eec9da7434a85ac3a60",
-    "semantic_hash": ""
+    "semantic_hash": "b9ff3294c4b65eec9da7434a85ac3a60"
   },
   "D:\\deepslate dungeons\\hooks\\useIdempotentRequest.ts": {
     "mtime": 1780316357.0658777,
     "ast_hash": "5c51093b1c775f2c8e32ba71c1e7c881",
-    "semantic_hash": ""
+    "semantic_hash": "5c51093b1c775f2c8e32ba71c1e7c881"
   },
   "D:\\deepslate dungeons\\hooks\\useSupabase.ts": {
     "mtime": 1780316357.0669234,
     "ast_hash": "2978493d94baa9e03f2dc8ac5580e4fc",
-    "semantic_hash": ""
+    "semantic_hash": "2978493d94baa9e03f2dc8ac5580e4fc"
   },
   "D:\\deepslate dungeons\\instrumentation-client.ts": {
     "mtime": 1778324112.2465582,
     "ast_hash": "d6be11b24c8a52b934fdbf8249de4e9f",
-    "semantic_hash": ""
+    "semantic_hash": "d6be11b24c8a52b934fdbf8249de4e9f"
   },
   "D:\\deepslate dungeons\\issues_data.json": {
     "mtime": 1780316357.0684326,
     "ast_hash": "7565f6f0a3bfecf126145d36119d13af",
-    "semantic_hash": ""
+    "semantic_hash": "7565f6f0a3bfecf126145d36119d13af"
   },
   "D:\\deepslate dungeons\\lib\\GamesInsert.ts": {
     "mtime": 1780316357.069559,
     "ast_hash": "d99f2752a255a07f689bd64a2927f3f9",
-    "semantic_hash": ""
+    "semantic_hash": "d99f2752a255a07f689bd64a2927f3f9"
   },
   "D:\\deepslate dungeons\\lib\\auth.ts": {
     "mtime": 1780316357.0705576,
     "ast_hash": "779ace2f83d24b4d5c7dfc040956d76f",
-    "semantic_hash": ""
+    "semantic_hash": "779ace2f83d24b4d5c7dfc040956d76f"
   },
   "D:\\deepslate dungeons\\lib\\cache-warmup.ts": {
-    "mtime": 1780316357.0715542,
-    "ast_hash": "e93c15879f46d016adf0eebbbeebe352",
-    "semantic_hash": ""
+    "mtime": 1780564146.116886,
+    "ast_hash": "7030cb1c6a6b650410549360461ec6cd",
+    "semantic_hash": "7030cb1c6a6b650410549360461ec6cd"
   },
   "D:\\deepslate dungeons\\lib\\db.ts": {
     "mtime": 1780145250.5666468,
     "ast_hash": "5334b02b7f705d69fbcf8887fb6f9298",
-    "semantic_hash": ""
+    "semantic_hash": "5334b02b7f705d69fbcf8887fb6f9298"
   },
   "D:\\deepslate dungeons\\lib\\gamesFormValidation.ts": {
     "mtime": 1779021862.4286177,
     "ast_hash": "cf04fb0df92dcee13680d648efdc894f",
-    "semantic_hash": ""
+    "semantic_hash": "cf04fb0df92dcee13680d648efdc894f"
   },
   "D:\\deepslate dungeons\\lib\\jwt-validate.ts": {
     "mtime": 1780316357.072554,
     "ast_hash": "f81d45e27104839f04c5548b14b4c5f5",
-    "semantic_hash": ""
+    "semantic_hash": "f81d45e27104839f04c5548b14b4c5f5"
   },
   "D:\\deepslate dungeons\\lib\\middleware\\rate-limit.ts": {
     "mtime": 1780316357.0735493,
     "ast_hash": "1e177782348e3dc2d1246d1e21a6fca0",
-    "semantic_hash": ""
+    "semantic_hash": "1e177782348e3dc2d1246d1e21a6fca0"
   },
   "D:\\deepslate dungeons\\lib\\queue.ts": {
     "mtime": 1780316357.0745637,
     "ast_hash": "26bc8d2cf046f12bba9ca87283994cf5",
-    "semantic_hash": ""
+    "semantic_hash": "26bc8d2cf046f12bba9ca87283994cf5"
   },
   "D:\\deepslate dungeons\\lib\\retry.ts": {
     "mtime": 1779021862.4290693,
     "ast_hash": "8a67e0e35bc6e3666a14a7e814d664f5",
-    "semantic_hash": ""
+    "semantic_hash": "8a67e0e35bc6e3666a14a7e814d664f5"
   },
   "D:\\deepslate dungeons\\lib\\storage.ts": {
     "mtime": 1780316357.0745637,
     "ast_hash": "7d04315cec0c9227cb165dff28087f7c",
-    "semantic_hash": ""
+    "semantic_hash": "7d04315cec0c9227cb165dff28087f7c"
   },
   "D:\\deepslate dungeons\\lib\\supabase-auth.ts": {
     "mtime": 1780316357.0755608,
     "ast_hash": "c47f39a70833788ad05f96240cb6c2f8",
-    "semantic_hash": ""
+    "semantic_hash": "c47f39a70833788ad05f96240cb6c2f8"
   },
   "D:\\deepslate dungeons\\lib\\supabase.ts": {
     "mtime": 1778787345.9501748,
     "ast_hash": "c90ecb6ea7c9e9c9852c123c2f3ad930",
-    "semantic_hash": ""
+    "semantic_hash": "c90ecb6ea7c9e9c9852c123c2f3ad930"
   },
   "D:\\deepslate dungeons\\lib\\useGamesForm.ts": {
     "mtime": 1780316357.0766914,
     "ast_hash": "69a0052ef43046864dd3e810738a5e4d",
-    "semantic_hash": ""
+    "semantic_hash": "69a0052ef43046864dd3e810738a5e4d"
   },
   "D:\\deepslate dungeons\\lib\\utils.ts": {
     "mtime": 1778158625.0424652,
     "ast_hash": "5a6fd53fdcf2be529e9cc0b718fde352",
-    "semantic_hash": ""
+    "semantic_hash": "5a6fd53fdcf2be529e9cc0b718fde352"
   },
   "D:\\deepslate dungeons\\models\\games\\mongodb\\client.ts": {
     "mtime": 1780145250.5710344,
     "ast_hash": "ca58bc6085811881dd831e42ed7a42aa",
-    "semantic_hash": ""
+    "semantic_hash": "ca58bc6085811881dd831e42ed7a42aa"
   },
   "D:\\deepslate dungeons\\models\\games\\mongodb\\schema.ts": {
     "mtime": 1779021862.43321,
     "ast_hash": "33b8db57800b3a08d9c9d3c7aba0fd31",
-    "semantic_hash": ""
+    "semantic_hash": "33b8db57800b3a08d9c9d3c7aba0fd31"
   },
   "D:\\deepslate dungeons\\next.config.ts": {
     "mtime": 1778324112.2615297,
     "ast_hash": "d4611dd17912804396ef4b920da6949e",
-    "semantic_hash": ""
+    "semantic_hash": "d4611dd17912804396ef4b920da6949e"
   },
   "D:\\deepslate dungeons\\package.json": {
-    "mtime": 1780316357.0861478,
-    "ast_hash": "a567717ac6a4ca5d1f96db39ab8fa7cf",
-    "semantic_hash": ""
+    "mtime": 1780396856.143309,
+    "ast_hash": "55ced60d89c8a436ad4fd2272b253631",
+    "semantic_hash": "55ced60d89c8a436ad4fd2272b253631"
   },
   "D:\\deepslate dungeons\\postcss.config.mjs": {
     "mtime": 1778065407.5389762,
     "ast_hash": "239f3ebf717465dc636818a1a619398d",
-    "semantic_hash": ""
+    "semantic_hash": "239f3ebf717465dc636818a1a619398d"
   },
   "D:\\deepslate dungeons\\proxy.ts": {
     "mtime": 1780316357.099581,
     "ast_hash": "fd278dc36d9c27aef62452f52e7f8653",
-    "semantic_hash": ""
+    "semantic_hash": "fd278dc36d9c27aef62452f52e7f8653"
   },
   "D:\\deepslate dungeons\\skills-lock.json": {
-    "mtime": 1780318464.2401752,
-    "ast_hash": "62076b912a73d1a678b16790ecabe3fe",
-    "semantic_hash": ""
+    "mtime": 1780329801.009772,
+    "ast_hash": "44d3f3656792d731ccf6c3c76a77f5d7",
+    "semantic_hash": "44d3f3656792d731ccf6c3c76a77f5d7"
   },
   "D:\\deepslate dungeons\\tsconfig.json": {
     "mtime": 1778278129.8163712,
     "ast_hash": "02fc19ad21338c2ab820a70136310db4",
-    "semantic_hash": ""
+    "semantic_hash": "02fc19ad21338c2ab820a70136310db4"
   },
   "D:\\deepslate dungeons\\types\\api.ts": {
     "mtime": 1780316357.1176326,
     "ast_hash": "84a30c3a37d8e7fd8ad0f928b6e33f96",
-    "semantic_hash": ""
+    "semantic_hash": "84a30c3a37d8e7fd8ad0f928b6e33f96"
   },
   "D:\\deepslate dungeons\\types\\cards.ts": {
-    "mtime": 1780316357.118631,
-    "ast_hash": "a609315211ba4667d74d2ddb11ee2511",
-    "semantic_hash": ""
+    "mtime": 1780396337.6318884,
+    "ast_hash": "610d8f8b16319c4689d9ca8e17dcc4cc",
+    "semantic_hash": "610d8f8b16319c4689d9ca8e17dcc4cc"
   },
   "D:\\deepslate dungeons\\types\\db.ts": {
     "mtime": 1778787345.9614968,
     "ast_hash": "a34bbc7e59864c3e58b1bce335bcc9c0",
-    "semantic_hash": ""
+    "semantic_hash": "a34bbc7e59864c3e58b1bce335bcc9c0"
   },
   "D:\\deepslate dungeons\\types\\form.ts": {
     "mtime": 1780316357.1196291,
     "ast_hash": "1fa7b912b2fbe2b11676fed686cd0b0e",
-    "semantic_hash": ""
+    "semantic_hash": "1fa7b912b2fbe2b11676fed686cd0b0e"
   },
   "D:\\deepslate dungeons\\types\\gameForm.ts": {
     "mtime": 1780316357.1206262,
     "ast_hash": "dac7f1e6e9fcd6c90fbbc8915af0c1f6",
-    "semantic_hash": ""
+    "semantic_hash": "dac7f1e6e9fcd6c90fbbc8915af0c1f6"
   },
   "D:\\deepslate dungeons\\types\\gamedata.ts": {
-    "mtime": 1780316343.1063833,
+    "mtime": 1780329793.2274861,
     "ast_hash": "88239963473fd99b295d6ef446f49769",
-    "semantic_hash": ""
+    "semantic_hash": "88239963473fd99b295d6ef446f49769"
   },
   "D:\\deepslate dungeons\\types\\images.ts": {
     "mtime": 1780316357.121628,
     "ast_hash": "69918c4d1f07eef0b2408c46080c748f",
-    "semantic_hash": ""
+    "semantic_hash": "69918c4d1f07eef0b2408c46080c748f"
   },
   "D:\\deepslate dungeons\\types\\validation.ts": {
-    "mtime": 1780316357.1226196,
+    "mtime": 1780320772.946443,
     "ast_hash": "934dbb2cd29d5927e99dda8abafad714",
-    "semantic_hash": ""
+    "semantic_hash": "934dbb2cd29d5927e99dda8abafad714"
   },
   "D:\\deepslate dungeons\\ui\\FormUI\\imageComponent.tsx": {
     "mtime": 1780316357.123293,
     "ast_hash": "bccac20dedb1625c5982f5a794c16624",
-    "semantic_hash": ""
+    "semantic_hash": "bccac20dedb1625c5982f5a794c16624"
   },
   "D:\\deepslate dungeons\\ui\\FormUI\\textComponent.tsx": {
     "mtime": 1778787345.9645445,
     "ast_hash": "3410b6c5933bd10ff8e4a12587c5d2c6",
-    "semantic_hash": ""
+    "semantic_hash": "3410b6c5933bd10ff8e4a12587c5d2c6"
   },
   "D:\\deepslate dungeons\\ui\\gamesFormUi\\charactersStep.tsx": {
     "mtime": 1780316357.1242933,
     "ast_hash": "f0b76b3984de06aa9c47b80b12c63e5c",
-    "semantic_hash": ""
+    "semantic_hash": "f0b76b3984de06aa9c47b80b12c63e5c"
   },
   "D:\\deepslate dungeons\\ui\\gamesFormUi\\form.tsx": {
     "mtime": 1780316357.125746,
     "ast_hash": "cd9775651cd4fbb1c494475fe0be1131",
-    "semantic_hash": ""
+    "semantic_hash": "cd9775651cd4fbb1c494475fe0be1131"
   },
   "D:\\deepslate dungeons\\ui\\gamesFormUi\\itemsStep.tsx": {
     "mtime": 1780316357.126889,
     "ast_hash": "b39a5641098de03361adaa237aa9a484",
-    "semantic_hash": ""
+    "semantic_hash": "b39a5641098de03361adaa237aa9a484"
   },
   "D:\\deepslate dungeons\\ui\\gamesFormUi\\mapsStep.tsx": {
     "mtime": 1780316357.1280756,
     "ast_hash": "446a1acafc83072b78cd5a492d68a7e4",
-    "semantic_hash": ""
+    "semantic_hash": "446a1acafc83072b78cd5a492d68a7e4"
   },
   "D:\\deepslate dungeons\\ui\\primitives\\button.tsx": {
     "mtime": 1780316357.129078,
     "ast_hash": "fa2c2ff50d4a757f662ac8799e610236",
-    "semantic_hash": ""
+    "semantic_hash": "fa2c2ff50d4a757f662ac8799e610236"
   },
   "D:\\deepslate dungeons\\ui\\primitives\\card.tsx": {
     "mtime": 1780316357.129078,
     "ast_hash": "3538b99ca26cc9db07bef571cb0fe900",
-    "semantic_hash": ""
+    "semantic_hash": "3538b99ca26cc9db07bef571cb0fe900"
   },
   "D:\\deepslate dungeons\\ui\\primitives\\input.tsx": {
     "mtime": 1780316357.1304252,
     "ast_hash": "cbda0485f9cb22305a053205f9f8ee5c",
-    "semantic_hash": ""
+    "semantic_hash": "cbda0485f9cb22305a053205f9f8ee5c"
   },
   "D:\\deepslate dungeons\\ui\\primitives\\label.tsx": {
     "mtime": 1780316357.1304252,
     "ast_hash": "c42b106a0d4a65cbda10c624494a8024",
-    "semantic_hash": ""
+    "semantic_hash": "c42b106a0d4a65cbda10c624494a8024"
   },
   "D:\\deepslate dungeons\\ui\\primitives\\textarea.tsx": {
     "mtime": 1780316357.1318958,
     "ast_hash": "7f2c52b75fef2c8106e352f8e63e8656",
-    "semantic_hash": ""
+    "semantic_hash": "7f2c52b75fef2c8106e352f8e63e8656"
   },
   "D:\\deepslate dungeons\\unique_issues.json": {
     "mtime": 1780316357.1318958,
     "ast_hash": "cb4f07a7dbc388d664fd8823dea444d1",
-    "semantic_hash": ""
+    "semantic_hash": "cb4f07a7dbc388d664fd8823dea444d1"
   },
   "D:\\deepslate dungeons\\utilities\\FormUtils.ts": {
     "mtime": 1780235040.9509838,
     "ast_hash": "038cbb7f93680d9487d35ce1a9f4a621",
-    "semantic_hash": ""
+    "semantic_hash": "038cbb7f93680d9487d35ce1a9f4a621"
   },
   "D:\\deepslate dungeons\\utilities\\clientUtilities\\exceptions.ts": {
     "mtime": 1780316357.1339893,
     "ast_hash": "2d962eb4aa05f22ea9d36acfc6d25480",
-    "semantic_hash": ""
+    "semantic_hash": "2d962eb4aa05f22ea9d36acfc6d25480"
   },
   "D:\\deepslate dungeons\\utilities\\clientUtilities\\imagesUtils.ts": {
     "mtime": 1780316357.134416,
     "ast_hash": "605fae626facd7a711c977519a1a7167",
-    "semantic_hash": ""
+    "semantic_hash": "605fae626facd7a711c977519a1a7167"
   },
   "D:\\deepslate dungeons\\utilities\\db.ts": {
     "mtime": 1778787345.9658868,
     "ast_hash": "2b14944fcaf78d2b223a891e43afee19",
-    "semantic_hash": ""
+    "semantic_hash": "2b14944fcaf78d2b223a891e43afee19"
   },
   "D:\\deepslate dungeons\\utilities\\idempotency.ts": {
     "mtime": 1780316357.1349247,
     "ast_hash": "1a16cf2693655888a364ee2bb2a8d86b",
-    "semantic_hash": ""
+    "semantic_hash": "1a16cf2693655888a364ee2bb2a8d86b"
   },
   "D:\\deepslate dungeons\\utilities\\imagesUtils.ts": {
     "mtime": 1780316357.135929,
     "ast_hash": "0062c03d200411edd5b1b34dccbae2b9",
-    "semantic_hash": ""
+    "semantic_hash": "0062c03d200411edd5b1b34dccbae2b9"
   },
   "D:\\deepslate dungeons\\utilities\\insertGame.ts": {
     "mtime": 1780316357.1369276,
     "ast_hash": "3a66f4ce95a59114b2e6f496053df1f9",
-    "semantic_hash": ""
+    "semantic_hash": "3a66f4ce95a59114b2e6f496053df1f9"
   },
   "D:\\deepslate dungeons\\utilities\\insertGameImages.ts": {
     "mtime": 1780316423.3142102,
     "ast_hash": "3a26284018c68b486b67eac4cdd4c24b",
-    "semantic_hash": ""
+    "semantic_hash": "3a26284018c68b486b67eac4cdd4c24b"
   },
   "D:\\deepslate dungeons\\utilities\\pull.ts": {
     "mtime": 1780316357.1389203,
     "ast_hash": "edf642e56bfe7b6b057971e14a56012c",
-    "semantic_hash": ""
+    "semantic_hash": "edf642e56bfe7b6b057971e14a56012c"
   },
   "D:\\deepslate dungeons\\utilities\\sleep.ts": {
     "mtime": 1780316357.1389203,
     "ast_hash": "676333b43731b4ae63c767f1a2d50ad4",
-    "semantic_hash": ""
+    "semantic_hash": "676333b43731b4ae63c767f1a2d50ad4"
   },
   "D:\\deepslate dungeons\\utilities\\utils.ts": {
-    "mtime": 1780316357.1399202,
-    "ast_hash": "25fbaf24332365ee2d30b3ee152a8f4a",
-    "semantic_hash": ""
+    "mtime": 1780396284.256376,
+    "ast_hash": "9f02320214fa1a8a9ffea0d68af2a118",
+    "semantic_hash": "9f02320214fa1a8a9ffea0d68af2a118"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\AGENTS.md": {
     "mtime": 1780316356.88975,
     "ast_hash": "69a670b77df4730929887958d48bf111",
-    "semantic_hash": ""
+    "semantic_hash": "69a670b77df4730929887958d48bf111"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\assessment\\Skill.md": {
     "mtime": 1780316356.8908234,
     "ast_hash": "9c7ddfb13a27ab2604246bcd90930461",
-    "semantic_hash": ""
+    "semantic_hash": "9c7ddfb13a27ab2604246bcd90930461"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-create-component\\SKILL.md": {
     "mtime": 1780316356.8930123,
     "ast_hash": "196d330c73161936858bda9b55fec24c",
-    "semantic_hash": ""
+    "semantic_hash": "196d330c73161936858bda9b55fec24c"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-create-component\\agents\\openai.yaml": {
     "mtime": 1780316356.8940096,
     "ast_hash": "220fe8f9c8c013e5e8a4e235c11956fd",
-    "semantic_hash": ""
+    "semantic_hash": "220fe8f9c8c013e5e8a4e235c11956fd"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-create-component\\references\\advanced-patterns.md": {
     "mtime": 1780316356.8960135,
     "ast_hash": "a62af63f4af89d0c4d7127b3de9c0511",
-    "semantic_hash": ""
+    "semantic_hash": "a62af63f4af89d0c4d7127b3de9c0511"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-create-component\\references\\hybrid-components.md": {
     "mtime": 1780316356.897012,
     "ast_hash": "6226d5a592f5792aad89cb451761b3cd",
-    "semantic_hash": ""
+    "semantic_hash": "6226d5a592f5792aad89cb451761b3cd"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-create-component\\references\\local-components.md": {
     "mtime": 1780316356.899442,
     "ast_hash": "196d629c81f2a5b6b7919bd002c47ae6",
-    "semantic_hash": ""
+    "semantic_hash": "196d629c81f2a5b6b7919bd002c47ae6"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-create-component\\references\\packaged-components.md": {
     "mtime": 1780316356.899442,
     "ast_hash": "944a36c2cfcf9d90273e08e63c43ba25",
-    "semantic_hash": ""
+    "semantic_hash": "944a36c2cfcf9d90273e08e63c43ba25"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-migration-helper\\SKILL.md": {
     "mtime": 1780316356.9015958,
     "ast_hash": "1f52175ed2783ad9c45b1b4644247af1",
-    "semantic_hash": ""
+    "semantic_hash": "1f52175ed2783ad9c45b1b4644247af1"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-migration-helper\\agents\\openai.yaml": {
     "mtime": 1780316356.902601,
     "ast_hash": "c5ce609704dd5ccf11eef5ade5c483ba",
-    "semantic_hash": ""
+    "semantic_hash": "c5ce609704dd5ccf11eef5ade5c483ba"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-migration-helper\\references\\migration-patterns.md": {
     "mtime": 1780316356.9048886,
     "ast_hash": "bdcae90d6ed317e6b1a5b8d2015cb5ce",
-    "semantic_hash": ""
+    "semantic_hash": "bdcae90d6ed317e6b1a5b8d2015cb5ce"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-migration-helper\\references\\migrations-component.md": {
     "mtime": 1780316356.9048886,
     "ast_hash": "8bcaa6c55543a63aa0eefc8e302868f4",
-    "semantic_hash": ""
+    "semantic_hash": "8bcaa6c55543a63aa0eefc8e302868f4"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-performance-audit\\SKILL.md": {
     "mtime": 1780316356.9059489,
     "ast_hash": "4e9b78427f1971eb07ff143c50855292",
-    "semantic_hash": ""
+    "semantic_hash": "4e9b78427f1971eb07ff143c50855292"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-performance-audit\\agents\\openai.yaml": {
     "mtime": 1780316356.9079525,
     "ast_hash": "e32b6b73766f5789d6ea35c33b301bc1",
-    "semantic_hash": ""
+    "semantic_hash": "e32b6b73766f5789d6ea35c33b301bc1"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-performance-audit\\references\\function-budget.md": {
     "mtime": 1780316356.9091463,
     "ast_hash": "5cbbdc3a33709ef2362ad598ab0cea58",
-    "semantic_hash": ""
+    "semantic_hash": "5cbbdc3a33709ef2362ad598ab0cea58"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-performance-audit\\references\\hot-path-rules.md": {
     "mtime": 1780316356.9101913,
     "ast_hash": "c0efc6986ba707368a214a68c52e3288",
-    "semantic_hash": ""
+    "semantic_hash": "c0efc6986ba707368a214a68c52e3288"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-performance-audit\\references\\occ-conflicts.md": {
     "mtime": 1780316356.9123902,
     "ast_hash": "bf8351e99fb9d67948f67f746bca33c8",
-    "semantic_hash": ""
+    "semantic_hash": "bf8351e99fb9d67948f67f746bca33c8"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-performance-audit\\references\\subscription-cost.md": {
     "mtime": 1780316356.9126654,
     "ast_hash": "c176d967670a9e7015cfe03503996234",
-    "semantic_hash": ""
+    "semantic_hash": "c176d967670a9e7015cfe03503996234"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-quickstart\\SKILL.md": {
     "mtime": 1780316356.9146645,
     "ast_hash": "a5a7adb402feb221c53a968cce96ea37",
-    "semantic_hash": ""
+    "semantic_hash": "a5a7adb402feb221c53a968cce96ea37"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-quickstart\\agents\\openai.yaml": {
     "mtime": 1780316356.9156587,
     "ast_hash": "54a5eec30e580b52ec9bbd3c41f07e02",
-    "semantic_hash": ""
+    "semantic_hash": "54a5eec30e580b52ec9bbd3c41f07e02"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-setup-auth\\SKILL.md": {
     "mtime": 1780316356.9174778,
     "ast_hash": "e9147ddfd3e08de978332019e9b52b39",
-    "semantic_hash": ""
+    "semantic_hash": "e9147ddfd3e08de978332019e9b52b39"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-setup-auth\\agents\\openai.yaml": {
     "mtime": 1780316356.9184704,
     "ast_hash": "a94b558acadffbcb9198572057e27f50",
-    "semantic_hash": ""
+    "semantic_hash": "a94b558acadffbcb9198572057e27f50"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-setup-auth\\references\\auth0.md": {
     "mtime": 1780316356.9210694,
     "ast_hash": "669e9371606c9dd0dae68a20f0d9ae11",
-    "semantic_hash": ""
+    "semantic_hash": "669e9371606c9dd0dae68a20f0d9ae11"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-setup-auth\\references\\clerk.md": {
     "mtime": 1780316356.922002,
     "ast_hash": "1873cded0ff170fae07cee923e8e2f62",
-    "semantic_hash": ""
+    "semantic_hash": "1873cded0ff170fae07cee923e8e2f62"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-setup-auth\\references\\convex-auth.md": {
     "mtime": 1780316356.9232092,
     "ast_hash": "4dc023feff0e7be43c02fcad77ec4a83",
-    "semantic_hash": ""
+    "semantic_hash": "4dc023feff0e7be43c02fcad77ec4a83"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-setup-auth\\references\\workos-authkit.md": {
     "mtime": 1780316356.9249823,
     "ast_hash": "9be534f8fb1291c9e1fabb1f46cfadaf",
-    "semantic_hash": ""
+    "semantic_hash": "9be534f8fb1291c9e1fabb1f46cfadaf"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex\\SKILL.md": {
     "mtime": 1780316356.9261231,
     "ast_hash": "c34b4dfe9691a4e89b980bda95999e7b",
-    "semantic_hash": ""
+    "semantic_hash": "c34b4dfe9691a4e89b980bda95999e7b"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\deploymentChecks\\SKILL.md": {
     "mtime": 1780316356.9277816,
     "ast_hash": "c874d41b64cf4b40680963ac9ee7e3c9",
-    "semantic_hash": ""
+    "semantic_hash": "c874d41b64cf4b40680963ac9ee7e3c9"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\documentation\\SKILL.md": {
-    "mtime": 1780317804.108801,
+    "mtime": 1780329800.914207,
     "ast_hash": "f89d61f06b277e87c043806f074a836c",
-    "semantic_hash": ""
+    "semantic_hash": "f89d61f06b277e87c043806f074a836c"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\integration-nextjs-app-router\\SKILL.md": {
     "mtime": 1780316356.929576,
     "ast_hash": "763fa63dca4b3c4f4d61bb1d1ea4d11d",
-    "semantic_hash": ""
+    "semantic_hash": "763fa63dca4b3c4f4d61bb1d1ea4d11d"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\integration-nextjs-app-router\\references\\EXAMPLE.md": {
     "mtime": 1780316356.931909,
     "ast_hash": "aefcedd306d33efa3a71009c1481d7a7",
-    "semantic_hash": ""
+    "semantic_hash": "aefcedd306d33efa3a71009c1481d7a7"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\integration-nextjs-app-router\\references\\basic-integration-1.0-begin.md": {
     "mtime": 1780316356.932898,
     "ast_hash": "cb4415f81b8a1ca01c519c1111f73df2",
-    "semantic_hash": ""
+    "semantic_hash": "cb4415f81b8a1ca01c519c1111f73df2"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\integration-nextjs-app-router\\references\\basic-integration-1.1-edit.md": {
     "mtime": 1780316356.934408,
     "ast_hash": "1b84cf1deec3d9b45d6dad520a60e2be",
-    "semantic_hash": ""
+    "semantic_hash": "1b84cf1deec3d9b45d6dad520a60e2be"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\integration-nextjs-app-router\\references\\basic-integration-1.2-revise.md": {
     "mtime": 1780316356.9352367,
     "ast_hash": "e0e4d9da16da06c67df5c4dd031d916e",
-    "semantic_hash": ""
+    "semantic_hash": "e0e4d9da16da06c67df5c4dd031d916e"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\integration-nextjs-app-router\\references\\basic-integration-1.3-conclude.md": {
     "mtime": 1780316356.9363964,
     "ast_hash": "e6f9efecc85064389ecd74907c8331ae",
-    "semantic_hash": ""
+    "semantic_hash": "e6f9efecc85064389ecd74907c8331ae"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\integration-nextjs-app-router\\references\\identify-users.md": {
     "mtime": 1780316356.9392135,
     "ast_hash": "1aac94c14b28b1cb66f63e95e95520b3",
-    "semantic_hash": ""
+    "semantic_hash": "1aac94c14b28b1cb66f63e95e95520b3"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\integration-nextjs-app-router\\references\\next-js.md": {
     "mtime": 1780316356.9407392,
     "ast_hash": "625a52b287a08d69db0341c63c101c4e",
-    "semantic_hash": ""
+    "semantic_hash": "625a52b287a08d69db0341c63c101c4e"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\neon-postgres\\SKILL.md": {
     "mtime": 1778787345.9290283,
     "ast_hash": "d99c42e9c657e51a96e8971e241002c8",
-    "semantic_hash": ""
+    "semantic_hash": "d99c42e9c657e51a96e8971e241002c8"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\project-reference\\Skill.md": {
     "mtime": 1780316356.9426022,
     "ast_hash": "a8bbf4ea3c8f9a242d3a2d9967fbcb4c",
-    "semantic_hash": ""
+    "semantic_hash": "a8bbf4ea3c8f9a242d3a2d9967fbcb4c"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\references\\Skill.md": {
     "mtime": 1780316356.9442341,
     "ast_hash": "6b9bc324d01c7d747f62beca05ec607f",
-    "semantic_hash": ""
+    "semantic_hash": "6b9bc324d01c7d747f62beca05ec607f"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\self-assessment\\Architicture-refrences\\technical-architecture-analysis\\Skill.md": {
     "mtime": 1780316356.9478326,
     "ast_hash": "94d68070fc943cd13d978de22d2c13b6",
-    "semantic_hash": ""
+    "semantic_hash": "94d68070fc943cd13d978de22d2c13b6"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\self-assessment\\Architicture-refrences\\ui-architecture-analysis\\Skill.md": {
     "mtime": 1780316356.9502516,
     "ast_hash": "2b4a3eb89b055f33082eb4aa79cbe842",
-    "semantic_hash": ""
+    "semantic_hash": "2b4a3eb89b055f33082eb4aa79cbe842"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\self-assessment\\Skill.md": {
     "mtime": 1780316356.951249,
     "ast_hash": "9fd260d3a184d8edb1cc6ef3a81db23d",
-    "semantic_hash": ""
+    "semantic_hash": "9fd260d3a184d8edb1cc6ef3a81db23d"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\self-assessment\\assesment\\Skill.md": {
     "mtime": 1780316356.9536235,
     "ast_hash": "b2876e687d42cadfed9aee7fa33aedcc",
-    "semantic_hash": ""
+    "semantic_hash": "b2876e687d42cadfed9aee7fa33aedcc"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\self-assessment\\personality-refrences\\Skill.md": {
     "mtime": 1780316356.9556153,
     "ast_hash": "333861f81bc3bdb3628c42a24474cf9c",
-    "semantic_hash": ""
+    "semantic_hash": "333861f81bc3bdb3628c42a24474cf9c"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\ui-design\\SKILL.md": {
     "mtime": 1780316356.9566123,
     "ast_hash": "62fec14bdb823fdff5aaf5de1f68bd2f",
-    "semantic_hash": ""
+    "semantic_hash": "62fec14bdb823fdff5aaf5de1f68bd2f"
   },
   "D:\\deepslate dungeons\\CLAUDE.md": {
     "mtime": 1780316356.9586124,
     "ast_hash": "731cf0f23e2f6426fe28143cb1a31564",
-    "semantic_hash": ""
+    "semantic_hash": "731cf0f23e2f6426fe28143cb1a31564"
   },
   "D:\\deepslate dungeons\\COMPLETION_SUMMARY.md": {
     "mtime": 1780316356.959607,
     "ast_hash": "bb69ebe66a8e68765bb3226eb9bbfd29",
-    "semantic_hash": ""
+    "semantic_hash": "bb69ebe66a8e68765bb3226eb9bbfd29"
   },
   "D:\\deepslate dungeons\\DOCUMENTATION_COMPLETE.md": {
     "mtime": 1780316356.9606075,
     "ast_hash": "ba846a6ce5f9ec896e7a026574c20f6f",
-    "semantic_hash": ""
+    "semantic_hash": "ba846a6ce5f9ec896e7a026574c20f6f"
   },
   "D:\\deepslate dungeons\\JWT_IMPLEMENTATION_SUMMARY.md": {
     "mtime": 1780316356.9616096,
     "ast_hash": "a97e5a70806aa68a4353ebf4a0b839a3",
-    "semantic_hash": ""
+    "semantic_hash": "a97e5a70806aa68a4353ebf4a0b839a3"
   },
   "D:\\deepslate dungeons\\JWT_VALIDATION_GUIDE.md": {
     "mtime": 1780316356.9636054,
     "ast_hash": "8805e951683ed9524b60ec884cdf67f9",
-    "semantic_hash": ""
+    "semantic_hash": "8805e951683ed9524b60ec884cdf67f9"
   },
   "D:\\deepslate dungeons\\PLAN.md": {
     "mtime": 1780316356.9646044,
     "ast_hash": "72c22260c5baca367ca10115b7ab14f6",
-    "semantic_hash": ""
+    "semantic_hash": "72c22260c5baca367ca10115b7ab14f6"
   },
   "D:\\deepslate dungeons\\README.md": {
     "mtime": 1780316356.9656005,
     "ast_hash": "614529c1553185c53803586c96d879f1",
-    "semantic_hash": ""
+    "semantic_hash": "614529c1553185c53803586c96d879f1"
   },
   "D:\\deepslate dungeons\\architicture\\architecture.md": {
     "mtime": 1780316356.9883575,
     "ast_hash": "39f7d2c254fd8736cd23d89b040cf6e0",
-    "semantic_hash": ""
+    "semantic_hash": "39f7d2c254fd8736cd23d89b040cf6e0"
   },
   "D:\\deepslate dungeons\\convex\\_generated\\ai\\guidelines.md": {
     "mtime": 1780316357.0074372,
     "ast_hash": "8cbea02be34ffeeb5ded27222eaf4ab8",
-    "semantic_hash": ""
+    "semantic_hash": "8cbea02be34ffeeb5ded27222eaf4ab8"
   },
   "D:\\deepslate dungeons\\documentations\\README.md": {
     "mtime": 1780316357.0199225,
     "ast_hash": "9510eb06044f44d832633f46c2209e93",
-    "semantic_hash": ""
+    "semantic_hash": "9510eb06044f44d832633f46c2209e93"
   },
   "D:\\deepslate dungeons\\documentations\\documentations\\01-ARCHITECTURE.md": {
     "mtime": 1780316357.0210998,
     "ast_hash": "6c960617907b7c4076664d1d65c0ac72",
-    "semantic_hash": ""
+    "semantic_hash": "6c960617907b7c4076664d1d65c0ac72"
   },
   "D:\\deepslate dungeons\\documentations\\documentations\\02-AUTHENTICATION.md": {
     "mtime": 1780316357.0220985,
     "ast_hash": "a76d19c1aefb06c7765289bd0ffa43ab",
-    "semantic_hash": ""
+    "semantic_hash": "a76d19c1aefb06c7765289bd0ffa43ab"
   },
   "D:\\deepslate dungeons\\documentations\\documentations\\03-DATA_FLOW.md": {
     "mtime": 1780316357.023386,
     "ast_hash": "65fc33b670fb1ba439431e37da3937f1",
-    "semantic_hash": ""
-  },
-  "D:\\deepslate dungeons\\documentations\\features\\GamePage.md": {
-    "mtime": 1780316810.3432841,
-    "ast_hash": "9249430074101b8aeeccc49281f28bf3",
-    "semantic_hash": ""
+    "semantic_hash": "65fc33b670fb1ba439431e37da3937f1"
   },
   "D:\\deepslate dungeons\\documentations\\guides\\01-JWT_SETUP.md": {
     "mtime": 1780316357.0243847,
     "ast_hash": "6017c22f2c8686101edfd0d65c2eb62c",
-    "semantic_hash": ""
+    "semantic_hash": "6017c22f2c8686101edfd0d65c2eb62c"
   },
   "D:\\deepslate dungeons\\documentations\\guides\\02-API_IMPLEMENTATION.md": {
     "mtime": 1780316357.0253818,
     "ast_hash": "1250b22ab0282ef062dd671c54a1a7b6",
-    "semantic_hash": ""
+    "semantic_hash": "1250b22ab0282ef062dd671c54a1a7b6"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\48-INCONSISTENT-LAYOUT-SYSTEM.md": {
     "mtime": 1780316357.0263803,
     "ast_hash": "cf0b02b1cac6f510df2c9fbe75765946",
-    "semantic_hash": ""
+    "semantic_hash": "cf0b02b1cac6f510df2c9fbe75765946"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\49-RENDERING-STRATEGY-INEFFICIENCIES.md": {
     "mtime": 1780316357.0273764,
     "ast_hash": "1dd8ffabf2a09f93bbab572ba0e82911",
-    "semantic_hash": ""
+    "semantic_hash": "1dd8ffabf2a09f93bbab572ba0e82911"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\50-MISSING-DESIGN-SYSTEM.md": {
     "mtime": 1780316357.0293722,
     "ast_hash": "337f5f3b02d6ca7e06aecac360089b45",
-    "semantic_hash": ""
+    "semantic_hash": "337f5f3b02d6ca7e06aecac360089b45"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\51-RESPONSIVENESS-IMPLEMENTATION-GAPS.md": {
     "mtime": 1780316357.0293722,
     "ast_hash": "5c0c4cc4b8dd7c9cecb1400560bc3ed9",
-    "semantic_hash": ""
+    "semantic_hash": "5c0c4cc4b8dd7c9cecb1400560bc3ed9"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\52-COMPONENT-COUPLING-REUSABILITY.md": {
     "mtime": 1780316357.031424,
     "ast_hash": "6668148889ad0841f23c6c811d506ac3",
-    "semantic_hash": ""
+    "semantic_hash": "6668148889ad0841f23c6c811d506ac3"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\53-ACCESSIBILITY-GAPS.md": {
     "mtime": 1780316357.0324218,
     "ast_hash": "1c0ae8a99b12ce736ec44e20a0091345",
-    "semantic_hash": ""
+    "semantic_hash": "1c0ae8a99b12ce736ec44e20a0091345"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\54-FORM-ACCESSIBILITY-DEFICIENCIES.md": {
     "mtime": 1780316357.03292,
     "ast_hash": "5d38a068048d221ace7a790f662ce71c",
-    "semantic_hash": ""
+    "semantic_hash": "5d38a068048d221ace7a790f662ce71c"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\55-INADEQUATE-STATE-MANAGEMENT.md": {
     "mtime": 1780316357.0342796,
     "ast_hash": "d045e7fe04329705ab78ad775336cda0",
-    "semantic_hash": ""
+    "semantic_hash": "d045e7fe04329705ab78ad775336cda0"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\56-OBJECT-URL-MEMORY-LEAK.md": {
     "mtime": 1780316357.034789,
     "ast_hash": "c58899ed7eb04205b92b9b7be190a3c8",
-    "semantic_hash": ""
+    "semantic_hash": "c58899ed7eb04205b92b9b7be190a3c8"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\57-EXCESSIVE-PROP-DRILLING.md": {
     "mtime": 1780316357.0366123,
     "ast_hash": "fa48fef3d56f8f86951f3392b29a3933",
-    "semantic_hash": ""
+    "semantic_hash": "fa48fef3d56f8f86951f3392b29a3933"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\58-FORM-HOOKS-CODE-DUPLICATION.md": {
     "mtime": 1780316357.0371766,
     "ast_hash": "1a6ced2e746d22dfb85c13dc08d806d7",
-    "semantic_hash": ""
+    "semantic_hash": "1a6ced2e746d22dfb85c13dc08d806d7"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\59-ARRAY-INDEX-AS-REACT-KEY.md": {
     "mtime": 1780316357.0381844,
     "ast_hash": "5d81a0548a88f079679d52be1542cc68",
-    "semantic_hash": ""
+    "semantic_hash": "5d81a0548a88f079679d52be1542cc68"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\60-DUPLICATE-SLEEP-UTILITY.md": {
     "mtime": 1780316357.039181,
     "ast_hash": "4967f957736f813779d75132671634d4",
-    "semantic_hash": ""
+    "semantic_hash": "4967f957736f813779d75132671634d4"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\61-LIKES-COUNT-RESET-TO-ZERO.md": {
     "mtime": 1780316357.0401754,
     "ast_hash": "dac5f0dcd024a3ada535b1fcf9b6e7ab",
-    "semantic_hash": ""
+    "semantic_hash": "dac5f0dcd024a3ada535b1fcf9b6e7ab"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\62-ROUTE-SPECIFIC-HELPERS-IN-CACHE-WARMUP-MODULE.md": {
     "mtime": 1780316357.0411787,
     "ast_hash": "393c67f894e3f40d59bb982356c6f040",
-    "semantic_hash": ""
+    "semantic_hash": "393c67f894e3f40d59bb982356c6f040"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\64-UNNECESSARY-ZOD-SCHEMA-FOR-SIMPLE-QUERY-PARAMS.md": {
     "mtime": 1780316357.0421734,
     "ast_hash": "21038fbc1b5147037a573db1489ca92a",
-    "semantic_hash": ""
+    "semantic_hash": "21038fbc1b5147037a573db1489ca92a"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\65-RATE-LIMITER-USES-WRONG-BOTTLENECK-API.md": {
     "mtime": 1780316357.0431707,
     "ast_hash": "d914d9881045b61ab2ffb99084d2a9b5",
-    "semantic_hash": ""
+    "semantic_hash": "d914d9881045b61ab2ffb99084d2a9b5"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\66-WRONG-JWT-AUTH-APPROACH.md": {
     "mtime": 1780316357.0441685,
     "ast_hash": "63a75a8ebdddcadae091bc270513108d",
-    "semantic_hash": ""
+    "semantic_hash": "63a75a8ebdddcadae091bc270513108d"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\67-N+1-REDIS-QUERY-IN-GAMES-API.md": {
     "mtime": 1780316357.0457454,
     "ast_hash": "d96306c5c63294e241a45ee60bd5c4a5",
-    "semantic_hash": ""
+    "semantic_hash": "d96306c5c63294e241a45ee60bd5c4a5"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\68-DOUBLE-READ-REQUEST-BODY-IN-API-CONVERTURL.md": {
     "mtime": 1780316357.0467436,
     "ast_hash": "33571e754f58d51191b6a9c75fa66b04",
-    "semantic_hash": ""
+    "semantic_hash": "33571e754f58d51191b6a9c75fa66b04"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\69-FILE-OBJECT-SILENTLY-LOST-IN-JSON-STRINGIFY.md": {
     "mtime": 1780316357.04774,
     "ast_hash": "842bc3563876fbe0aef5f9bb94f6f2b3",
-    "semantic_hash": ""
+    "semantic_hash": "842bc3563876fbe0aef5f9bb94f6f2b3"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\70-WASTEFUL-DATA-URL-FETCH-ROUND-TRIP-IN-IMAGE-PIPELINE.md": {
     "mtime": 1780316357.0497348,
     "ast_hash": "976460c92905ea77bb471c8bfb153c5f",
-    "semantic_hash": ""
+    "semantic_hash": "976460c92905ea77bb471c8bfb153c5f"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\71-ZODERROR-USES-ISSUES-NOT-ERRORS.md": {
     "mtime": 1780316357.0497348,
     "ast_hash": "e1d25cf851362a612e174967735a90ca",
-    "semantic_hash": ""
+    "semantic_hash": "e1d25cf851362a612e174967735a90ca"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\72-OPTIONAL-IMAGE-FIELD-MISSING-FALLBACK.md": {
     "mtime": 1780316357.05173,
     "ast_hash": "afbcaae15d8ae7fffb5c7e3ae93d6c25",
-    "semantic_hash": ""
+    "semantic_hash": "afbcaae15d8ae7fffb5c7e3ae93d6c25"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\73-USEAUTH-IMPORT-NAME-CONFLICT.md": {
     "mtime": 1780316357.05173,
     "ast_hash": "2f3028216903de0d584f75cd04b5954c",
-    "semantic_hash": ""
+    "semantic_hash": "2f3028216903de0d584f75cd04b5954c"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\74-REQUEST-ABORTED-NO-IMAGES.md": {
     "mtime": 1780316357.053156,
     "ast_hash": "49b9fe59ec504435155cae640ea20211",
-    "semantic_hash": ""
+    "semantic_hash": "49b9fe59ec504435155cae640ea20211"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\75-FORM-STYLES-BUTTON-PREVIEW-WIZARD.md": {
     "mtime": 1780316357.053156,
     "ast_hash": "e4644d623ef07253856f50a8ca460b93",
-    "semantic_hash": ""
+    "semantic_hash": "e4644d623ef07253856f50a8ca460b93"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\76-DOCUMENTATION-AND-BUGFIXES.md": {
-    "mtime": 1780316357.054816,
+    "mtime": 1780320772.9444485,
     "ast_hash": "50b24ffe75d875630a0592e88ef53390",
-    "semantic_hash": ""
+    "semantic_hash": "50b24ffe75d875630a0592e88ef53390"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\77-ZOD-VALIDATION-CENTRALIZATION.md": {
-    "mtime": 1780316357.0552607,
+    "mtime": 1780320772.9454455,
     "ast_hash": "3820765e9fab65d725ccd4f68e9a52bb",
-    "semantic_hash": ""
+    "semantic_hash": "3820765e9fab65d725ccd4f68e9a52bb"
   },
   "D:\\deepslate dungeons\\documentations\\issues\\README.md": {
-    "mtime": 1780316357.056258,
-    "ast_hash": "9a050ad69ef1c885b5910b5501d8469d",
-    "semantic_hash": ""
+    "mtime": 1780564158.8294406,
+    "ast_hash": "bd6b8f8361f0064678b40860caa7aeda",
+    "semantic_hash": "bd6b8f8361f0064678b40860caa7aeda"
   },
   "D:\\deepslate dungeons\\documentations\\problems\\01-SECURITY_VULNERABILITIES.md": {
     "mtime": 1780316357.0582507,
     "ast_hash": "b4de69629796e55d91168b79ef437d7a",
-    "semantic_hash": ""
+    "semantic_hash": "b4de69629796e55d91168b79ef437d7a"
   },
   "D:\\deepslate dungeons\\documentations\\problems\\02-KNOWN_ISSUES.md": {
     "mtime": 1780316357.058763,
     "ast_hash": "71c20366e2b857be501cd429aa4ea6ef",
-    "semantic_hash": ""
+    "semantic_hash": "71c20366e2b857be501cd429aa4ea6ef"
   },
   "D:\\deepslate dungeons\\posthog-setup-report.md": {
     "mtime": 1778324112.305062,
     "ast_hash": "15f0e371a3798e07eaf10b3f142e6b7d",
-    "semantic_hash": ""
+    "semantic_hash": "15f0e371a3798e07eaf10b3f142e6b7d"
   },
   "D:\\deepslate dungeons\\progress.md": {
     "mtime": 1780316357.086306,
     "ast_hash": "91cffd6b6170b432a58458e0ac8416d4",
-    "semantic_hash": ""
+    "semantic_hash": "91cffd6b6170b432a58458e0ac8416d4"
   },
   "D:\\deepslate dungeons\\project description\\New folder\\FULL_ASSESSMENT.md": {
     "mtime": 1780316357.0883412,
     "ast_hash": "b8ef9f951101f6153ee44d740402d368",
-    "semantic_hash": ""
+    "semantic_hash": "b8ef9f951101f6153ee44d740402d368"
   },
   "D:\\deepslate dungeons\\project description\\New folder\\PERSONALITY_ANALYSIS.md": {
     "mtime": 1780316357.0894015,
     "ast_hash": "739a053816dabef8ecd3cb51841f6829",
-    "semantic_hash": ""
+    "semantic_hash": "739a053816dabef8ecd3cb51841f6829"
   },
   "D:\\deepslate dungeons\\project description\\New folder\\TECHNICAL_ARCHITECTURE_ANALYSIS.md": {
     "mtime": 1780316357.090408,
     "ast_hash": "6561c49f8fe58c4569f2d60cf2817e10",
-    "semantic_hash": ""
+    "semantic_hash": "6561c49f8fe58c4569f2d60cf2817e10"
   },
   "D:\\deepslate dungeons\\project description\\New folder\\UI_ARCHITECTURE_ANALYSIS.md": {
     "mtime": 1780316357.091396,
     "ast_hash": "7d09ab2a40ba79de30d56c4ff19020aa",
-    "semantic_hash": ""
+    "semantic_hash": "7d09ab2a40ba79de30d56c4ff19020aa"
   },
   "D:\\deepslate dungeons\\project description\\New folder\\problems.md": {
     "mtime": 1780316357.0919948,
     "ast_hash": "e8b17f5c6e8c2b4abb888325bcf1c7df",
-    "semantic_hash": ""
+    "semantic_hash": "e8b17f5c6e8c2b4abb888325bcf1c7df"
   },
   "D:\\deepslate dungeons\\project description\\New folder\\ui-problems.md": {
     "mtime": 1780316357.0930643,
     "ast_hash": "54a68db3ce573ac96f7d723484146591",
-    "semantic_hash": ""
+    "semantic_hash": "54a68db3ce573ac96f7d723484146591"
   },
   "D:\\deepslate dungeons\\project description\\PLAN.md": {
     "mtime": 1780316357.09421,
     "ast_hash": "8bf18bbaa3962bec2a2067946a2278c2",
-    "semantic_hash": ""
+    "semantic_hash": "8bf18bbaa3962bec2a2067946a2278c2"
   },
   "D:\\deepslate dungeons\\project description\\obstacles.md": {
     "mtime": 1780316357.0952144,
     "ast_hash": "b088cef8a37b0e7ec0a4058dcae3829c",
-    "semantic_hash": ""
+    "semantic_hash": "b088cef8a37b0e7ec0a4058dcae3829c"
   },
   "D:\\deepslate dungeons\\project description\\to-learn.md": {
     "mtime": 1780316357.0977952,
     "ast_hash": "64ac1fb36d7613b6ece22419555dc084",
-    "semantic_hash": ""
+    "semantic_hash": "64ac1fb36d7613b6ece22419555dc084"
   },
   "D:\\deepslate dungeons\\project description\\v1.md": {
     "mtime": 1780316357.0988941,
     "ast_hash": "c76aa052fbc7327ef0943a5b2488586f",
-    "semantic_hash": ""
+    "semantic_hash": "c76aa052fbc7327ef0943a5b2488586f"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-create-component\\assets\\icon.svg": {
     "mtime": 1780316356.8950162,
     "ast_hash": "a36bafa81ae72d1f374aea3b91bc8a2a",
-    "semantic_hash": ""
+    "semantic_hash": "a36bafa81ae72d1f374aea3b91bc8a2a"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-migration-helper\\assets\\icon.svg": {
     "mtime": 1780316356.9036,
     "ast_hash": "20d40af94ffdf5f92b1cd3163140ac56",
-    "semantic_hash": ""
+    "semantic_hash": "20d40af94ffdf5f92b1cd3163140ac56"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-performance-audit\\assets\\icon.svg": {
     "mtime": 1780316356.90809,
     "ast_hash": "b882cf44cc58be47afb164370a68cbdc",
-    "semantic_hash": ""
+    "semantic_hash": "b882cf44cc58be47afb164370a68cbdc"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-quickstart\\assets\\icon.svg": {
     "mtime": 1780316356.9164696,
     "ast_hash": "4ccb6b42b6fa1584d06d83756155491e",
-    "semantic_hash": ""
+    "semantic_hash": "4ccb6b42b6fa1584d06d83756155491e"
   },
   "D:\\deepslate dungeons\\.agents\\skills\\convex-setup-auth\\assets\\icon.svg": {
     "mtime": 1780316356.9195018,
     "ast_hash": "75c95b7a85ab6b9bb084d2b067cc7d00",
-    "semantic_hash": ""
+    "semantic_hash": "75c95b7a85ab6b9bb084d2b067cc7d00"
   },
   "D:\\deepslate dungeons\\public\\file.svg": {
     "mtime": 1778065407.6287298,
     "ast_hash": "d09f95206c3fa0bb9bd9fefabfd0ea71",
-    "semantic_hash": ""
+    "semantic_hash": "d09f95206c3fa0bb9bd9fefabfd0ea71"
   },
   "D:\\deepslate dungeons\\public\\globe.svg": {
     "mtime": 1778065407.7287772,
     "ast_hash": "2aaafa6a49b6563925fe440891e32717",
-    "semantic_hash": ""
+    "semantic_hash": "2aaafa6a49b6563925fe440891e32717"
   },
   "D:\\deepslate dungeons\\public\\images\\project.jpg": {
     "mtime": 1778324112.4681756,
     "ast_hash": "811072d30ac439b5db3a8787ee40c872",
-    "semantic_hash": ""
+    "semantic_hash": "811072d30ac439b5db3a8787ee40c872"
   },
   "D:\\deepslate dungeons\\public\\next.svg": {
     "mtime": 1778065407.82489,
     "ast_hash": "8e061864f388b47f33a1c3780831193e",
-    "semantic_hash": ""
+    "semantic_hash": "8e061864f388b47f33a1c3780831193e"
   },
   "D:\\deepslate dungeons\\public\\vercel.svg": {
     "mtime": 1778065407.9098263,
     "ast_hash": "c0af2f507b369b085b35ef4bbe3bcf1e",
-    "semantic_hash": ""
+    "semantic_hash": "c0af2f507b369b085b35ef4bbe3bcf1e"
   },
   "D:\\deepslate dungeons\\public\\window.svg": {
     "mtime": 1778065407.987057,
     "ast_hash": "a2760511c65806022ad20adf74370ff3",
-    "semantic_hash": ""
+    "semantic_hash": "a2760511c65806022ad20adf74370ff3"
+  },
+  "D:\\deepslate dungeons\\.graphify_update.py": {
+    "mtime": 1780564309.156672,
+    "ast_hash": "5fef6c6083ccda6a4ba0c9e9ef25472b",
+    "semantic_hash": "5fef6c6083ccda6a4ba0c9e9ef25472b"
+  },
+  "D:\\deepslate dungeons\\.opencode\\package.json": {
+    "mtime": 1780329998.3437915,
+    "ast_hash": "a54dfb29cbb6ce299a30358fae6a8b78",
+    "semantic_hash": "a54dfb29cbb6ce299a30358fae6a8b78"
+  },
+  "D:\\deepslate dungeons\\app\\api\\games\\[id]\\route-gamepage.ts": {
+    "mtime": 1780341877.4636114,
+    "ast_hash": "1c7ef3df1a3066b7362a1b5e10776923",
+    "semantic_hash": "1c7ef3df1a3066b7362a1b5e10776923"
+  },
+  "D:\\deepslate dungeons\\app\\game\\[uuid]\\game-detail.tsx": {
+    "mtime": 1780396686.8134613,
+    "ast_hash": "ae85699abb35d305f071f86d194530e2",
+    "semantic_hash": "ae85699abb35d305f071f86d194530e2"
+  },
+  "D:\\deepslate dungeons\\app\\game\\[uuid]\\page.tsx": {
+    "mtime": 1780341939.49333,
+    "ast_hash": "ddccce6614b8704e5c0ebec65542f4c8",
+    "semantic_hash": "ddccce6614b8704e5c0ebec65542f4c8"
+  },
+  "D:\\deepslate dungeons\\components\\game\\CharacterTabs.tsx": {
+    "mtime": 1780341985.826495,
+    "ast_hash": "5c3d2717cfdb529b1932081cbe35b6b2",
+    "semantic_hash": "5c3d2717cfdb529b1932081cbe35b6b2"
+  },
+  "D:\\deepslate dungeons\\components\\game\\GameHeader.tsx": {
+    "mtime": 1780341972.7726486,
+    "ast_hash": "b225c821df71740b5a9fbd6a0a731dee",
+    "semantic_hash": "b225c821df71740b5a9fbd6a0a731dee"
+  },
+  "D:\\deepslate dungeons\\components\\game\\ItemGrid.tsx": {
+    "mtime": 1780342009.4198031,
+    "ast_hash": "c91c1fdd5e4fafc937588da6f85e593c",
+    "semantic_hash": "c91c1fdd5e4fafc937588da6f85e593c"
+  },
+  "D:\\deepslate dungeons\\components\\game\\MapList.tsx": {
+    "mtime": 1780342000.600606,
+    "ast_hash": "cab06ea11b51beb2377047ca3a1353c7",
+    "semantic_hash": "cab06ea11b51beb2377047ca3a1353c7"
+  },
+  "D:\\deepslate dungeons\\types\\gamePage.ts": {
+    "mtime": 1780341822.0686257,
+    "ast_hash": "1d886c062a2e23773f60eb7eafc2cbde",
+    "semantic_hash": "1d886c062a2e23773f60eb7eafc2cbde"
+  },
+  "D:\\deepslate dungeons\\utilities\\clientUtilities\\gameFetch.ts": {
+    "mtime": 1780342485.8955941,
+    "ast_hash": "8e1e2554e6718c9e702ec38bca45a074",
+    "semantic_hash": "8e1e2554e6718c9e702ec38bca45a074"
+  },
+  "D:\\deepslate dungeons\\utilities\\clientUtilities\\useGameCache.ts": {
+    "mtime": 1780396764.3568037,
+    "ast_hash": "7ca64030a84b1584e82109e1c19cb6dd",
+    "semantic_hash": "7ca64030a84b1584e82109e1c19cb6dd"
+  },
+  "D:\\deepslate dungeons\\utilities\\gameFetchPipeline.ts": {
+    "mtime": 1780342378.0863667,
+    "ast_hash": "58b25424a2110d7a47b325f9d7ed283d",
+    "semantic_hash": "58b25424a2110d7a47b325f9d7ed283d"
+  },
+  "D:\\deepslate dungeons\\utilities\\hotnessCache.ts": {
+    "mtime": 1780396897.3959017,
+    "ast_hash": "b7951ae33b61fb67bd7b3547976ba076",
+    "semantic_hash": "b7951ae33b61fb67bd7b3547976ba076"
+  },
+  "D:\\deepslate dungeons\\documentations\\features\\DataStructures.md": {
+    "mtime": 1780338428.8393197,
+    "ast_hash": "51bcb471e8df231dfb90ff932bb0e437",
+    "semantic_hash": "51bcb471e8df231dfb90ff932bb0e437"
+  },
+  "D:\\deepslate dungeons\\documentations\\features\\GamePage\\GAMEPAGE_QUICKSTART.md": {
+    "mtime": 1780342876.4518468,
+    "ast_hash": "f787cc6dd7aa84d15e3581fdfa3f028d",
+    "semantic_hash": "f787cc6dd7aa84d15e3581fdfa3f028d"
+  },
+  "D:\\deepslate dungeons\\documentations\\features\\GamePage\\GAMEPAGE_README.md": {
+    "mtime": 1780342934.814697,
+    "ast_hash": "e49ac5967c07026f695a6b964a547e43",
+    "semantic_hash": "e49ac5967c07026f695a6b964a547e43"
+  },
+  "D:\\deepslate dungeons\\documentations\\features\\GamePage\\GAMEPAGE_SUMMARY.md": {
+    "mtime": 1780342766.5159788,
+    "ast_hash": "5adff334f08250f73687ad8fb88bdf48",
+    "semantic_hash": "5adff334f08250f73687ad8fb88bdf48"
+  },
+  "D:\\deepslate dungeons\\documentations\\features\\GamePage\\GamePage.md": {
+    "mtime": 1780340722.8299608,
+    "ast_hash": "02d6dff59f881932ad0373f2d79519da",
+    "semantic_hash": "02d6dff59f881932ad0373f2d79519da"
+  },
+  "D:\\deepslate dungeons\\documentations\\features\\GamePage\\GamePage_Integration_Guide.md": {
+    "mtime": 1780342153.7123759,
+    "ast_hash": "03cd594d7a4ed653285d39a277437f26",
+    "semantic_hash": "03cd594d7a4ed653285d39a277437f26"
+  },
+  "D:\\deepslate dungeons\\documentations\\features\\GamePage\\GamePage_Progress.md": {
+    "mtime": 1780342858.590276,
+    "ast_hash": "a62cdb37c35d84dec9e5553bd4ff9d9a",
+    "semantic_hash": "a62cdb37c35d84dec9e5553bd4ff9d9a"
+  },
+  "D:\\deepslate dungeons\\documentations\\issues\\78-DB-RETRY-MECHANISM.md": {
+    "mtime": 1780564119.8936393,
+    "ast_hash": "65d27a9f8c42b4f59a379f4255044bc2",
+    "semantic_hash": "65d27a9f8c42b4f59a379f4255044bc2"
   }
 }

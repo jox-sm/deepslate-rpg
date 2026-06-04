@@ -3,7 +3,6 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 
 import { ImageUploadProps } from "@/types/form";
-import formStyles from "@/styles/forms/form.module.css";
 
 let imageInputIdCounter = 0;
 
@@ -62,20 +61,20 @@ export default function ImageUpload({
 
   return (
     <div className="flex flex-col gap-3">
-      <label htmlFor={inputIdRef.current} className="text-sm font-medium">{label}</label>
+      <label htmlFor={inputIdRef.current} className="text-sm font-medium text-text-secondary">{label}</label>
 
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className={formStyles.button}
+        className="flex h-24 w-full items-center justify-center rounded-lg border-2 border-dashed border-border bg-bg-elevated text-sm text-text-muted transition-all duration-200 hover:border-accent/50 hover:text-accent"
         aria-label={`Upload ${label}`}
       >
         {preview ? (
           <img
-          src={preview}
-          alt="Preview"
-          className={formStyles.previewImage}
-        />
+            src={preview}
+            alt="Preview"
+            className="h-full w-full rounded-lg object-cover"
+          />
         ) : (
           <span>Upload Image</span>
         )}
@@ -86,7 +85,7 @@ export default function ImageUpload({
         id={inputIdRef.current}
         type="file"
         accept={accept}
-        className={formStyles.hiddenInput}
+        className="sr-only"
         tabIndex={-1}
         onChange={(e) => {
           const file = e.target.files?.[0];
@@ -95,7 +94,7 @@ export default function ImageUpload({
         }}
       />
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );
 }

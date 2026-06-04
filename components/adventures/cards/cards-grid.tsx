@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import ProfileCard from '@/components/adventures/cards/cards';
-import style from '@/styles/cards/CardsGrid.module.css';
-import rowStyle from '@/styles/cards/CardsLoad.module.css';
 import { CardProps } from '@/types/cards';
+import { cn } from '@/lib/utils';
+import gridStyles from "@/styles/cards/CardsGrid.module.css";
 
 type CardsGridProps = {
   fetchCards: (offset: number) => Promise<CardProps[]>;
@@ -40,33 +40,33 @@ export default function CardsGrid({
   const isExhaustedRef = useRef(false);
   const initialLoaded = useRef(false);
 
-   const loadMore = useCallback(async () => {
-     if (isLoadingRef.current || isExhaustedRef.current) return;
-     isLoadingRef.current = true;
-     setIsLoading(true);
-     setError(null);
+  const loadMore = useCallback(async () => {
+    if (isLoadingRef.current || isExhaustedRef.current) return;
+    isLoadingRef.current = true;
+    setIsLoading(true);
+    setError(null);
 
-     try {
-       const result = await fetchCards(offsetRef.current);
-       const exhausted = result.length < batchSize;
-       if (exhausted) {
-         isExhaustedRef.current = true;
-         setIsExhausted(true);
-       }
-       setCards((prev) => {
-         const next = [...prev, ...result];
-         saveCache(next, offsetRef.current + result.length, exhausted);
-         return next;
-       });
-       offsetRef.current += result.length;
-     } catch (err) {
-       setError('Failed to load cards. Please try again.');
-       console.error('[CardsGrid] fetch error:', err);
-     } finally {
-       isLoadingRef.current = false;
-       setIsLoading(false);
-     }
-   }, [batchSize]);
+    try {
+      const result = await fetchCards(offsetRef.current);
+      const exhausted = result.length < batchSize;
+      if (exhausted) {
+        isExhaustedRef.current = true;
+        setIsExhausted(true);
+      }
+      setCards((prev) => {
+        const next = [...prev, ...result];
+        saveCache(next, offsetRef.current + result.length, exhausted);
+        return next;
+      });
+      offsetRef.current += result.length;
+    } catch (err) {
+      setError('Failed to load cards. Please try again.');
+      console.error('[CardsGrid] fetch error:', err);
+    } finally {
+      isLoadingRef.current = false;
+      setIsLoading(false);
+    }
+  }, [batchSize]);
 
   const loadMoreRef = useRef(loadMore);
   loadMoreRef.current = loadMore;
@@ -85,7 +85,6 @@ export default function CardsGrid({
     } else {
       loadMoreRef.current();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -98,14 +97,14 @@ export default function CardsGrid({
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className={style.grid}>
+    <div className={gridStyles.grid}>
       {cards.map((card, i) => (
-        <div key={`${card.name}-${i}`} className={rowStyle.cardWrapper}>
+        <div key={`${card.name}-${i}`} className={gridStyles.cardWrapper}>
           <ProfileCard
+            id={card.id}
             likes_count={card.likes_count}
             image={card.image}
             name={card.name}
@@ -116,17 +115,23 @@ export default function CardsGrid({
       ))}
 
       {isLoading && (
-        <div className={style.loader} aria-label="Loading more cards">
-          <span className={style.loaderDot} />
-          <span className={style.loaderDot} />
-          <span className={style.loaderDot} />
+        <div className={cn(gridStyles.loader, "")} aria-label="Loading more cards">
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className={cn(gridStyles.loaderDot, "bg-accent/50")}
+              style={{ animationDelay: `${i * 150}ms` }}
+            />
+          ))}
         </div>
       )}
 
-      {error && <p className={rowStyle.error}>{error}</p>}
+      {error && (
+        <p className={cn(gridStyles.loader, "text-destructive")}>{error}</p>
+      )}
 
       {isExhausted && (
-        <p className={style.exhausted}>You&apos;ve reached the end.</p>
+        <p className={gridStyles.exhausted}>You&apos;ve reached the end.</p>
       )}
     </div>
   );

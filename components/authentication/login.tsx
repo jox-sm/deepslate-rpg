@@ -11,7 +11,7 @@ export default function Login() {
       <button
         type="button"
         onClick={() => clerk.openSignIn({})}
-        className="rounded-xl border border-zinc-500/30 bg-white/10 px-8 py-3 text-base font-semibold text-white shadow-lg backdrop-blur-md transition-all hover:bg-white/20 hover:shadow-xl active:scale-95"
+        className="rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-accent/20 transition-all duration-200 ease-ember hover:bg-accent-hover active:scale-[0.97]"
       >
         Sign In
       </button>

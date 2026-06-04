@@ -2,10 +2,10 @@
 import ImageUpload from "@/ui/FormUI/imageComponent";
 import { itemValidators } from "@/lib/gamesFormValidation";
 import { type ItemData } from "@/types/gameForm";
-import formStyles from "@/styles/forms/form.module.css";
 import { Button } from "@/ui/primitives/button";
 import { Input } from "@/ui/primitives/input";
 import { Label } from "@/ui/primitives/label";
+import { cn } from "@/lib/utils";
 
 interface ItemsStepProps {
   items: ItemData[];
@@ -27,11 +27,11 @@ export default function ItemsStep({
   loading,
 }: ItemsStepProps) {
   return (
-    <div className={formStyles.card}>
-      <h2 className={formStyles.title}>Items</h2>
+    <div className="space-y-6">
+      <h2 className="font-display text-xl font-semibold text-text-primary">Items</h2>
 
       {items.length === 0 && (
-        <p className="text-sm text-zinc-400">No items yet. Create your first item below.</p>
+        <p className="text-sm text-text-muted">No items yet. Create your first item below.</p>
       )}
 
       {items.map((item, index) => {
@@ -39,9 +39,9 @@ export default function ItemsStep({
         const nameErrorId = `item-${item.id}-name-error`;
 
         return (
-          <div key={item.id} className="border border-zinc-700 rounded-lg p-3 flex flex-col gap-2" role="group" aria-label={`Item ${index + 1}`}>
+          <div key={item.id} className="rounded-lg border border-border bg-bg-surface p-4 space-y-3" role="group" aria-label={`Item ${index + 1}`}>
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs text-zinc-500">#{index + 1}</span>
+              <span className="text-xs text-text-muted">#{index + 1}</span>
               <Button
                 variant="ghost"
                 size="sm"
@@ -51,7 +51,7 @@ export default function ItemsStep({
                 Remove
               </Button>
             </div>
-            <div className="flex flex-col gap-1 flex-1">
+            <div className="space-y-2">
               <Label htmlFor={`item-${item.id}-name`}>Name</Label>
               <Input
                 id={`item-${item.id}-name`}
@@ -62,7 +62,10 @@ export default function ItemsStep({
                 aria-describedby={item.name.length > 0 ? nameErrorId : undefined}
               />
               {item.name.length > 0 && (
-                <span id={nameErrorId} role="alert" className={formStyles[nameValidation.isFormValid ? "statusSuccess" : nameValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
+                <span id={nameErrorId} role="alert" className={cn(
+                  "text-xs",
+                  nameValidation.isFormValid ? "text-success" : nameValidation.errorColor === "error" ? "text-destructive" : "text-warning"
+                )}>
                   {nameValidation.errorMessage}
                 </span>
               )}
@@ -80,7 +83,7 @@ export default function ItemsStep({
         Make New Item
       </Button>
 
-      <div className="flex gap-2 justify-between mt-4">
+      <div className="flex justify-between gap-2">
         <Button variant="outline" onClick={onBack}>
           Back
         </Button>

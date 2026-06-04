@@ -1,20 +1,17 @@
 'use client';
 
-import Image from 'next/image';
+import { FittedImage } from '@/components/shared/FittedImage';
 import type { MapDataJSON } from '@/types/gamedata';
 
 interface MapListProps {
   maps: MapDataJSON[];
 }
 
-/**
- * MapList Component - Displays game maps
- */
 export function MapList({ maps }: MapListProps) {
   if (!maps || maps.length === 0) {
     return (
       <div className="py-12 text-center">
-        <p className="text-muted-foreground">No maps found for this game.</p>
+        <p className="text-sm text-text-muted">No maps found for this game.</p>
       </div>
     );
   }
@@ -24,38 +21,30 @@ export function MapList({ maps }: MapListProps) {
       {maps.map((map) => (
         <div
           key={map.id}
-          className="overflow-hidden rounded-lg border border-input bg-card hover:border-primary hover:shadow-lg transition"
+          className="overflow-hidden rounded-lg border border-border bg-bg-surface transition-all duration-200 ease-ember hover:border-accent/30 hover:shadow-md hover:shadow-accent/5"
         >
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {/* Map Image */}
-            <div className="relative aspect-video overflow-hidden bg-muted md:col-span-2 lg:col-span-2">
-              <Image
-                src={map.image || map.imagePreview}
-                alt={map.nameOfPlace}
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            {/* Map Info */}
+            <FittedImage
+              src={map.image || map.imagePreview}
+              alt={map.nameOfPlace}
+              aspectRatio="16/9"
+              containerClassName="overflow-hidden bg-bg-elevated md:col-span-2 lg:col-span-2"
+            />
             <div className="flex flex-col justify-between p-4">
               <div>
-                <h3 className="font-semibold text-lg">{map.nameOfPlace}</h3>
-
+                <h3 className="font-display text-lg font-semibold text-text-primary">{map.nameOfPlace}</h3>
                 <div className="mt-4 space-y-2 text-sm">
                   <div>
-                    <span className="font-semibold text-muted-foreground">Size:</span>
-                    <p className="mt-1 text-foreground">{map.sizeOfPlace}</p>
+                    <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Size</span>
+                    <p className="mt-0.5 text-text-secondary">{map.sizeOfPlace}</p>
                   </div>
-
                   <div>
-                    <span className="font-semibold text-muted-foreground">Locations:</span>
-                    <p className="mt-1 text-foreground line-clamp-3">{map.placesAtMap}</p>
+                    <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Locations</span>
+                    <p className="mt-0.5 text-text-secondary line-clamp-3">{map.placesAtMap}</p>
                   </div>
                 </div>
               </div>
-
-              <button className="mt-4 rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:bg-primary/90 w-full">
+              <button className="mt-4 w-full rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-all duration-200 ease-ember hover:bg-accent-hover active:scale-[0.97]">
                 Explore Map
               </button>
             </div>

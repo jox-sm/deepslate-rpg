@@ -1,5 +1,6 @@
 import { TextAreaFieldProps, TagsComponentProps } from '@/types/form';
-import formStyles from "@/styles/forms/form.module.css";
+import { cn } from '@/lib/utils';
+
 export default function TextAreaField({
   label,
   value,
@@ -21,37 +22,35 @@ export default function TextAreaField({
   if (!displayMessage) {
     if (isTooLong) {
       displayMessage = `max is ${maxLength}`;
-      displayColor = formStyles.statusError;
+      displayColor = "text-destructive";
     } else if (isTooShort) {
       displayMessage = `too short minimum is ${minLength}`;
-      displayColor = formStyles.statusWarning;
+      displayColor = "text-warning";
     } else if (length > 0) {
       displayMessage = "OK";
-      displayColor = formStyles.statusSuccess;
+      displayColor = "text-success";
     }
   }
 
   if (!displayColor) {
-    displayColor = length > 0 ? formStyles.statusError : "";
+    displayColor = length > 0 ? "text-destructive" : "";
   }
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium">
+      <label className="text-sm font-medium text-text-secondary">
         {label}
       </label>
-
       <textarea
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className={formStyles.input}
+        className="flex min-h-[80px] w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-sm text-text-primary placeholder:text-text-muted transition-all duration-200 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
       />
-
       <div className="flex justify-between text-sm">
         <span className={displayColor}>
           {displayMessage}
-         </span>
+        </span>
       </div>
     </div>
   );
@@ -73,19 +72,21 @@ export function tagsComponent({
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium">
+      <label className="text-sm font-medium text-text-secondary">
         {label}
       </label>
-
-      <div className={formStyles.tagsContainer}>
+      <div className="flex flex-wrap gap-2">
         {availableTags.map((tag) => (
           <button
             key={tag}
             type="button"
             onClick={() => toggleTag(tag)}
-            className={`${formStyles.tagButton} ${
-              selectedTags.includes(tag) ? formStyles.selected : ""
-            }`}
+            className={cn(
+              "rounded-full border px-3 py-1 text-sm font-medium transition-all duration-200",
+              selectedTags.includes(tag)
+                ? "border-accent bg-accent/10 text-accent"
+                : "border-border text-text-muted hover:border-text-muted hover:text-text-secondary"
+            )}
           >
             {tag}
           </button>

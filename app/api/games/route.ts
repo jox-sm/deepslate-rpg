@@ -10,7 +10,7 @@ let cacheInitialized = false;
 
 async function ensureCachePrimed(): Promise<void> {
   if (!cacheInitialized) {
-    await warmUpCache();
+    await retry(() => warmUpCache(), 2, 500);
     cacheInitialized = true;
   }
 }

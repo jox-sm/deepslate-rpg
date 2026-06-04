@@ -2,7 +2,7 @@
 
 import { Unauthenticated } from "convex/react";
 import { useClerk } from "@clerk/nextjs";
-import style from "@/styles/auth/signup.module.css";
+import styles from "@/styles/auth/signup.module.css";
 
 export default function Signup() {
   const clerk = useClerk();
@@ -12,7 +12,7 @@ export default function Signup() {
       <button
         type="button"
         onClick={() => clerk.openSignUp({})}
-        className={style.button}
+        className={styles.button}
       >
         Sign Up
       </button>
