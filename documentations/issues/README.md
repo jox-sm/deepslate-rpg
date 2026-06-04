@@ -18,6 +18,7 @@ Complete documentation of all 25 unique GitHub issues for the Deepslate RPG proj
 
 | # | Issue | Status | Impact |
 |---|-------|--------|--------|
+| 78 | [Missing retry mechanism on DB functions — cold start failures](./78-DB-RETRY-MECHANISM.md) | ✅ | Reliability |
 | 77 | [Centralized Zod validation — security and consistency](./77-ZOD-VALIDATION-CENTRALIZATION.md) | ✅ | Security |
 | 76 | [Build fixes: useAuth import, client/server split, Zod validation](./76-DOCUMENTATION-AND-BUGFIXES.md) | ✅ | Build |
 | 75 | [Form styles - button, preview, wizard layout](./75-FORM-STYLES-BUTTON-PREVIEW-WIZARD.md) | ✅ | UI |
@@ -98,7 +99,7 @@ Complete documentation of all 25 unique GitHub issues for the Deepslate RPG proj
 
 ### By Impact Area
 
-**Performance:** #67, #70, #57, #49
+**Performance/Reliability:** #78, #67, #70, #57, #49
 **Data Integrity:** #69, #61
 **Security:** #66
 **UX/Accessibility:** #53, #54, #51, #48
@@ -109,11 +110,7 @@ Complete documentation of all 25 unique GitHub issues for the Deepslate RPG proj
 
 ## 📊 Issue Statistics
 
-<<<<<<< Updated upstream
-- **Total Issues:** 22 (unique titles)
-=======
-- **Total Issues:** 27 (unique titles)
->>>>>>> Stashed changes
+- **Total Issues:** 28 (unique titles)
 - **All Status:** ✅ CLOSED
 - **Performance Issues:** 4
 - **Security Issues:** 1
@@ -225,8 +222,9 @@ Bug/Feature/Refactor/Performance/Security/UI-UX/Accessibility
 
 ## 📝 Last Updated
 
-2026-05-31
+2026-06-04
 
-All 25 issues are CLOSED and solutions have been implemented.
+All 27 issues are CLOSED and solutions have been implemented.
+Issue #78 is CLOSED — retry mechanism added to all DB functions.
 
 For questions or updates, refer to the main project documentation.

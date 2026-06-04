@@ -1,56 +1,21 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
-import {
-  cacheHit,
-  cacheMiss,
-  getCachedGameData,
-  getCacheStats,
-} from '@/utilities/hotnessCache';
-import {
-  getGameWithBatchQueue,
-} from '@/utilities/clientUtilities/gameFetch';
-import { v7 as uuidv7 } from 'uuid';
-
-interface FullGameData {
-  id: string;
-  name: string;
-  description: string;
-  image?: string;
-  tags?: string[];
-  likes_count?: number;
-  characters: unknown[];
-  maps: unknown[];
-  items: unknown[];
-  status: string;
-}
-
-interface CacheStats {
-  entriesCount: number;
-  maxEntries: number;
-  memoryPressure: boolean;
-  queueLength: number;
-}
+import type { FullGamePageData } from '@/types/gamePage';
+import { tryOrError, tryOrErrorSync, isNotFound, isServerError } from '@/utilities/errorHandler';
 
 interface UseGameCacheResult {
-  data: FullGameData | null;
+  data: FullGamePageData | null;
   loading: boolean;
   error: Error | null;
-  cacheStats: CacheStats | null;
+  cacheStats: Record<string, never> | null;
   refreshData: () => Promise<void>;
 }
 
-/**
- * Hook for accessing GamePage cache with automatic fetching
- * Handles hotness tracking, promotion, and batch queueing
- */
 export function useGameCache(gameId: string): UseGameCacheResult {
-  const [data, setData] = useState<FullGameData | null>(null);
+  const [data, setData] = useState<FullGamePageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [cacheStats, setCacheStats] = useState<CacheStats | null>(null);
-
-  const requestIdRef = useRef(uuidv7());
   const initializedRef = useRef(false);
 
   const loadData = useCallback(async () => {
@@ -59,73 +24,41 @@ export function useGameCache(gameId: string): UseGameCacheResult {
       return;
     }
 
-    try {
-      setLoading(true);
-      setError(null);
+    setLoading(true);
+    setError(null);
 
-      // Try cached data first
-      const cached = await getCachedGameData(gameId);
-      if (cached) {
-        setData(cached as FullGameData);
-        // Register hit asynchronously
-        cacheHit(gameId, cached).catch((err) =>
-          console.error('[useGameCache] Error on cache hit:', err)
+    const result = await tryOrError(async () => {
+      const res = await fetch(`/api/games/${gameId}`);
+
+      if (!res.ok) {
+        throw new Error(
+          res.status === 404 ? 'Game not found' : 'Failed to fetch game'
         );
-        setLoading(false);
-        return;
       }
 
-      // Cache miss: queue fetch via batch pipeline
-      const result = await cacheMiss(gameId, null);
+      const json = await res.json();
 
-      if (result.status === 'skip') {
-        // Game not promoted to cache, fetch via batch queue
-        const fetched = await getGameWithBatchQueue(
-          gameId,
-          requestIdRef.current
-        );
-        if (fetched) {
-          setData(fetched as FullGameData);
-        } else {
-          setError(new Error('Failed to fetch game data'));
-        }
+      if (json.success && json.data) {
+        return json.data as FullGamePageData;
+      }
+
+      throw new Error('Invalid response from server');
+    }, { context: "useGameCache" });
+
+    if (result.ok && result.data) {
+      setData(result.data);
+    } else {
+      if (result.error) {
+        setError(new Error(result.error.message));
       } else {
-        // Game promoted, fetch via batch queue
-        const fetched = await getGameWithBatchQueue(
-          gameId,
-          requestIdRef.current
-        );
-        if (fetched) {
-          setData(fetched as FullGameData);
-        } else {
-          setError(new Error('Failed to fetch game data'));
-        }
+        setError(new Error('Unknown error'));
       }
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error(String(err)));
       setData(null);
-    } finally {
-      setLoading(false);
-
-      // Update cache stats
-      try {
-        const stats = await getCacheStats();
-        setCacheStats({
-          ...stats,
-          queueLength: 0, // Not available from client-side
-        });
-      } catch {
-        // Silently fail on stats fetch
-      }
     }
+
+    setLoading(false);
   }, [gameId]);
 
-  const refreshData = useCallback(async () => {
-    requestIdRef.current = uuidv7();
-    await loadData();
-  }, [loadData]);
-
-  // Initial load
   useEffect(() => {
     if (!initializedRef.current) {
       initializedRef.current = true;
@@ -133,68 +66,59 @@ export function useGameCache(gameId: string): UseGameCacheResult {
     }
   }, [loadData]);
 
-  return { data, loading, error, cacheStats, refreshData };
+  const refreshData = useCallback(async () => {
+    await loadData();
+  }, [loadData]);
+
+  return { data, loading, error, cacheStats: null, refreshData };
 }
 
-/**
- * Hook for preloading game data from sessionStorage
- * Used when navigating from ProfileCard with card data
- */
 export function useGamePreload(
   gameId: string
-): Pick<FullGameData, 'name' | 'description' | 'image' | 'tags' | 'likes_count'> | null {
+): Pick<FullGamePageData, 'name' | 'description' | 'image' | 'tags' | 'likes_count'> | null {
   const [preloadedData, setPreloadedData] = useState(null);
 
   useEffect(() => {
-    try {
-      const key = `game:${gameId}:card`;
+    const key = `game:${gameId}:card`;
+    const result = tryOrErrorSync(() => {
       const stored = sessionStorage.getItem(key);
-      if (stored) {
-        setPreloadedData(JSON.parse(stored));
-      }
-    } catch (err) {
-      console.error('[useGamePreload] Error loading preloaded data:', err);
+      return stored ? JSON.parse(stored) : null;
+    }, { context: "useGamePreload" });
+
+    if (result.ok && result.data) {
+      setPreloadedData(result.data);
     }
   }, [gameId]);
 
   return preloadedData;
 }
 
-/**
- * Hook for managing sessionStorage preload when navigating
- * Use in ProfileCard onClick handler
- */
 export function useGamePreloadStore() {
   return {
     setPreload: (
       gameId: string,
-      data: Pick<FullGameData, 'name' | 'description' | 'image' | 'tags' | 'likes_count'>
+      data: Pick<FullGamePageData, 'name' | 'description' | 'image' | 'tags' | 'likes_count'>
     ) => {
-      try {
+      tryOrErrorSync(() => {
         const key = `game:${gameId}:card`;
         sessionStorage.setItem(key, JSON.stringify(data));
-      } catch (err) {
-        console.error('[useGamePreloadStore] Error storing preload data:', err);
-      }
+      }, { context: "setPreload" });
     },
     getPreload: (
       gameId: string
-    ): Pick<FullGameData, 'name' | 'description' | 'image' | 'tags' | 'likes_count'> | null => {
-      try {
+    ): Pick<FullGamePageData, 'name' | 'description' | 'image' | 'tags' | 'likes_count'> | null => {
+      const result = tryOrErrorSync(() => {
         const key = `game:${gameId}:card`;
         const stored = sessionStorage.getItem(key);
         return stored ? JSON.parse(stored) : null;
-      } catch {
-        return null;
-      }
+      }, { context: "getPreload" });
+      return result.ok ? (result.data as Pick<FullGamePageData, 'name' | 'description' | 'image' | 'tags' | 'likes_count'> | null) : null;
     },
     clearPreload: (gameId: string) => {
-      try {
+      tryOrErrorSync(() => {
         const key = `game:${gameId}:card`;
         sessionStorage.removeItem(key);
-      } catch (err) {
-        console.error('[useGamePreloadStore] Error clearing preload data:', err);
-      }
+      }, { context: "clearPreload" });
     },
   };
 }

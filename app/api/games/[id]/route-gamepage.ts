@@ -10,51 +10,30 @@ import {
   getCachedGameData,
   getCacheStats,
 } from '@/utilities/hotnessCache';
-
-/**
- * GamePage API Route with Hotness Cache Integration
- *
- * Three-tier fetch strategy:
- * 1. Check hotness cache for existing data
- * 2. Handle cache hits/misses with hotness tracking
- * 3. Fall back to direct DB fetch if needed
- */
+import { tryApiRoute } from '@/utilities/apiErrorHandler';
+import { classifyError } from '@/utilities/errorHandler';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  // Validate JWT token
   const { payload, error } = await validateJWTMiddleware(request);
   if (error) return error;
 
-  try {
+  return tryApiRoute(async () => {
     const { id } = await params;
 
     if (!id || typeof id !== 'string') {
-      return NextResponse.json(
-        { success: false, error: 'Invalid game ID' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: 'Invalid game ID' }, { status: 400 });
     }
 
-    // Tier 1: Check hotness cache
-    console.log(`[API /api/games/[id]] Checking cache for game: ${id}`);
-
-    const cachedData = await retry(
-      () => getCachedGameData(id),
-      2,
-      300
-    );
+    const cachedData = await retry(() => getCachedGameData(id), 2, 300);
 
     if (cachedData) {
-      console.log(`[API /api/games/[id]] Cache HIT for game: ${id}`);
-
-      // Update cache metrics (async)
-      cacheHit(id, cachedData).catch((err) =>
-        console.error('[API /api/games/[id]] Error updating cache hit:', err)
-      );
-
+      cacheHit(id, cachedData).catch((err) => {
+        const classified = classifyError(err, "route-gamepage.cacheHit");
+        console.error('[API /api/games/[id]] Error updating cache hit:', classified.message);
+      });
       const stats = await getCacheStats();
       return NextResponse.json(
         { success: true, data: cachedData, cacheStats: stats },
@@ -62,28 +41,14 @@ export async function GET(
       );
     }
 
-    console.log(
-      `[API /api/games/[id]] Cache MISS for game: ${id}, fetching from DBs`
-    );
-
-    // Tier 2: Fetch from DBs
     const pgGame = await retry(() => getGameById(id), 2, 300);
 
     if (!pgGame) {
-      console.log(`[API /api/games/[id]] Game not found in PostgreSQL: ${id}`);
-      return NextResponse.json(
-        { success: false, error: 'Game not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ success: false, error: 'Game not found' }, { status: 404 });
     }
 
-    // Fetch nested data from MongoDB
     await connectDB();
-    const mongoGame = await retry(
-      () => Game.findOne({ id }).lean(),
-      2,
-      300
-    );
+    const mongoGame = await retry(() => Game.findOne({ id }).lean(), 2, 300);
 
     const fullGame = {
       ...pgGame,
@@ -93,22 +58,12 @@ export async function GET(
       status: mongoGame?.status || 'draft',
     };
 
-    // Handle cache miss (may promote to cache)
     const missResult = await cacheMiss(id, fullGame);
-    console.log(
-      `[API /api/games/[id]] Cache miss handled: ${missResult.status}`
-    );
-
     const stats = await getCacheStats();
+
     return NextResponse.json(
       { success: true, data: fullGame, cacheStats: stats },
       { headers: { 'X-Cache': 'MISS' } }
     );
-  } catch (error) {
-    console.error('[API /api/games/[id]] Error fetching game:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch game' },
-      { status: 500 }
-    );
-  }
+  }, "games/[id]/gamepage");
 }

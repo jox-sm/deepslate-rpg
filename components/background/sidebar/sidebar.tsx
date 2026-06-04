@@ -1,7 +1,5 @@
 'use client';
 import Sidebar from "@/components/background/slidebar"
-import style from "@/styles/sidebar/sidebar.module.css";
-
 import {
   Home,
   Package,
@@ -10,20 +8,15 @@ import {
 } from "lucide-react"
 
 export default function Sbar() {
-
   return (
-    <div className={style.sidebarWrapper}>
-
-      <Sidebar
-        logo="Hollow Depths"
-        items={[
-          { icon: Home, label: "Home" },
-          { icon: Package, label: "Inventory" },
-          { icon: Settings, label: "Settings" },
-          { icon: User, label: "Profile" },
-        ]}
-      />
-
-    </div>
+    <Sidebar
+      logo="Hollow Depths"
+      items={[
+        { icon: Home, label: "Home" },
+        { icon: Package, label: "Inventory" },
+        { icon: Settings, label: "Settings" },
+        { icon: User, label: "Profile" },
+      ]}
+    />
   )
 }

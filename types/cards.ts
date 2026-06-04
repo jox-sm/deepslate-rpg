@@ -1,4 +1,5 @@
 type CardProps = {
+  id: string;
   name: string;
   description: string;
   likes_count: number;
@@ -8,7 +9,6 @@ type CardProps = {
 export type { CardProps };
 
 type GameCardProps = CardProps & {
-  id: string; // UUID 7
   created_at: string;
   updated_at: string;
 };

@@ -6,7 +6,6 @@ import { CharacterTabs } from '@/components/game/CharacterTabs';
 import { MapList } from '@/components/game/MapList';
 import { ItemGrid } from '@/components/game/ItemGrid';
 import { GameHeader } from '@/components/game/GameHeader';
-import type { FullGamePageData } from '@/types/gamePage';
 
 interface GameDetailClientProps {
   uuid: string;
@@ -14,17 +13,6 @@ interface GameDetailClientProps {
   initialDescription?: string;
   initialImage?: string;
 }
-
-/**
- * GamePage Client Component
- *
- * Handles:
- * - Data fetching via useGameCache hook
- * - Preloaded data from sessionStorage
- * - Instant hero section render
- * - Tab/grid rendering for nested data
- * - Error states and loading
- */
 
 export default function GameDetailClient({
   uuid,
@@ -34,13 +22,8 @@ export default function GameDetailClient({
 }: GameDetailClientProps) {
   const [hasPreload, setHasPreload] = useState(false);
   const [activeTab, setActiveTab] = useState<'characters' | 'maps' | 'items'>('characters');
-
-  // Get preloaded data from sessionStorage (passed from ProfileCard)
   const preloadedData = useGamePreload(uuid);
-
-  // Fetch full game data with cache
-  const { data, loading, error, cacheStats, refreshData } =
-    useGameCache(uuid);
+  const { data, loading, error, cacheStats, refreshData } = useGameCache(uuid);
 
   useEffect(() => {
     if (preloadedData) {
@@ -48,7 +31,7 @@ export default function GameDetailClient({
     }
   }, [preloadedData]);
 
-  const displayData = data || {
+  const displayData = {
     id: uuid,
     name: preloadedData?.name || initialName || 'Loading...',
     description: preloadedData?.description || initialDescription || '',
@@ -59,36 +42,36 @@ export default function GameDetailClient({
     maps: [],
     items: [],
     status: 'draft',
+    ...data,
   };
+
+  const tabs = [
+    { id: 'characters' as const, label: 'Characters', count: displayData.characters?.length || 0 },
+    { id: 'maps' as const, label: 'Maps', count: displayData.maps?.length || 0 },
+    { id: 'items' as const, label: 'Items', count: displayData.items?.length || 0 },
+  ];
 
   return (
     <div className="w-full">
-      {/* Hero Section - Instant Render with Preload */}
       <GameHeader
         name={displayData.name}
         description={displayData.description}
-        image={displayData.image}
+        image={displayData.image || '/images/default-game.png'}
         tags={displayData.tags || []}
         likes={displayData.likes_count || 0}
         isPreload={hasPreload && !data}
       />
 
-      {/* Content Section - Tabs for Nested Data */}
-      <div className="container mx-auto px-4 py-8">
-        {/* Tab Navigation */}
-        <div className="mb-6 flex gap-4 border-b">
-          {[
-            { id: 'characters', label: 'Characters', count: displayData.characters?.length || 0 },
-            { id: 'maps', label: 'Maps', count: displayData.maps?.length || 0 },
-            { id: 'items', label: 'Items', count: displayData.items?.length || 0 },
-          ].map((tab) => (
+      <div className="container-page py-8">
+        <div className="mb-6 flex gap-6 border-b border-border">
+          {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as 'characters' | 'maps' | 'items')}
-              className={`px-4 py-2 font-semibold transition ${
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-1 py-3 text-sm font-medium transition-all duration-200 ease-ember border-b-2 ${
                 activeTab === tab.id
-                  ? 'border-b-2 border-primary text-primary'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'border-accent text-accent'
+                  : 'border-transparent text-text-muted hover:text-text-secondary hover:border-text-muted/30'
               }`}
               disabled={loading && !data}
             >
@@ -97,68 +80,48 @@ export default function GameDetailClient({
           ))}
         </div>
 
-        {/* Loading State */}
         {loading && !data && (
-          <div className="flex justify-center py-12">
+          <div className="flex justify-center py-16">
             <div className="text-center">
-              <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-              <p className="text-sm text-muted-foreground">Loading game data...</p>
+              <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent shadow-glow-accent-sm" />
+              <p className="text-sm text-text-muted">Loading game data...</p>
             </div>
           </div>
         )}
 
-        {/* Error State */}
         {error && !data && (
-          <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4">
-            <h3 className="font-semibold text-destructive">Error Loading Game</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{error.message}</p>
+          <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-radial-accent opacity-20 pointer-events-none" />
+            <h3 className="font-semibold text-destructive relative">Error Loading Game</h3>
+            <p className="mt-1 text-sm text-text-muted relative">{error.message}</p>
             <button
               onClick={refreshData}
-              className="mt-4 rounded px-3 py-1 text-sm font-medium hover:bg-destructive/20"
+              className="mt-3 rounded-lg bg-destructive/20 px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/30 relative"
             >
               Try Again
             </button>
           </div>
         )}
 
-        {/* Content Tabs */}
         {data && !loading && (
           <div>
-            {activeTab === 'characters' && (
-              <CharacterTabs characters={displayData.characters} />
-            )}
-            {activeTab === 'maps' && (
-              <MapList maps={displayData.maps} />
-            )}
-            {activeTab === 'items' && (
-              <ItemGrid items={displayData.items} />
-            )}
+            {activeTab === 'characters' && <CharacterTabs characters={displayData.characters} />}
+            {activeTab === 'maps' && <MapList maps={displayData.maps} />}
+            {activeTab === 'items' && <ItemGrid items={displayData.items} />}
           </div>
         )}
 
-        {/* Empty State */}
-        {data && !loading && activeTab === 'characters' && displayData.characters.length === 0 && (
-          <div className="py-12 text-center">
-            <p className="text-muted-foreground">No characters found for this game.</p>
-          </div>
-        )}
-        {data && !loading && activeTab === 'maps' && displayData.maps.length === 0 && (
-          <div className="py-12 text-center">
-            <p className="text-muted-foreground">No maps found for this game.</p>
-          </div>
-        )}
-        {data && !loading && activeTab === 'items' && displayData.items.length === 0 && (
-          <div className="py-12 text-center">
-            <p className="text-muted-foreground">No items found for this game.</p>
+        {data && !loading && displayData[activeTab]?.length === 0 && (
+          <div className="py-16 text-center">
+            <p className="text-sm text-text-muted">No {activeTab} found for this game.</p>
           </div>
         )}
       </div>
 
-      {/* Cache Stats (Development Only) */}
       {process.env.NODE_ENV === 'development' && cacheStats && (
-        <div className="border-t bg-muted/50 p-4">
-          <details className="text-xs text-muted-foreground">
-            <summary className="cursor-pointer font-semibold">Cache Stats</summary>
+        <div className="border-t border-border bg-bg-elevated/50 p-4">
+          <details className="cursor-pointer text-xs text-text-muted">
+            <summary className="font-medium">Cache Stats</summary>
             <div className="mt-2 space-y-1">
               <p>Cache: {cacheStats.entriesCount}/{cacheStats.maxEntries}</p>
               <p>Memory Pressure: {cacheStats.memoryPressure ? 'Yes' : 'No'}</p>

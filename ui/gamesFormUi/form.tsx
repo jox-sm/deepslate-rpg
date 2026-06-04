@@ -4,7 +4,7 @@ import { GAMES_FORM_STEPS, type GamesFormData } from "@/types/gameForm";
 import CharactersStep from "./charactersStep";
 import MapsStep from "./mapsStep";
 import ItemsStep from "./itemsStep";
-import styles from "@/styles/forms/wizard.module.css";
+import { cn } from "@/lib/utils";
 
 interface GamesFormWizardProps {
   onComplete: (wizardData: GamesFormData) => void;
@@ -55,19 +55,30 @@ export default function GamesFormWizard({ onComplete, loading }: GamesFormWizard
   };
 
   return (
-      <div className={styles.container}>
-        <nav aria-label="Form steps" className={styles.stepIndicator}>
-          {GAMES_FORM_STEPS.map((step, index) => (
-            <div
-              key={step.key}
-              className={`${styles.step} ${index <= hook.currentStep ? styles.active : ""} ${index === hook.currentStep ? styles.current : ""}`}
-              aria-current={index === hook.currentStep ? "step" : undefined}
-            >
-              <span className={styles.stepNumber}>{index + 1}</span>
-              <span className={styles.stepLabel}>{step.title}</span>
-            </div>
-          ))}
-        </nav>
+    <div className="space-y-8">
+      <nav aria-label="Form steps" className="flex items-center justify-center gap-4">
+        {GAMES_FORM_STEPS.map((step, index) => (
+          <div
+            key={step.key}
+            className={cn(
+              "flex items-center gap-2 transition-colors duration-200",
+              index <= hook.currentStep ? "text-accent" : "text-text-muted",
+              index === hook.currentStep ? "font-semibold" : ""
+            )}
+            aria-current={index === hook.currentStep ? "step" : undefined}
+          >
+            <span className={cn(
+              "flex h-8 w-8 items-center justify-center rounded-full border text-sm font-medium transition-colors duration-200",
+              index <= hook.currentStep
+                ? "border-accent bg-accent/10 text-accent"
+                : "border-border text-text-muted"
+            )}>
+              {index + 1}
+            </span>
+            <span className="hidden text-sm sm:inline">{step.title}</span>
+          </div>
+        ))}
+      </nav>
       {renderStep()}
     </div>
   );

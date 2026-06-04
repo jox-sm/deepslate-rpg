@@ -4,12 +4,13 @@ import { createAuthenticatedSupabaseClient } from '@/lib/auth';
 import { auth } from '@clerk/nextjs/server';
 import { withIdempotency } from '@/utilities/idempotency';
 import { validateJWTMiddleware } from '@/lib/jwt-validate';
+import { tryApiRoute } from '@/utilities/apiErrorHandler';
 
 export async function POST(req: NextRequest) {
   const { payload, error } = await validateJWTMiddleware(req);
   if (error) return error;
 
-  try {
+  return tryApiRoute(async () => {
     const body = await req.json();
     const { idempotencyKey, image: imageBase64 } = body;
 
@@ -37,8 +38,5 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ ...result, idempotencyKey, cached });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
-  }
+  }, "convertUrl");
 }

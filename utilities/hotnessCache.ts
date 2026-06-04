@@ -1,5 +1,6 @@
 import { redis } from '@/lib/queue';
 import pako from 'pako';
+import { classifyError } from '@/utilities/errorHandler';
 
 /**
  * Hotness Cache: Binary-Search Sorted Cache with Hotness Tracking
@@ -50,7 +51,8 @@ export async function checkMemoryPressure(): Promise<boolean> {
     const pressure = usedMemory / maxMemory;
     return pressure >= MEMORY_PRESSURE_THRESHOLD;
   } catch (error) {
-    console.error('[HotnessCache] Error checking memory pressure:', error);
+    const classified = classifyError(error, "HotnessCache.checkMemoryPressure");
+    console.error('[HotnessCache] Error checking memory pressure:', classified.message);
     return false;
   }
 }
@@ -105,17 +107,18 @@ async function loadCacheState(): Promise<{
     const dataJson = await redis.get(CACHE_KEYS.CACHE_DATA_ARRAY);
     const hashmapJson = await redis.get(CACHE_KEYS.CACHE_HASHMAP);
 
-    const views = viewsJson ? JSON.parse(viewsJson) : [];
-    const data = dataJson
+    const views: CacheEntry[] = viewsJson ? JSON.parse(viewsJson) : [];
+    const data: Map<string, string> = dataJson
       ? new Map(JSON.parse(dataJson))
       : new Map<string, string>();
-    const hashmap = hashmapJson
+    const hashmap: Map<string, number> = hashmapJson
       ? new Map(JSON.parse(hashmapJson))
       : new Map<string, number>();
 
     return { views, data, hashmap };
   } catch (error) {
-    console.error('[HotnessCache] Error loading cache state:', error);
+    const classified = classifyError(error, "HotnessCache.loadCacheState");
+    console.error('[HotnessCache] Error loading cache state:', classified.message);
     return {
       views: [],
       data: new Map(),
@@ -157,7 +160,8 @@ async function saveCacheState(
 
     await pipeline.exec();
   } catch (error) {
-    console.error('[HotnessCache] Error saving cache state:', error);
+    const classified = classifyError(error, "HotnessCache.saveCacheState");
+    console.error('[HotnessCache] Error saving cache state:', classified.message);
   }
 }
 
@@ -214,7 +218,8 @@ export async function cacheHit(
 
     return { status: 'hit', data };
   } catch (error) {
-    console.error('[HotnessCache] Error on cache hit:', error);
+    const classified = classifyError(error, "HotnessCache.cacheHit");
+    console.error('[HotnessCache] Error on cache hit:', classified.message);
     return { status: 'hit', data };
   }
 }
@@ -285,7 +290,8 @@ export async function cacheMiss(
 
     return { status: 'promoted', data };
   } catch (error) {
-    console.error('[HotnessCache] Error on cache miss:', error);
+    const classified = classifyError(error, "HotnessCache.cacheMiss");
+    console.error('[HotnessCache] Error on cache miss:', classified.message);
     return { status: 'skip' };
   }
 }
@@ -309,7 +315,8 @@ export async function getCachedGameData(uuid: string): Promise<unknown | null> {
 
     return decompressData(compressed);
   } catch (error) {
-    console.error('[HotnessCache] Error retrieving cached data:', error);
+    const classified = classifyError(error, "HotnessCache.getCachedGameData");
+    console.error('[HotnessCache] Error retrieving cached data:', classified.message);
     return null;
   }
 }
@@ -323,7 +330,8 @@ export function compressData(data: unknown): string {
     const compressed = pako.gzip(json);
     return Buffer.from(compressed).toString('base64');
   } catch (error) {
-    console.error('[HotnessCache] Error compressing data:', error);
+    const classified = classifyError(error, "HotnessCache.compressData");
+    console.error('[HotnessCache] Error compressing data:', classified.message);
     return JSON.stringify(data);
   }
 }
@@ -341,7 +349,8 @@ export function decompressData(compressed: string): unknown {
     try {
       return JSON.parse(compressed);
     } catch (error) {
-      console.error('[HotnessCache] Error decompressing data:', error);
+      const classified = classifyError(error, "HotnessCache.decompressData");
+      console.error('[HotnessCache] Error decompressing data:', classified.message);
       return null;
     }
   }
@@ -365,7 +374,8 @@ export async function getCacheStats(): Promise<{
       memoryPressure,
     };
   } catch (error) {
-    console.error('[HotnessCache] Error getting cache stats:', error);
+    const classified = classifyError(error, "HotnessCache.getCacheStats");
+    console.error('[HotnessCache] Error getting cache stats:', classified.message);
     return {
       entriesCount: 0,
       maxEntries: MAX_CACHE_ENTRIES,
@@ -387,6 +397,7 @@ export async function clearCache(): Promise<void> {
     );
     console.log('[HotnessCache] Cache cleared');
   } catch (error) {
-    console.error('[HotnessCache] Error clearing cache:', error);
+    const classified = classifyError(error, "HotnessCache.clearCache");
+    console.error('[HotnessCache] Error clearing cache:', classified.message);
   }
 }

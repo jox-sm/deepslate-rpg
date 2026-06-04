@@ -1,134 +1,131 @@
-.unauthenticatedOverlay {
+.overlay {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(20px);
+  background-color: var(--color-bg-base);
 }
 
-.unauthenticatedContent {
+.content {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 24px; /* 3 * 8px */
-  padding: 24px; /* 3 * 8px */
+  gap: 24px;
+  padding: 24px;
   max-width: 90%;
   width: 100%;
-  color: white;
+  color: var(--color-text-primary);
 }
 
-.unauthenticatedLogo {
-  font-size: 3rem; /* 6 * 8px = 48px */
+.logo {
+  font-size: 3rem;
+  font-family: var(--font-display);
   font-weight: bold;
-  background: linear-gradient(to bottom right, #fbbf24, #f59e0b);
+  background: linear-gradient(135deg, var(--color-ember-300), var(--color-accent), var(--color-ember-200));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  text-shadow: 0 0 20px color-mix(in srgb, var(--color-accent) 40%, transparent);
 }
 
-.unauthenticatedDescription {
-  font-size: 1rem; /* 2 * 8px = 16px */
-  color: #d4d4d8; /* zinc-400 */
+.description {
+  font-size: 1rem;
+  color: var(--color-text-muted);
 }
 
-.unauthenticatedButtons {
+.buttons {
   display: flex;
-  gap: 16px; /* 2 * 8px */
+  gap: 16px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.unauthenticatedButton {
+.button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px; /* 1 * 8px */
-  padding: 0.75rem 1.5rem; /* 12px 24px (1.5*8px 3*8px) */
-  border-radius: 1.5rem; /* 3 * 8px = 24px */
+  gap: 8px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 1.5rem;
   font-weight: 600;
-  font-size: 1rem; /* 2 * 8px = 16px */
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
   border: none;
   text-decoration: none;
 }
 
-.unauthenticatedButtonSignIn {
-  border: 1px solid #fbbf244d; /* amber-500/30 */
-  background: linear-gradient(to bottom right, #fbbf2433, #f59e0b1a); /* amber-500/20 to amber-600/10 */
-  color: #fbbf24; /* amber-100 */
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+.buttonSignIn {
+  background: linear-gradient(135deg, var(--color-ember-500), var(--color-accent));
+  color: white;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent) 30%, transparent);
 }
 
-.unauthenticatedButtonSignIn:hover {
-  border: 1px solid #fbbf2480; /* amber-500/50 */
-  background: linear-gradient(to bottom right, #fbbf244d, #f59e0b33); /* amber-500/30 to amber-600/20 */
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+.buttonSignIn:hover {
+  background: linear-gradient(135deg, var(--color-ember-400), var(--color-accent-hover));
+  box-shadow: 0 0 24px color-mix(in srgb, var(--color-accent) 50%, transparent);
   transform: translateY(-2px);
 }
 
-.unauthenticatedButtonSignIn:active {
+.buttonSignIn:active {
   transform: translateY(0) scale(0.97);
 }
 
-.unauthenticatedButtonSignUp {
-  border: 1px solid #d4d4d866; /* zinc-600/40 */
-  background: linear-gradient(to bottom right, #ffffff1a, #ffffff0d); /* white/10 to white/5 */
-  color: #d4d4d8; /* zinc-200 */
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+.buttonSignUp {
+  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--color-text-secondary);
 }
 
-.unauthenticatedButtonSignUp:hover {
-  border: 1px solid #d4d4d899; /* zinc-600/60 */
-  background: linear-gradient(to bottom right, #ffffff33, #ffffff1a); /* white/20 to white/10 */
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+.buttonSignUp:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  color: var(--color-text-primary);
   transform: translateY(-2px);
 }
 
-.unauthenticatedButtonSignUp:active {
+.buttonSignUp:active {
   transform: translateY(0) scale(0.97);
 }
 
-/* Responsive adjustments for larger screens */
 @media (min-width: 640px) {
-  .unauthenticatedLogo {
-    font-size: 3.75rem; /* 7.5 * 8px = 60px */
+  .logo {
+    font-size: 3.75rem;
   }
   
-  .unauthenticatedDescription {
-    font-size: 1.125rem; /* 2.25 * 8px = 18px */
+  .description {
+    font-size: 1.125rem;
   }
   
-  .unauthenticatedButtons {
-    gap: 24px; /* 3 * 8px */
+  .buttons {
+    gap: 24px;
   }
   
-  .unauthenticatedButton {
-    padding: 1rem 2rem; /* 16px 32px (2*8px 4*8px) */
-    font-size: 1.125rem; /* 2.25 * 8px = 18px */
+  .button {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
   }
 }
 
 @media (min-width: 1024px) {
-  .unauthenticatedLogo {
-    font-size: 4.5rem; /* 9 * 8px = 72px */
+  .logo {
+    font-size: 4.5rem;
   }
   
-  .unauthenticatedDescription {
-    font-size: 1.25rem; /* 2.5 * 8px = 20px */
+  .description {
+    font-size: 1.25rem;
   }
   
-  .unauthenticatedButtons {
-    gap: 32px; /* 4 * 8px */
+  .buttons {
+    gap: 32px;
   }
   
-  .unauthenticatedButton {
-    padding: 1.25rem 2.5rem; /* 20px 40px (2.5*8px 5*8px) */
-    font-size: 1.25rem; /* 2.5 * 8px = 20px */
+  .button {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.25rem;
   }
 }

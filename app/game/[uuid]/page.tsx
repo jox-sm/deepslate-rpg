@@ -3,24 +3,13 @@ import { notFound } from 'next/navigation';
 import { getGameById } from '@/lib/db';
 import GameDetailClient from './game-detail';
 import type { GamePageProps } from '@/types/gamePage';
-
-/**
- * GamePage Server Component
- *
- * Handles:
- * - SEO metadata generation
- * - Initial data fetch for metadata
- * - Server-side validation
- * - Client component rendering
- */
+import { classifyError } from '@/utilities/errorHandler';
 
 export async function generateMetadata(
   { params }: GamePageProps
 ): Promise<Metadata> {
   try {
     const { uuid } = await params;
-
-    // Lightweight fetch for metadata (just the name)
     const game = await getGameById(uuid);
 
     if (!game) {
@@ -31,9 +20,7 @@ export async function generateMetadata(
     }
 
     const gameTitle = game.name || 'Deepslate Dungeons';
-    const gameDescription =
-      game.description ||
-      'Explore an epic game adventure in Deepslate Dungeons.';
+    const gameDescription = game.description || 'Explore an epic game adventure in Deepslate Dungeons.';
     const gameImage = game.image || '/images/default-game.png';
 
     return {
@@ -42,14 +29,7 @@ export async function generateMetadata(
       openGraph: {
         title: gameTitle,
         description: gameDescription,
-        images: [
-          {
-            url: gameImage,
-            width: 1200,
-            height: 630,
-            alt: gameTitle,
-          },
-        ],
+        images: [{ url: gameImage, width: 1200, height: 630, alt: gameTitle }],
         type: 'website',
       },
       twitter: {
@@ -60,7 +40,8 @@ export async function generateMetadata(
       },
     };
   } catch (error) {
-    console.error('[GamePage] Error generating metadata:', error);
+    const classified = classifyError(error, "GamePage.generateMetadata");
+    console.error('[GamePage] Error generating metadata:', classified.message);
     return {
       title: 'Game | Deepslate Dungeons',
       description: 'View game details in Deepslate Dungeons.',
@@ -71,13 +52,11 @@ export async function generateMetadata(
 export default async function GamePage({ params }: GamePageProps) {
   const { uuid } = await params;
 
-  // Validate UUID format (basic validation)
   if (!uuid || typeof uuid !== 'string' || uuid.length < 10) {
     notFound();
   }
 
   try {
-    // Fetch basic game info for server-side validation
     const gameBasicInfo = await getGameById(uuid);
 
     if (!gameBasicInfo) {
@@ -95,7 +74,8 @@ export default async function GamePage({ params }: GamePageProps) {
       </main>
     );
   } catch (error) {
-    console.error('[GamePage] Error rendering page:', error);
+    const classified = classifyError(error, "GamePage");
+    console.error('[GamePage] Error rendering page:', classified.message);
     notFound();
   }
 }

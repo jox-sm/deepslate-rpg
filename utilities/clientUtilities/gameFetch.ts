@@ -1,17 +1,13 @@
 'use client';
 
 import { v7 as uuidv7 } from 'uuid';
-
-/**
- * Client-side wrapper for game fetch requests
- * Sends requests to the batch pipeline API
- */
+import { tryOrError } from '@/utilities/errorHandler';
 
 export async function requestGameFetch(
   uuid: string,
   requestId: string = uuidv7()
 ): Promise<{ requestId: string }> {
-  try {
+  const result = await tryOrError(async () => {
     const response = await fetch('/api/games/batch-queue', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -23,15 +19,15 @@ export async function requestGameFetch(
     }
 
     return { requestId };
-  } catch (error) {
-    console.error('[ClientGameFetch] Error:', error);
-    throw error;
+  }, { context: "requestGameFetch" });
+
+  if (!result.ok) {
+    throw new Error(result.error?.message || 'Failed to queue fetch request');
   }
+
+  return result.data!;
 }
 
-/**
- * Poll for game fetch result
- */
 export async function pollGameResult(
   requestId: string,
   timeoutMs: number = 5000
@@ -39,7 +35,7 @@ export async function pollGameResult(
   const startTime = Date.now();
 
   while (Date.now() - startTime < timeoutMs) {
-    try {
+    const result = await tryOrError(async () => {
       const response = await fetch(`/api/games/batch-result/${requestId}`);
 
       if (response.ok) {
@@ -47,35 +43,33 @@ export async function pollGameResult(
       }
 
       if (response.status === 404) {
-        // Still processing, wait and retry
         await new Promise((resolve) => setTimeout(resolve, 100));
-        continue;
+        return null;
       }
 
       throw new Error('Failed to fetch result');
-    } catch (error) {
-      console.error('[ClientGameFetch] Poll error:', error);
-      await new Promise((resolve) => setTimeout(resolve, 100));
+    }, { context: "pollGameResult" });
+
+    if (result.ok && result.data !== null) {
+      return result.data;
     }
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
   return null;
 }
 
-/**
- * Get game with batch queueing (client-side)
- */
 export async function getGameWithBatchQueue(
   uuid: string,
   requestId?: string
 ): Promise<any | null> {
   const id = requestId || uuidv7();
 
-  try {
+  const result = await tryOrError(async () => {
     await requestGameFetch(uuid, id);
     return await pollGameResult(id);
-  } catch (error) {
-    console.error('[ClientGameFetch] Error:', error);
-    return null;
-  }
+  }, { context: "getGameWithBatchQueue" });
+
+  return result.ok ? result.data : null;
 }

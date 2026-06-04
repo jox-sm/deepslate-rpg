@@ -1,63 +1,65 @@
 'use client';
 import { useEffect, useState } from "react";
-import style from "@/styles/cards/cards.module.css";
+import { useRouter } from "next/navigation";
 import posthog from "posthog-js";
 import { CardProps } from "@/types/cards";
+import { useGamePreloadStore } from "@/utilities/clientUtilities/useGameCache";
+import { cn } from "@/lib/utils";
+import { FittedImage } from "@/components/shared/FittedImage";
+import styles from "@/styles/cards/cards.module.css";
 
 export default function ProfileCard({
+  id,
   image,
   name,
   description,
   tags,
+  likes_count,
 }: CardProps) {
+  const router = useRouter();
+  const { setPreload } = useGamePreloadStore();
   const tagsKey = tags.join(',');
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     posthog.capture('adventure_card_viewed', { name, tags });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, tagsKey]);
 
-  const handleImageError = () => {
-    setImageError(true);
-    // TODO: Call an API endpoint to report broken image and invalidate cache for this game/item
-    // Example: fetch(`/api/report-broken-image?imageUrl=${encodeURIComponent(image)}`, { method: 'POST' });
-    console.error(`Image failed to load: ${image}`);
+  const handleClick = () => {
+    setPreload(id, { name, description, image, tags, likes_count });
+    posthog.capture('adventure_card_clicked', { id, name, tags: tagsKey });
+    router.push(`/game/${id}`);
   };
 
   return (
-    <div className={style.card}>
-      {/* Photo Layout */}
-      <div className={style.imagecontainer}>
-        <img
+    <div
+      onClick={handleClick}
+      className={cn(styles.card)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter') handleClick(); }}
+    >
+      <div className={styles.imagecontainer}>
+        <FittedImage
           src={imageError ? '/images/project.jpg' : image}
           alt={name}
-          onError={handleImageError}
-          className={style.img}
+          aspectRatio="3/2"
+          className="transition-transform duration-500 ease-ember"
+          showOverlay
         />
       </div>
-
-      {/* Content */}
-      <div className={style.contentPadding}>
-        {/* Name */}
-        <h2 className={style.header}>{name}</h2>
-
-        {/* Description */}
-        <p className={style.content}>
-          {description}
-        </p>
-
-         {/* Tags */}
-         <div className={style.tags}>
-           {tags.map((tag) => (
-             <span
-               key={tag}
-               >
-               #{tag}
-             </span>
-           ))}
-         </div>
-       </div>
-     </div>
-   );
- }
+      <div className={styles.nameSection}>
+        <h3 className={cn(styles.name, "line-clamp-1")}>{name}</h3>
+      </div>
+      {tags.length > 0 && (
+        <div className={styles.tagsSection}>
+          {tags.map((tag) => (
+            <span key={tag} className={styles.tagPill}>
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
