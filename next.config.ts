@@ -2,6 +2,15 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactCompiler:true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "taeltdzrygfgphozyjtd.supabase.co",
+      },
+    ],
+    qualities: [75, 85],
+  },
   experimental:{
     turbopackFileSystemCacheForDev:true,
   },

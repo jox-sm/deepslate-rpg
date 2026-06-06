@@ -2,11 +2,11 @@
 import ImageUpload from "@/ui/FormUI/imageComponent";
 import { mapValidators } from "@/lib/gamesFormValidation";
 import { type MapData } from "@/types/gameForm";
-import formStyles from "@/styles/forms/form.module.css";
 import { Button } from "@/ui/primitives/button";
 import { Input } from "@/ui/primitives/input";
 import { Textarea } from "@/ui/primitives/textarea";
 import { Label } from "@/ui/primitives/label";
+import { cn } from "@/lib/utils";
 
 interface MapsStepProps {
   maps: MapData[];
@@ -19,11 +19,11 @@ interface MapsStepProps {
 
 export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBack }: MapsStepProps) {
   return (
-    <div className={formStyles.card}>
-      <h2 className={formStyles.title}>Maps</h2>
+    <div className="space-y-6">
+      <h2 className="font-display text-xl font-semibold text-text-primary">Maps</h2>
 
       {maps.length === 0 && (
-        <p className="text-sm text-zinc-400">No maps added yet. Add your first map below.</p>
+        <p className="text-sm text-text-muted">No maps added yet. Add your first map below.</p>
       )}
 
       {maps.map((mapItem, index) => {
@@ -35,9 +35,9 @@ export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBa
         const placesErrorId = `map-${mapItem.id}-places-error`;
 
         return (
-          <div key={mapItem.id} className="border border-zinc-700 rounded-lg p-4 flex flex-col gap-3" role="group" aria-label={`Map ${index + 1}`}>
-            <div className="flex justify-between items-center">
-              <h3 className="text-sm font-semibold text-zinc-300">Map {index + 1}</h3>
+          <div key={mapItem.id} className="rounded-lg border border-border bg-bg-surface p-4 space-y-4" role="group" aria-label={`Map ${index + 1}`}>
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-text-primary">Map {index + 1}</h3>
               <Button
                 variant="ghost"
                 size="sm"
@@ -48,7 +48,7 @@ export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBa
               </Button>
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="space-y-2">
               <Label htmlFor={`map-${mapItem.id}-name`}>Name of Place</Label>
               <Input
                 id={`map-${mapItem.id}-name`}
@@ -59,7 +59,10 @@ export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBa
                 aria-describedby={mapItem.nameOfPlace.length > 0 ? nameErrorId : undefined}
               />
               {mapItem.nameOfPlace.length > 0 && (
-                <span id={nameErrorId} role="alert" className={formStyles[nameValidation.isFormValid ? "statusSuccess" : nameValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
+                <span id={nameErrorId} role="alert" className={cn(
+                  "text-xs",
+                  nameValidation.isFormValid ? "text-success" : nameValidation.errorColor === "error" ? "text-destructive" : "text-warning"
+                )}>
                   {nameValidation.errorMessage}
                 </span>
               )}
@@ -71,7 +74,7 @@ export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBa
               onPreviewChange={(preview) => onUpdate(mapItem.id, "imagePreview", preview)}
             />
 
-            <div className="flex flex-col gap-2">
+            <div className="space-y-2">
               <Label htmlFor={`map-${mapItem.id}-size`}>Size of Place</Label>
               <Input
                 id={`map-${mapItem.id}-size`}
@@ -82,13 +85,16 @@ export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBa
                 aria-describedby={mapItem.sizeOfPlace.length > 0 ? sizeErrorId : undefined}
               />
               {mapItem.sizeOfPlace.length > 0 && (
-                <span id={sizeErrorId} role="alert" className={formStyles[sizeValidation.isFormValid ? "statusSuccess" : sizeValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
+                <span id={sizeErrorId} role="alert" className={cn(
+                  "text-xs",
+                  sizeValidation.isFormValid ? "text-success" : sizeValidation.errorColor === "error" ? "text-destructive" : "text-warning"
+                )}>
                   {sizeValidation.errorMessage}
                 </span>
               )}
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="space-y-2">
               <Label htmlFor={`map-${mapItem.id}-places`}>Places at Map</Label>
               <Textarea
                 id={`map-${mapItem.id}-places`}
@@ -100,7 +106,10 @@ export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBa
                 aria-describedby={mapItem.placesAtMap.length > 0 ? placesErrorId : undefined}
               />
               {mapItem.placesAtMap.length > 0 && (
-                <span id={placesErrorId} role="alert" className={formStyles[placesValidation.isFormValid ? "statusSuccess" : placesValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
+                <span id={placesErrorId} role="alert" className={cn(
+                  "text-xs",
+                  placesValidation.isFormValid ? "text-success" : placesValidation.errorColor === "error" ? "text-destructive" : "text-warning"
+                )}>
                   {placesValidation.errorMessage}
                 </span>
               )}
@@ -113,7 +122,7 @@ export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBa
         Add New Map
       </Button>
 
-      <div className="flex gap-2 justify-between">
+      <div className="flex justify-between gap-2">
         <Button variant="outline" onClick={onBack}>
           Back
         </Button>

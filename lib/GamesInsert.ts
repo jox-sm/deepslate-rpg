@@ -2,6 +2,7 @@ import {validateQueue, setToIdle, getGamesQueue} from "@/utilities/insertGame";
 import connectDB from "@/models/games/mongodb/client";
 import Game from "@/models/games/mongodb/schema";
 import { sleep } from "@/utilities/sleep";
+import { classifyError } from '@/utilities/errorHandler';
 
 export async function processGamesQueue() {
   try {
@@ -16,6 +17,7 @@ export async function processGamesQueue() {
       await setToIdle();
     } 
   } catch (error) {
-    console.error('Error processing games queue:', error);
+    const classified = classifyError(error, "GamesInsert.processGamesQueue");
+    console.error('Error processing games queue:', classified.message);
   }
 }

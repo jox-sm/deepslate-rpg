@@ -8,9 +8,9 @@
   height: 320px;
   background: linear-gradient(
     90deg,
-    #27272a 0%,
-    #3f3f46 50%,
-    #27272a 100%
+    var(--color-bg-hover) 0%,
+    var(--color-abyss-600) 50%,
+    var(--color-bg-hover) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.6s ease-in-out infinite;
@@ -24,7 +24,7 @@
 .error {
   text-align: center;
   padding: 2rem 0;
-  color: #f87171;
+  color: var(--color-destructive);
   font-size: 0.875rem;
 }
 

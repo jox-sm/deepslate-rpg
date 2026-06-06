@@ -1,18 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ConvexClientProvider } from "@/app/convex-client-provider";
 import AuthGate from "@/app/auth-gate";
 import Sbar from "@/components/background/sidebar/sidebar";
-import layoutStyle from "@/styles/layout/layout.module.css";
 
-const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: ["300", "600"], style: ["normal", "italic"] });
-const dmSans = DM_Sans({ subsets: ["latin"], weight: ["300", "400", "500"] });
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+});
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
   title: "Deepslate Dungeons",
@@ -22,13 +27,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${layoutStyle.html}`}>
-        <body className={`${layoutStyle.body} ${layoutStyle.background}`}>
+      <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`}>
+        <body className="min-h-screen bg-bg-base text-text-primary antialiased">
           <ConvexClientProvider>
             <AuthGate>
-              <div className={layoutStyle.page}>
+              <div className="flex min-h-screen">
                 <Sbar />
-                {children}
+                <main className="flex-1 overflow-x-hidden">
+                  {children}
+                </main>
               </div>
             </AuthGate>
           </ConvexClientProvider>

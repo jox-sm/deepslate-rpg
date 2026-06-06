@@ -7,18 +7,18 @@
   width: 172px;
   height: 100vh;
   z-index: 3;
-  background: #171717;
-  border-right: 1px solid #2a2a2a;
-  color: white;
+  background: linear-gradient(180deg, var(--color-charcoal-900) 0%, var(--color-slate-800) 100%);
+  border-right: 1px solid var(--color-slate-600);
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.4), inset -20px 0 40px color-mix(in srgb, var(--color-torch-400) 3%, transparent);
+  color: var(--color-text-primary);
   justify-self: start;
   align-self: flex-start;
   display: flex;
   flex-direction: column;
-
   transition:
     width 0.3s ease,
-    background 0.3s ease;
-
+    background 0.3s ease,
+    box-shadow 0.3s ease;
   overflow: visible;
 }
 
@@ -31,19 +31,20 @@
 
 .header {
   padding: 8px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  border-bottom: 1px solid #2a2a2a;
+  border-bottom: 1px solid var(--color-slate-600);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-torch-400) 5%, var(--color-charcoal-900)) 0%, transparent 100%);
 }
 
 .logo {
   font-size: 16px;
   font-weight: bold;
-
+  font-family: var(--font-display);
   white-space: nowrap;
+  color: var(--color-text-primary);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--color-torch-400) 20%, transparent);
 }
 
 /* collapse button */
@@ -51,29 +52,24 @@
 .toggleButton {
   width: 38px;
   height: 38px;
-
   border: none;
   outline: none;
-
   background: transparent;
-  color: #d4d4d8;
-
+  color: var(--color-text-muted);
   border-radius: 10px;
-
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   transition:
     background 0.2s ease,
     color 0.2s ease;
 }
 
 .toggleButton:hover {
-  background: #2a2a2a;
-  color: white;
+  background: color-mix(in srgb, var(--color-torch-400) 8%, transparent);
+  color: var(--color-torch-400);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-torch-400) 20%, transparent);
 }
 
 /* ───────── MENU ───────── */
@@ -100,26 +96,29 @@
   border-radius: 14px;
   background: transparent;
   border: none;
-  color: #d4d4d8;
+  color: var(--color-text-muted);
   justify-content: flex-start; 
   gap: 12px; 
   text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 .menuItem:hover {
-  background: #262626;
-  color: white;
+  background: color-mix(in srgb, var(--color-torch-400) 8%, transparent);
+  color: var(--color-torch-300);
+  box-shadow: inset 0 0 12px color-mix(in srgb, var(--color-torch-400) 15%, transparent);
 }
 
 .menuItem:active {
-  transform: scale(0.98);
+  transform: scale(0.96);
 }
 
 /* active item */
 
 .active {
-  background: #303030;
-  color: white;
+  background: color-mix(in srgb, var(--color-torch-400) 15%, transparent);
+  color: var(--color-torch-400);
+  box-shadow: inset 0 0 16px color-mix(in srgb, var(--color-torch-400) 20%, transparent), 0 0 12px color-mix(in srgb, var(--color-torch-400) 15%, transparent);
 }
 
 /* icon */
@@ -157,9 +156,9 @@
 
 .footer {
   padding: 16px;
-
-  border-top: 1px solid #2a2a2a;
+  border-top: 1px solid var(--color-slate-600);
   margin-top: auto;
+  background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--color-torch-400) 4%, var(--color-slate-800)) 100%);
 }
 
 /* User button container in footer */
@@ -176,7 +175,7 @@
 }
 
 .userButtonContainer .UserButton:hover {
-  background: #2a2a2a !important;
+  background: var(--color-bg-hover) !important;
   border-radius: 8px !important;
 }
 
@@ -197,12 +196,14 @@
 }
 
 .menu::-webkit-scrollbar-thumb {
-  background: #3a3a3a;
+  background: var(--color-slate-600);
   border-radius: 999px;
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-torch-400) 10%, transparent);
 }
 
 .menu::-webkit-scrollbar-thumb:hover {
-  background: #4a4a4a;
+  background: var(--color-torch-500);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-torch-400) 20%, transparent);
 }
 .headerContent {
   display: flex;

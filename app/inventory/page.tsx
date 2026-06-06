@@ -1,13 +1,9 @@
-import React from 'react'
 import CreateForm from "@/components/adventures/form/form";
-import style from '@/styles/pages/inventory.module.css';
 
-const page = () => {
+export default function InventoryPage() {
   return (
-    <div className={style.container}>
+    <div className="container-page py-8">
       <CreateForm />
     </div>
-  )
+  );
 }
-
-export default page

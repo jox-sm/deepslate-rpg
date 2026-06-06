@@ -4,6 +4,7 @@
 import { useAuth as useClerkAuth } from '@clerk/nextjs';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { useState, useEffect, useCallback } from 'react';
+import { classifyError } from '@/utilities/errorHandler';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
@@ -49,11 +50,12 @@ export function useAuth() {
         error: null,
       });
     } catch (error) {
-      console.error('Failed to create authenticated clients:', error);
+      const classified = classifyError(error, "useAuth.createClients");
+      console.error('Failed to create authenticated clients:', classified.message);
       setState(prev => ({
         ...prev,
         isLoading: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: classified.message,
       }));
     }
   }, [getToken, isLoaded, isSignedIn]);

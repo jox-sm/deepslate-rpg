@@ -1,11 +1,11 @@
 .button {
   border-radius: 12px;
-  background: white;
+  background: linear-gradient(135deg, var(--color-ember-500), var(--color-accent));
   padding: 12px 32px;
   font-size: 1rem;
   font-weight: 600;
-  color: black;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  color: white;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent) 30%, transparent);
   transition: all 0.2s ease;
   cursor: pointer;
   border: none;
@@ -13,8 +13,8 @@
 }
 
 .button:hover {
-  background: #e4e4e7;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, var(--color-ember-400), var(--color-accent-hover));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--color-accent) 50%, transparent);
 }
 
 .button:active {

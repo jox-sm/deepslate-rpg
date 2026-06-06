@@ -1,12 +1,15 @@
 .button {
   border-radius: 12px;
-  border: 1px solid rgba(113, 113, 122, 0.3);
-  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-torch-500);
+  background: color-mix(in srgb, var(--color-torch-400) 8%, var(--color-charcoal-900));
   padding: 12px 32px;
   font-size: 1rem;
   font-weight: 600;
-  color: white;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  color: var(--color-torch-300);
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.5),
+    0 0 20px color-mix(in srgb, var(--color-torch-400) 15%, transparent),
+    inset 0 1px 0 color-mix(in srgb, rgba(255, 255, 255, 0.1) 30%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   transition: all 0.2s ease;
@@ -15,8 +18,13 @@
 }
 
 .button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  background: color-mix(in srgb, var(--color-torch-400) 15%, var(--color-charcoal-900));
+  border-color: var(--color-torch-400);
+  color: var(--color-torch-200);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.6),
+    0 0 28px color-mix(in srgb, var(--color-torch-400) 30%, transparent),
+    inset 0 1px 0 color-mix(in srgb, rgba(255, 255, 255, 0.1) 30%, transparent);
 }
 
 .button:active {

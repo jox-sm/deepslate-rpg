@@ -35,6 +35,7 @@ export async function fetchGamesFromApi(offset: number): Promise<CardProps[]> {
   }
 
 return json.data.map((game) => ({
+  id: game.id,
   name: game.name || 'Untitled',
   description: game.description || '',
   likes_count: game.likes_count ?? 0,

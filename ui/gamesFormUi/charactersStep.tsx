@@ -2,11 +2,11 @@
 import ImageUpload from "@/ui/FormUI/imageComponent";
 import { characterValidators } from "@/lib/gamesFormValidation";
 import { type CharacterData } from "@/types/gameForm";
-import formStyles from "@/styles/forms/form.module.css";
 import { Button } from "@/ui/primitives/button";
 import { Input } from "@/ui/primitives/input";
 import { Textarea } from "@/ui/primitives/textarea";
 import { Label } from "@/ui/primitives/label";
+import { cn } from "@/lib/utils";
 
 interface CharactersStepProps {
   characters: CharacterData[];
@@ -18,11 +18,11 @@ interface CharactersStepProps {
 
 export default function CharactersStep({ characters, onAdd, onRemove, onUpdate, onNext }: CharactersStepProps) {
   return (
-    <div className={formStyles.card}>
-      <h2 className={formStyles.title}>Characters</h2>
+    <div className="space-y-6">
+      <h2 className="font-display text-xl font-semibold text-text-primary">Characters</h2>
 
       {characters.length === 0 && (
-        <p className="text-sm text-zinc-400">No characters added yet. Add your first character below.</p>
+        <p className="text-sm text-text-muted">No characters added yet. Add your first character below.</p>
       )}
 
       {characters.map((char, index) => {
@@ -32,9 +32,9 @@ export default function CharactersStep({ characters, onAdd, onRemove, onUpdate, 
         const descErrorId = `char-${char.id}-desc-error`;
 
         return (
-          <div key={char.id} className="border border-zinc-700 rounded-lg p-4 flex flex-col gap-3" role="group" aria-label={`Character ${index + 1}`}>
-            <div className="flex justify-between items-center">
-              <h3 className="text-sm font-semibold text-zinc-300">Character {index + 1}</h3>
+          <div key={char.id} className="rounded-lg border border-border bg-bg-surface p-4 space-y-4" role="group" aria-label={`Character ${index + 1}`}>
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-text-primary">Character {index + 1}</h3>
               <Button
                 variant="ghost"
                 size="sm"
@@ -45,7 +45,7 @@ export default function CharactersStep({ characters, onAdd, onRemove, onUpdate, 
               </Button>
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="space-y-2">
               <Label htmlFor={`char-${char.id}-name`}>Name</Label>
               <Input
                 id={`char-${char.id}-name`}
@@ -56,13 +56,16 @@ export default function CharactersStep({ characters, onAdd, onRemove, onUpdate, 
                 aria-describedby={char.name.length > 0 ? nameErrorId : undefined}
               />
               {char.name.length > 0 && (
-                <span id={nameErrorId} role="alert" className={formStyles[nameValidation.isFormValid ? "statusSuccess" : nameValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
+                <span id={nameErrorId} role="alert" className={cn(
+                  "text-xs",
+                  nameValidation.isFormValid ? "text-success" : nameValidation.errorColor === "error" ? "text-destructive" : "text-warning"
+                )}>
                   {nameValidation.errorMessage}
                 </span>
               )}
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="space-y-2">
               <Label htmlFor={`char-${char.id}-desc`}>Description</Label>
               <Textarea
                 id={`char-${char.id}-desc`}
@@ -74,7 +77,10 @@ export default function CharactersStep({ characters, onAdd, onRemove, onUpdate, 
                 aria-describedby={char.description.length > 0 ? descErrorId : undefined}
               />
               {char.description.length > 0 && (
-                <span id={descErrorId} role="alert" className={formStyles[descValidation.isFormValid ? "statusSuccess" : descValidation.errorColor === "error" ? "statusError" : "statusWarning"]}>
+                <span id={descErrorId} role="alert" className={cn(
+                  "text-xs",
+                  descValidation.isFormValid ? "text-success" : descValidation.errorColor === "error" ? "text-destructive" : "text-warning"
+                )}>
                   {descValidation.errorMessage}
                 </span>
               )}
@@ -89,11 +95,9 @@ export default function CharactersStep({ characters, onAdd, onRemove, onUpdate, 
         );
       })}
 
-      <div className="flex gap-2">
-        <Button onClick={onAdd}>
-          Add Character
-        </Button>
-      </div>
+      <Button onClick={onAdd}>
+        Add Character
+      </Button>
 
       <div className="flex justify-end">
         <Button onClick={onNext}>

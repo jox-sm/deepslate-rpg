@@ -4,16 +4,32 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 ease-ember focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97]",
   {
     variants: {
       variant: {
-        default: "bg-zinc-100 text-zinc-900 hover:bg-zinc-200",
-        destructive: "bg-red-600 text-white hover:bg-red-700",
-        outline: "border border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800",
-        secondary: "bg-zinc-800 text-zinc-100 hover:bg-zinc-700",
-        ghost: "text-zinc-400 hover:text-white hover:bg-zinc-800",
-        link: "text-zinc-100 underline-offset-4 hover:underline",
+        default:
+          "bg-accent text-white hover:bg-accent-hover shadow-lg glow-accent-sm",
+        destructive:
+          "bg-destructive text-white hover:bg-destructive-hover",
+        outline:
+          "border border-border bg-transparent text-text-secondary hover:bg-bg-hover hover:text-text-primary hover:border-accent/30",
+        secondary:
+          "bg-bg-elevated text-text-primary hover:bg-bg-hover border border-border",
+        ghost:
+          "text-text-secondary hover:text-text-primary hover:bg-bg-hover",
+        link:
+          "text-accent underline-offset-4 hover:underline",
+        gradient:
+          "text-white shadow-lg glow-accent bg-gradient-to-r from-torch-500 to-torch-400 hover:from-torch-400 hover:to-torch-300",
+        glass:
+          "bg-glass text-text-primary border border-border/50 hover:bg-bg-hover/70 hover:border-accent/30 glow-accent-sm",
+        torch:
+          "bg-torch-500 text-charcoal-950 hover:bg-torch-400 shadow-lg glow-torch active:glow-torch",
+        gold:
+          "bg-gold-500 text-charcoal-950 hover:bg-gold-400 shadow-lg glow-gold font-semibold",
+        blood:
+          "bg-blood-500 text-charcoal-950 hover:bg-blood-400 shadow-lg glow-blood font-semibold",
       },
       size: {
         default: "h-10 px-4 py-2",

@@ -29,6 +29,7 @@
     "mongoose": "^9.6.2",
     "next": "16.2.4",
     "ogl": "^1.0.11",
+    "pako": "^2.1.0",
     "pg": "^8.20.0",
     "postcss": "^8.5.14",
     "posthog-js": "^1.372.10",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@types/mongoose": "^5.11.96",
     "@types/node": "^20",
+    "@types/pako": "^2.0.4",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19",
     "@types/sharp": "^0.31.1",

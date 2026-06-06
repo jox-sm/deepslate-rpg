@@ -1,5 +1,7 @@
 import { redis } from './queue';
 import { getGamesPaginated } from './db';
+import { retry } from './retry';
+import { tryOrErrorSync, classifyError } from '@/utilities/errorHandler';
 
 const CACHE_KEYS = {
   GAME_PREFIX: 'game:',
@@ -29,7 +31,7 @@ export async function warmUpCache(): Promise<boolean> {
 
     console.log('[CacheWarmup] Starting cache warm-up...');
 
-    const { games } = await getGamesPaginated(WARMUP_LIMIT, 0);
+    const { games } = await retry(() => getGamesPaginated(WARMUP_LIMIT, 0), 3, 1000);
 
     if (games.length === 0) {
       console.log('[CacheWarmup] No games found in PostgreSQL');
@@ -60,7 +62,8 @@ export async function warmUpCache(): Promise<boolean> {
     console.log(`[CacheWarmup] Successfully cached ${games.length} games`);
     return true;
   } catch (error) {
-    console.error('[CacheWarmup] Error during warm-up:', error);
+    const classified = classifyError(error, "CacheWarmup.warmUpCache");
+    console.error('[CacheWarmup] Error during warm-up:', classified.message);
     return false;
   }
 }
@@ -72,12 +75,12 @@ export async function getCachedGameIds(): Promise<string[]> {
 export async function getGameFromCache(id: string): Promise<object | null> {
   const data = await redis.get(`${CACHE_KEYS.GAME_PREFIX}${id}`);
   if (data) {
-    try {
-      return JSON.parse(data);
-    } catch {
+    const result = tryOrErrorSync(() => JSON.parse(data), { context: `Cache:${id}` });
+    if (!result.ok) {
       console.error(`[Cache] Failed to parse cached game: ${id}`);
       return null;
     }
+    return result.data;
   }
   return null;
 }

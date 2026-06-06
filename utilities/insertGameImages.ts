@@ -1,6 +1,7 @@
 import { uploadImage } from '@/lib/storage';
 import { GamesFormDataDB as dbGameData, CharacterDataDB, MapDataDB, ItemDataDB } from "@/types/gameForm";
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { classifyError } from '@/utilities/errorHandler';
 
 export async function convertComponentImagesJSON(
   gameData: dbGameData,
@@ -18,7 +19,8 @@ export async function convertComponentImagesJSON(
         image,
       });
     } catch (error) {
-      console.error(`Failed to upload image for character ${char.name}:`, error);
+      const classified = classifyError(error, `insertGameImages.character.${char.name}`);
+      console.error(`Failed to upload image for character ${char.name}:`, classified.message);
       characters.push({
         id: char.id,
         name: char.name,
@@ -41,7 +43,8 @@ export async function convertComponentImagesJSON(
         placesAtMap: map.placesAtMap,
       });
     } catch (error) {
-      console.error(`Failed to upload image for map ${map.nameOfPlace}:`, error);
+      const classified = classifyError(error, `insertGameImages.map.${map.nameOfPlace}`);
+      console.error(`Failed to upload image for map ${map.nameOfPlace}:`, classified.message);
       maps.push({
         id: map.id,
         nameOfPlace: map.nameOfPlace,
@@ -63,7 +66,8 @@ export async function convertComponentImagesJSON(
         image,
       });
     } catch (error) {
-      console.error(`Failed to upload image for item ${item.name}:`, error);
+      const classified = classifyError(error, `insertGameImages.item.${item.name}`);
+      console.error(`Failed to upload image for item ${item.name}:`, classified.message);
       items.push({
         id: item.id,
         name: item.name,
