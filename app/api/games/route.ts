@@ -16,6 +16,29 @@ async function ensureCachePrimed(): Promise<void> {
   }
 }
 
+const LIKES_INTERVAL_MS = 10_000;
+const GAMES_INTERVAL_MS = 1_000;
+let lastLikesDrain = 0;
+let lastGamesDrain = 0;
+
+function maybeTriggerDrain(): void {
+  const now = Date.now();
+  if (now - lastLikesDrain >= LIKES_INTERVAL_MS) {
+    lastLikesDrain = now;
+    fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? ''}/api/drain?target=likes`, {
+      method: 'GET',
+      headers: { 'x-internal-drain': '1' },
+    }).catch(() => { /* drain errors are non-fatal */ });
+  }
+  if (now - lastGamesDrain >= GAMES_INTERVAL_MS) {
+    lastGamesDrain = now;
+    fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? ''}/api/drain?target=games`, {
+      method: 'GET',
+      headers: { 'x-internal-drain': '1' },
+    }).catch(() => { /* drain errors are non-fatal */ });
+  }
+}
+
 export async function GET(request: NextRequest) {
    const { error } = await validateJWTMiddleware(request);
    if (error) return error;
@@ -27,6 +50,8 @@ export async function GET(request: NextRequest) {
    }
 
    return tryApiRoute(async () => {
+     maybeTriggerDrain();
+
      const searchParams = request.nextUrl.searchParams;
      const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
      const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '10', 10)));
@@ -41,7 +66,7 @@ export async function GET(request: NextRequest) {
        const endIndex = Math.min(offset + limit, cachedCount);
        const pageIds = cachedIds.slice(offset, endIndex);
        const keys = pageIds.map(id => `game:${id}`);
-       const values = await retry(() => redis.mget(keys), 3, 500);
+        const values = await retry(() => redis.mget<string[]>(...keys), 3, 500);
        const filteredResults = values.map(v => v ? JSON.parse(v) : null).filter(Boolean);
 
        return NextResponse.json({

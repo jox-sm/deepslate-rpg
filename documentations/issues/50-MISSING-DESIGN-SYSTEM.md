@@ -75,6 +75,13 @@ function Button({ children, variant = 'primary' }) {
 - [x] Single source of truth
 - [x] Tests passing
 
+
+## Depends On
+- [#48](48-INCONSISTENT-LAYOUT-SYSTEM.md)
+
+## Blocks
+- [#51](51-RESPONSIVENESS-IMPLEMENTATION-GAPS.md)
+
 ## Related Issues
 
 - #28: Missing design system maturity (duplicate)

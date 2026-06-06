@@ -65,6 +65,13 @@ Desktop:  1024px+ (lg)
 - [x] Tested on multiple screens
 - [x] Tests passing
 
+
+## Depends On
+- [#50](50-MISSING-DESIGN-SYSTEM.md)
+
+## Blocks
+— (none)
+
 ## Related Issues
 
 - #29: Responsiveness implementation gaps (duplicate)

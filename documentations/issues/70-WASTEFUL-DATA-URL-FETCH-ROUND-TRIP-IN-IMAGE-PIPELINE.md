@@ -76,6 +76,14 @@ curl -X POST http://localhost:3000/api/upload \
 - **After**: 1 network operation (client → server direct)
 - **Estimated savings**: 30-50ms per image upload depending on file size
 
+
+## Depends On
+- [#56](56-OBJECT-URL-MEMORY-LEAK.md)
+
+## Blocks
+- [#69](69-FILE-OBJECT-SILENTLY-LOST-IN-JSON-STRINGIFY.md)
+- [#74](74-REQUEST-ABORTED-NO-IMAGES.md)
+
 ## Related Issues
 
 - #69: File object silently lost in JSON.stringify (related to image handling)

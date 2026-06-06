@@ -61,6 +61,14 @@ import { pushRequestSchema, pushGameDataSchema, likesSchema } from '@/types/vali
 - [x] All inline Zod imports removed from push route
 - [x] TypeScript types derived from Zod schemas via `z.infer`
 
+
+## Depends On
+- [#71](71-ZODERROR-USES-ISSUES-NOT-ERRORS.md)
+- [#64](64-UNNECESSARY-ZOD-SCHEMA-FOR-SIMPLE-QUERY-PARAMS.md)
+
+## Blocks
+— (none)
+
 ## Related Issues
 - #71: ZodError uses .issues not .errors (build fix)
 - #64: Unnecessary Zod schema for simple query params (removed inline Zod from games route)

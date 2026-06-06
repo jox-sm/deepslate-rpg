@@ -354,6 +354,13 @@ describe('useForm', () => {
 - [x] Tests passing
 - [x] Type safety maintained
 
+
+## Depends On
+- [#57](57-EXCESSIVE-PROP-DRILLING.md)
+
+## Blocks
+- [#54](54-FORM-ACCESSIBILITY-DEFICIENCIES.md)
+
 ## Related Issues
 
 - #36: Two nearly identical form hooks - code duplication (duplicate)

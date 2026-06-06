@@ -243,6 +243,13 @@ MONGODB_JWT_SECRET=... # NOT NEEDED
 | Secret management | Hardcoded (risky) | Environment variables |
 | Database auth | JWT (wrong) | Native (correct) |
 
+
+## Depends On
+— (none)
+
+## Blocks
+- [#65](65-RATE-LIMITER-USES-WRONG-BOTTLENECK-API.md)
+
 ## Related Issues
 
 - #43: Wrong JWT auth approach (duplicate of this)

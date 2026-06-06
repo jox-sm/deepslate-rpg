@@ -6,6 +6,7 @@ import { CardProps } from "@/types/cards";
 import { useGamePreloadStore } from "@/utilities/clientUtilities/useGameCache";
 import { cn } from "@/lib/utils";
 import { FittedImage } from "@/components/shared/FittedImage";
+import LikeButton from "@/components/adventures/cards/like-button";
 import styles from "@/styles/cards/cards.module.css";
 
 export default function ProfileCard({
@@ -50,6 +51,9 @@ export default function ProfileCard({
       </div>
       <div className={styles.nameSection}>
         <h3 className={cn(styles.name, "line-clamp-1")}>{name}</h3>
+        <div className="mt-1">
+          <LikeButton gameId={id} initialLikes={likes_count} />
+        </div>
       </div>
       {tags.length > 0 && (
         <div className={styles.tagsSection}>

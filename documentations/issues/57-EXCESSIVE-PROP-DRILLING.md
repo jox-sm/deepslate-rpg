@@ -319,6 +319,13 @@ describe('GameWizardProvider', () => {
 - [x] No unnecessary re-renders
 - [x] Tests passing
 
+
+## Depends On
+— (none)
+
+## Blocks
+- [#58](58-FORM-HOOKS-CODE-DUPLICATION.md)
+
 ## Related Issues
 
 - #35: Excessive prop drilling in wizard form (duplicate)

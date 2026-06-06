@@ -1,28 +1,39 @@
-import { NextResponse } from 'next/server';
-import { getGamesQueue, getLikesQueue } from '@/utilities/db';
-import { insertGamesBatch, updateGamesLikesBatch } from '@/lib/db';
-import { redis } from '@/lib/queue';
-import { sleep } from '@/utilities/sleep';
-import { tryApiRoute } from '@/utilities/apiErrorHandler';
+import { drain } from "@/utilities/queue";
+import { insertGamesBatch, updateGamesLikesBatch } from "@/lib/db";
+import type { GameCardProps } from "@/types/cards";
+import type { Likes } from "@/types/db";
+import { classifyError } from "@/utilities/errorHandler";
 
-export async function processPull() {
-  await sleep(850);
-  await redis.rpop('load', '1');
-  await sleep(150);
-  const games = await getGamesQueue();
-  const likes = await getLikesQueue();
-  if (games.length > 0) {
-    await insertGamesBatch(games);
-  }
-  if (likes.length > 0) {
+export async function drainLikes(): Promise<{ processed: number }> {
+  try {
+    const likes = await drain<Likes>("neon", "likes");
+    if (likes.length === 0) {
+      return { processed: 0 };
+    }
     const likesMap = new Map<string, number>();
-    likes.forEach(like => {
-      const currentCount = likesMap.get(like.id) || 0;
-      likesMap.set(like.id, currentCount + like.likesDelta);
-    });
+    for (const like of likes) {
+      likesMap.set(like.id, (likesMap.get(like.id) || 0) + like.likesDelta);
+    }
     await updateGamesLikesBatch(likesMap);
+    return { processed: likes.length };
+  } catch (error) {
+    const classified = classifyError(error, "pull.drainLikes");
+    console.error("drainLikes failed:", classified.message);
+    throw error;
   }
-  return { message: 'Data processed successfully' };
 }
 
-export const GET = tryApiRoute(processPull, "pull");
+export async function drainGames(): Promise<{ processed: number }> {
+  try {
+    const games = await drain<GameCardProps>("neon", "games");
+    if (games.length === 0) {
+      return { processed: 0 };
+    }
+    await insertGamesBatch(games);
+    return { processed: games.length };
+  } catch (error) {
+    const classified = classifyError(error, "pull.drainGames");
+    console.error("drainGames failed:", classified.message);
+    throw error;
+  }
+}

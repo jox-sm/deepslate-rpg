@@ -13,12 +13,12 @@ const CACHE_TTL = 86400;
 const WARMUP_LIMIT = 100;
 
 async function checkCachePrimed(): Promise<boolean> {
-  const isPrimed = await redis.get(CACHE_KEYS.CACHE_PRIMED_FLAG);
+  const isPrimed = await redis.get<string>(CACHE_KEYS.CACHE_PRIMED_FLAG);
   return isPrimed === 'true';
 }
 
 async function setCachePrimed(): Promise<void> {
-  await redis.set(CACHE_KEYS.CACHE_PRIMED_FLAG, 'true', 'EX', CACHE_TTL);
+  await redis.set(CACHE_KEYS.CACHE_PRIMED_FLAG, 'true', { ex: CACHE_TTL });
 }
 
 export async function warmUpCache(): Promise<boolean> {
@@ -39,24 +39,24 @@ export async function warmUpCache(): Promise<boolean> {
       return false;
     }
 
-    const pipeline = redis.pipeline();
+    const operations: Promise<unknown>[] = [];
     const gameIds: string[] = [];
 
     for (const game of games) {
       const key = `${CACHE_KEYS.GAME_PREFIX}${game.id}`;
       const gameData = JSON.stringify(game);
-      pipeline.set(key, gameData, 'EX', CACHE_TTL);
+      operations.push(redis.set(key, gameData, { ex: CACHE_TTL }));
       gameIds.push(game.id);
     }
 
     if (gameIds.length > 0) {
-      pipeline.del(CACHE_KEYS.GAME_IDS_SET);
+      operations.push(redis.del(CACHE_KEYS.GAME_IDS_SET));
       for (let i = 0; i < gameIds.length; i++) {
-        pipeline.zadd(CACHE_KEYS.GAME_IDS_SET, i + 1, gameIds[i]);
+        operations.push(redis.zadd(CACHE_KEYS.GAME_IDS_SET, { score: i + 1, member: gameIds[i] }));
       }
     }
 
-    await pipeline.exec();
+    await Promise.all(operations);
     await setCachePrimed();
 
     console.log(`[CacheWarmup] Successfully cached ${games.length} games`);
@@ -69,11 +69,12 @@ export async function warmUpCache(): Promise<boolean> {
 }
 
 export async function getCachedGameIds(): Promise<string[]> {
-  return redis.zrange(CACHE_KEYS.GAME_IDS_SET, 0, -1);
+  const result = await redis.zrange(CACHE_KEYS.GAME_IDS_SET, 0, -1);
+  return (result as string[]) || [];
 }
 
 export async function getGameFromCache(id: string): Promise<object | null> {
-  const data = await redis.get(`${CACHE_KEYS.GAME_PREFIX}${id}`);
+  const data = await redis.get<string>(`${CACHE_KEYS.GAME_PREFIX}${id}`);
   if (data) {
     const result = tryOrErrorSync(() => JSON.parse(data), { context: `Cache:${id}` });
     if (!result.ok) {
@@ -91,9 +92,8 @@ export async function setGameInCache(id: string, game: object): Promise<void> {
     redis.set(
       `${CACHE_KEYS.GAME_PREFIX}${id}`,
       gameData,
-      'EX',
-      CACHE_TTL
+      { ex: CACHE_TTL }
     ),
-    redis.zadd(CACHE_KEYS.GAME_IDS_SET, Date.now(), id),
+    redis.zadd(CACHE_KEYS.GAME_IDS_SET, { score: Date.now(), member: id }),
   ]);
 }

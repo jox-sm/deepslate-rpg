@@ -43,3 +43,10 @@ items: filterEntriesWithImages(items),
 - [x] Submitting form with characters that have no images no longer aborts
 - [x] Characters/images/maps with actual images still upload correctly
 - [x] Empty entries are filtered out before API call
+
+
+## Depends On
+- [#70](70-WASTEFUL-DATA-URL-FETCH-ROUND-TRIP-IN-IMAGE-PIPELINE.md)
+
+## Blocks
+- [#76](76-DOCUMENTATION-AND-BUGFIXES.md)

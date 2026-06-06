@@ -21,8 +21,8 @@ const CACHE_KEYS = {
 };
 
 const MAX_CACHE_ENTRIES = 1000;
-const PROMOTION_THRESHOLD = 5; // Promote to cache after 5 hits
-const MEMORY_PRESSURE_THRESHOLD = 0.85; // 85% memory usage
+const PROMOTION_THRESHOLD = 5;
+const CACHE_STATE_TTL = 86400;
 
 interface CacheEntry {
   views: number;
@@ -30,31 +30,12 @@ interface CacheEntry {
 }
 
 /**
- * Check Redis memory pressure
+ * Check Redis memory pressure.
+ * Upstash REST API does not expose INFO/MEMORY stats, so we always return false.
+ * The hotness cache will still work correctly, just without the memory-pressure guard.
  */
 export async function checkMemoryPressure(): Promise<boolean> {
-  try {
-    const info = await redis.info('memory');
-    const memoryLines = info.split('\r\n');
-    let usedMemory = 0;
-    let maxMemory = 0;
-
-    for (const line of memoryLines) {
-      if (line.startsWith('used_memory:')) {
-        usedMemory = parseInt(line.split(':')[1], 10);
-      } else if (line.startsWith('maxmemory:')) {
-        maxMemory = parseInt(line.split(':')[1], 10);
-      }
-    }
-
-    if (maxMemory === 0) return false;
-    const pressure = usedMemory / maxMemory;
-    return pressure >= MEMORY_PRESSURE_THRESHOLD;
-  } catch (error) {
-    const classified = classifyError(error, "HotnessCache.checkMemoryPressure");
-    console.error('[HotnessCache] Error checking memory pressure:', classified.message);
-    return false;
-  }
+  return false;
 }
 
 /**
@@ -62,7 +43,7 @@ export async function checkMemoryPressure(): Promise<boolean> {
  */
 export async function getHotness(uuid: string): Promise<number> {
   const key = `${CACHE_KEYS.HOTNESS_PREFIX}${uuid}`;
-  const hotness = await redis.get(key);
+  const hotness = await redis.get<string>(key);
   return hotness ? parseInt(hotness, 10) : 0;
 }
 
@@ -103,9 +84,9 @@ async function loadCacheState(): Promise<{
   hashmap: Map<string, number>;
 }> {
   try {
-    const viewsJson = await redis.get(CACHE_KEYS.CACHE_VIEWS_ARRAY);
-    const dataJson = await redis.get(CACHE_KEYS.CACHE_DATA_ARRAY);
-    const hashmapJson = await redis.get(CACHE_KEYS.CACHE_HASHMAP);
+    const viewsJson = await redis.get<string>(CACHE_KEYS.CACHE_VIEWS_ARRAY);
+    const dataJson = await redis.get<string>(CACHE_KEYS.CACHE_DATA_ARRAY);
+    const hashmapJson = await redis.get<string>(CACHE_KEYS.CACHE_HASHMAP);
 
     const views: CacheEntry[] = viewsJson ? JSON.parse(viewsJson) : [];
     const data: Map<string, string> = dataJson
@@ -136,29 +117,12 @@ async function saveCacheState(
   hashmap: Map<string, number>
 ): Promise<void> {
   try {
-    const pipeline = redis.pipeline();
-
-    pipeline.set(
-      CACHE_KEYS.CACHE_VIEWS_ARRAY,
-      JSON.stringify(views),
-      'EX',
-      86400
-    );
-    pipeline.set(
-      CACHE_KEYS.CACHE_DATA_ARRAY,
-      JSON.stringify(Array.from(data.entries())),
-      'EX',
-      86400
-    );
-    pipeline.set(
-      CACHE_KEYS.CACHE_HASHMAP,
-      JSON.stringify(Array.from(hashmap.entries())),
-      'EX',
-      86400
-    );
-    pipeline.set(CACHE_KEYS.CACHE_SIZE, views.length.toString(), 'EX', 86400);
-
-    await pipeline.exec();
+    await Promise.all([
+      redis.set(CACHE_KEYS.CACHE_VIEWS_ARRAY, JSON.stringify(views), { ex: CACHE_STATE_TTL }),
+      redis.set(CACHE_KEYS.CACHE_DATA_ARRAY, JSON.stringify(Array.from(data.entries())), { ex: CACHE_STATE_TTL }),
+      redis.set(CACHE_KEYS.CACHE_HASHMAP, JSON.stringify(Array.from(hashmap.entries())), { ex: CACHE_STATE_TTL }),
+      redis.set(CACHE_KEYS.CACHE_SIZE, views.length.toString(), { ex: CACHE_STATE_TTL }),
+    ]);
   } catch (error) {
     const classified = classifyError(error, "HotnessCache.saveCacheState");
     console.error('[HotnessCache] Error saving cache state:', classified.message);

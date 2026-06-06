@@ -66,3 +66,10 @@ padding: 16px;
 - [x] Preview images scale correctly within card container
 - [x] No unnecessary stacking context from wrapper
 - [x] Wizard container width matches form card width
+
+
+## Depends On
+- [#54](54-FORM-ACCESSIBILITY-DEFICIENCIES.md)
+
+## Blocks
+— (none)

@@ -341,6 +341,13 @@ describe('Image Upload', () => {
 - [x] Tests passing
 - [x] No memory leaks
 
+
+## Depends On
+— (none)
+
+## Blocks
+- [#70](70-WASTEFUL-DATA-URL-FETCH-ROUND-TRIP-IN-IMAGE-PIPELINE.md)
+
 ## Related Issues
 
 - #34: Object URL memory leak in ImageUpload (duplicate)

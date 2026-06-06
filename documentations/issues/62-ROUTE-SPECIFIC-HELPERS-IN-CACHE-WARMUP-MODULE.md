@@ -260,6 +260,13 @@ describe('Cache Queries', () => {
 - [x] Tests passing
 - [x] Code clarity improved
 
+
+## Depends On
+— (none)
+
+## Blocks
+- [#78](78-DB-RETRY-MECHANISM.md)
+
 ## Related Issues
 
 - #40: Added route-specific helpers to cache-warmup module (duplicate)

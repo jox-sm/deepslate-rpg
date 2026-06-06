@@ -28,3 +28,10 @@ Replaced all three `.errors` with `.issues`:
 - [x] Build passes (`npm run build`)
 - [x] Error response still includes validation details
 - [x] Zod types correctly resolved
+
+
+## Depends On
+— (none)
+
+## Blocks
+- [#77](77-ZOD-VALIDATION-CENTRALIZATION.md)

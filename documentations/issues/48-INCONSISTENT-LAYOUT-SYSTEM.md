@@ -99,6 +99,13 @@ function Layout({ children }) {
 - [x] Tested on multiple screens
 - [x] Tests passing
 
+
+## Depends On
+— (none)
+
+## Blocks
+- [#50](50-MISSING-DESIGN-SYSTEM.md)
+
 ## Related Issues
 
 - #26: Inconsistent layout system (duplicate)

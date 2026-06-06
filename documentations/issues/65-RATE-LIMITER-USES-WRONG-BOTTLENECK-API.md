@@ -266,6 +266,13 @@ describe('Rate Limiting', () => {
 - [x] 429 responses sent when limit exceeded
 - [x] Retry-After headers present
 
+
+## Depends On
+- [#66](66-WRONG-JWT-AUTH-APPROACH.md)
+
+## Blocks
+— (none)
+
 ## Related Issues
 
 - #42: Rate limiter uses wrong Bottleneck API (duplicate of this)

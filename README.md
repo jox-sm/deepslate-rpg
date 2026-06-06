@@ -14,7 +14,7 @@
 [![Supabase Storage](https://img.shields.io/badge/Supabase-Storage-3ecf8e)](https://supabase.com)
 [![PostHog](https://img.shields.io/badge/PostHog-analytics-1d4aff)](https://posthog.com)
 
-> **28 GitHub issues · all closed · 6 critical · 3 high · medium · low — fully documented in [`documentations/issues/`](documentations/issues/)**
+> **45 GitHub issues · 42 closed, 3 open · dependency-tracked · fully documented in [`documentations/issues/`](documentations/issues/)**
 
 ---
 
@@ -26,7 +26,7 @@
 - [Architecture](#architecture)
 - [Project structure](#project-structure)
 - [Documentation](#documentation)
-- [GitHub issues (28 closed)](#github-issues-28-closed)
+- [GitHub issues (45 documented)](#github-issues-45-documented)
 - [Knowledge graph (`graphify-out/`)](#knowledge-graph-graphify-out)
 - [Security & known issues](#security--known-issues)
 - [Environment variables](#environment-variables)
@@ -229,7 +229,7 @@ deepslate dungeons/
 │   └── db.ts
 │
 ├── documentations/             # Full project docs — see "Documentation" below
-├── graphify-out/               # Knowledge graph (2,217 nodes / 2,362 edges / 158 communities)
+├── graphify-out/               # Knowledge graph (2,591 nodes / 3,117 edges / 186 communities)
 │   ├── GRAPH_REPORT.md         # Audit report with community labels
 │   ├── graph.html              # Interactive browser graph
 │   ├── graph.json              # Raw graph data
@@ -264,79 +264,115 @@ Full documentation lives in [`documentations/`](documentations/README.md). The d
 - [`01-SECURITY_VULNERABILITIES.md`](documentations/problems/01-SECURITY_VULNERABILITIES.md) — Critical / High / Medium / Low, risk matrix, action items
 - [`02-KNOWN_ISSUES.md`](documentations/problems/02-KNOWN_ISSUES.md) — N+1 queries, cache stampede, dual-DB sync, race conditions, monitoring, deployment, scalability
 
-### 🐛 `documentations/issues/` — 28 closed GitHub issues (deep-dives)
-Each issue has: problem, root cause, solution, code examples, tests, verification, related issues. See the [GitHub issues section](#github-issues-28-closed) below for the full list.
+### 🐛 `documentations/issues/` — 45 documented GitHub issues (dependency-tracked)
+Each issue has: problem, root cause, solution, code examples, tests, verification, **depends on**, **blocks**, related issues. See the [GitHub issues section](#github-issues-45-documented) below for the full list with dependency graph.
 
 ---
 
-## GitHub issues (28 closed)
+## GitHub issues (45 documented)
 
-All 28 unique issues are documented in [`documentations/issues/`](documentations/issues/) with full implementation details. Live GitHub tracking: <https://github.com/jox-sm/deepslate-rpg/issues?q=is%3Aissue+state%3Aclosed>
+All 45 unique issues are documented in [`documentations/issues/`](documentations/issues/) with full implementation details and dependency tracking. Live GitHub tracking: <https://github.com/jox-sm/deepslate-rpg/issues?q=is%3Aissue+state%3Aclosed>
 
-| # | Title | Category | Doc | GitHub |
-|---|-------|----------|-----|--------|
-| **48** | Inconsistent layout system — no 8px grid, arbitrary spacing | UI/UX | [📄](documentations/issues/48-INCONSISTENT-LAYOUT-SYSTEM.md) | [#48](https://github.com/jox-sm/deepslate-rpg/issues/16) |
-| **49** | Rendering strategy inefficiencies — all-client components | Performance | [📄](documentations/issues/49-RENDERING-STRATEGY-INEFFICIENCIES.md) | [#49](https://github.com/jox-sm/deepslate-rpg/issues/20) |
-| **50** | Missing design system maturity — no shared primitives | UI/UX | [📄](documentations/issues/50-MISSING-DESIGN-SYSTEM.md) | [#50](https://github.com/jox-sm/deepslate-rpg/issues/18) |
-| **51** | Responsiveness implementation gaps — no breakpoint strategy | UI/UX | [📄](documentations/issues/51-RESPONSIVENESS-IMPLEMENTATION-GAPS.md) | [#51](https://github.com/jox-sm/deepslate-rpg/issues/23) |
-| **52** | Component coupling and reusability issues | Refactor | [📄](documentations/issues/52-COMPONENT-COUPLING-REUSABILITY.md) | [#52](https://github.com/jox-sm/deepslate-rpg/issues/24) |
-| **53** | Accessibility gaps across interactive components | Accessibility | [📄](documentations/issues/53-ACCESSIBILITY-GAPS.md) | [#53](https://github.com/jox-sm/deepslate-rpg/issues/19) |
-| **54** | Form accessibility deficiencies in ImageUpload and wizard | Accessibility | [📄](documentations/issues/54-FORM-ACCESSIBILITY-DEFICIENCIES.md) | [#54](https://github.com/jox-sm/deepslate-rpg/issues/25) |
-| **55** | Inadequate state management — 100% local state, no caching | Refactor/Performance | [📄](documentations/issues/55-INADEQUATE-STATE-MANAGEMENT.md) | [#55](https://github.com/jox-sm/deepslate-rpg/issues/22) |
-| **56** | Object URL memory leak in ImageUpload | Bug | [📄](documentations/issues/56-OBJECT-URL-MEMORY-LEAK.md) | [#56](https://github.com/jox-sm/deepslate-rpg/issues/21) |
-| **57** | Excessive prop drilling in wizard form | Performance/Refactor | [📄](documentations/issues/57-EXCESSIVE-PROP-DRILLING.md) | [#57](https://github.com/jox-sm/deepslate-rpg/issues/17) |
-| **58** | Two nearly identical form hooks — code duplication | Refactor | [📄](documentations/issues/58-FORM-HOOKS-CODE-DUPLICATION.md) | [#58](https://github.com/jox-sm/deepslate-rpg/issues/13) |
-| **59** | Array index as React key in list rendering | Bug | [📄](documentations/issues/59-ARRAY-INDEX-AS-REACT-KEY.md) | [#59](https://github.com/jox-sm/deepslate-rpg/issues/14) |
-| **60** | Duplicate sleep utility defined in two files | Refactor | [📄](documentations/issues/60-DUPLICATE-SLEEP-UTILITY.md) | [#60](https://github.com/jox-sm/deepslate-rpg/issues/15) |
-| **61** | Likes count reset to 0 instead of using DB value | Bug | [📄](documentations/issues/61-LIKES-COUNT-RESET-TO-ZERO.md) | [#61](https://github.com/jox-sm/deepslate-rpg/issues/12) |
-| **62** | Added route-specific helpers to cache-warmup module | Refactor | [📄](documentations/issues/62-ROUTE-SPECIFIC-HELPERS-IN-CACHE-WARMUP-MODULE.md) | [#62](https://github.com/jox-sm/deepslate-rpg/issues/11) |
-| **64** | Unnecessary Zod schema for simple query params | Refactor | [📄](documentations/issues/64-UNNECESSARY-ZOD-SCHEMA-FOR-SIMPLE-QUERY-PARAMS.md) | [#64](https://github.com/jox-sm/deepslate-rpg/issues/7) |
-| **65** | Rate limiter uses wrong Bottleneck API | Bug | [📄](documentations/issues/65-RATE-LIMITER-USES-WRONG-BOTTLENECK-API.md) | [#65](https://github.com/jox-sm/deepslate-rpg/issues/5) |
-| **66** | Wrong JWT auth approach — jsonwebtoken with Neon/MongoDB | Security/Bug | [📄](documentations/issues/66-WRONG-JWT-AUTH-APPROACH.md) | [#66](https://github.com/jox-sm/deepslate-rpg/issues/6) |
-| **67** | N+1 Redis query in games API | Performance/Bug | [📄](documentations/issues/67-N+1-REDIS-QUERY-IN-GAMES-API.md) | [#67](https://github.com/jox-sm/deepslate-rpg/issues/4) |
-| **68** | Double-read request body in `/api/convertUrl` | Bug | [📄](documentations/issues/68-DOUBLE-READ-REQUEST-BODY-IN-API-CONVERTURL.md) | [#68](https://github.com/jox-sm/deepslate-rpg/issues/8) |
-| **69** | File object silently lost in `JSON.stringify` | Bug | [📄](documentations/issues/69-FILE-OBJECT-SILENTLY-LOST-IN-JSON-STRINGIFY.md) | [#69](https://github.com/jox-sm/deepslate-rpg/issues/9) |
-| **70** | Wasteful data URL fetch round-trip in image pipeline | Performance | [📄](documentations/issues/70-WASTEFUL-DATA-URL-FETCH-ROUND-TRIP-IN-IMAGE-PIPELINE.md) | [#70](https://github.com/jox-sm/deepslate-rpg/issues/10) |
-| **71** | `ZodError` uses `.issues` not `.errors` (build failure) | Build | [📄](documentations/issues/71-ZODERROR-USES-ISSUES-NOT-ERRORS.md) | [#71](https://github.com/jox-sm/deepslate-rpg/issues/71) |
-| **72** | Optional image field missing string fallback (build) | Build | [📄](documentations/issues/72-OPTIONAL-IMAGE-FIELD-MISSING-FALLBACK.md) | [#72](https://github.com/jox-sm/deepslate-rpg/issues/72) |
-| **73** | `useAuth` import name conflict with Clerk (build) | Build | [📄](documentations/issues/73-USEAUTH-IMPORT-NAME-CONFLICT.md) | [#73](https://github.com/jox-sm/deepslate-rpg/issues/73) |
-| **74** | Request aborted when no images | Runtime | [📄](documentations/issues/74-REQUEST-ABORTED-NO-IMAGES.md) | [#74](https://github.com/jox-sm/deepslate-rpg/issues/74) |
-| **75** | Form styles — button, preview, wizard layout | UI/UX | [📄](documentations/issues/75-FORM-STYLES-BUTTON-PREVIEW-WIZARD.md) | [#75](https://github.com/jox-sm/deepslate-rpg/issues/75) |
-| **76** | Documentation updates and bug fixes (PR) | Build/Docs | [📄](documentations/issues/76-DOCUMENTATION-AND-BUGFIXES.md) | [#76](https://github.com/jox-sm/deepslate-rpg/issues/76) |
-| **77** | Centralized Zod validation — security and consistency | Security/Refactor | [📄](documentations/issues/77-ZOD-VALIDATION-CENTRALIZATION.md) | [#77](https://github.com/jox-sm/deepslate-rpg/issues/77) |
-| **78** | Missing retry mechanism on DB functions — cold start failures | Bug/Performance/Reliability | [📄](documentations/issues/78-DB-RETRY-MECHANISM.md) | [#78](https://github.com/jox-sm/deepslate-rpg/issues/78) |
+### Dependency graph
 
-> Note: issues 11–63 are duplicates of #48–#70 in the local `unique_issues.json` mirror (the same fix was logged as a fresh issue for tracking). The local docs only cover the canonical issue; the full GitHub history is in the linked issues.
+```
+#66 ─── #65                    Security
+#71 ─── #77 ← #64             Validation
+#67 ─── #78 ← #62             Backend reliability
+#56 ─── #70 ─┬─ #69           Image pipeline
+             ├─ #74 ── #76
+#57 ─── #58 ─── #54 ── #75   Form layer
+#48 ─── #50 ─── #51           Design system
+#49 ─── #52                    Architecture
+#90 ─┬─ #89 ── #95            Likes pipeline
+     ├─ #91                    State sync
+     ├─ #92                    Dead code
+     └─ #93 ── #94            Redis migration
+#80 ─┬─ #81 ── #82 ── #84 ── #85  GamePage suite
+```
 
-**Stats:** 28 unique issues · 6 critical (build/security/data) · 3 high (perf/memory) · medium (data/state) · low (maintenance). All ✅ CLOSED.
+### All issues
+
+| # | Title | Category | Depends On | Blocks | Doc |
+|---|-------|----------|------------|--------|-----|
+| **48** | Inconsistent layout system | UI/UX | — | #50 | [📄](documentations/issues/48-INCONSISTENT-LAYOUT-SYSTEM.md) |
+| **49** | Rendering strategy inefficiencies | Performance | — | #52 | [📄](documentations/issues/49-RENDERING-STRATEGY-INEFFICIENCIES.md) |
+| **50** | Missing design system | UI/UX | #48 | #51 | [📄](documentations/issues/50-MISSING-DESIGN-SYSTEM.md) |
+| **51** | Responsiveness gaps | UI/UX | #50 | — | [📄](documentations/issues/51-RESPONSIVENESS-IMPLEMENTATION-GAPS.md) |
+| **52** | Component coupling | Refactor | #49 | — | [📄](documentations/issues/52-COMPONENT-COUPLING-REUSABILITY.md) |
+| **53** | Accessibility gaps | Accessibility | — | — | [📄](documentations/issues/53-ACCESSIBILITY-GAPS.md) |
+| **54** | Form accessibility deficiencies | Accessibility | #58 | #75 | [📄](documentations/issues/54-FORM-ACCESSIBILITY-DEFICIENCIES.md) |
+| **55** | Inadequate state management | Refactor | — | — | [📄](documentations/issues/55-INADEQUATE-STATE-MANAGEMENT.md) |
+| **56** | Object URL memory leak | Bug | — | #70 | [📄](documentations/issues/56-OBJECT-URL-MEMORY-LEAK.md) |
+| **57** | Excessive prop drilling | Performance | — | #58 | [📄](documentations/issues/57-EXCESSIVE-PROP-DRILLING.md) |
+| **58** | Form hooks code duplication | Refactor | #57 | #54 | [📄](documentations/issues/58-FORM-HOOKS-CODE-DUPLICATION.md) |
+| **59** | Array index as React key | Bug | — | — | [📄](documentations/issues/59-ARRAY-INDEX-AS-REACT-KEY.md) |
+| **60** | Duplicate sleep utility | Refactor | — | — | [📄](documentations/issues/60-DUPLICATE-SLEEP-UTILITY.md) |
+| **61** | Likes count reset to 0 | Bug | — | — | [📄](documentations/issues/61-LIKES-COUNT-RESET-TO-ZERO.md) |
+| **62** | Route-specific cache helpers | Refactor | — | #78 | [📄](documentations/issues/62-ROUTE-SPECIFIC-HELPERS-IN-CACHE-WARMUP-MODULE.md) |
+| **64** | Unnecessary Zod schema | Refactor | — | #77 | [📄](documentations/issues/64-UNNECESSARY-ZOD-SCHEMA-FOR-SIMPLE-QUERY-PARAMS.md) |
+| **65** | Rate limiter wrong API | Bug | #66 | — | [📄](documentations/issues/65-RATE-LIMITER-USES-WRONG-BOTTLENECK-API.md) |
+| **66** | Wrong JWT auth approach | Security | — | #65 | [📄](documentations/issues/66-WRONG-JWT-AUTH-APPROACH.md) |
+| **67** | N+1 Redis query | Performance | — | #78 | [📄](documentations/issues/67-N+1-REDIS-QUERY-IN-GAMES-API.md) |
+| **68** | Double-read request body | Bug | — | — | [📄](documentations/issues/68-DOUBLE-READ-REQUEST-BODY-IN-API-CONVERTURL.md) |
+| **69** | File object lost in JSON.stringify | Bug | #70 | — | [📄](documentations/issues/69-FILE-OBJECT-SILENTLY-LOST-IN-JSON-STRINGIFY.md) |
+| **70** | Data URL fetch round-trip | Performance | #56 | #69, #74 | [📄](documentations/issues/70-WASTEFUL-DATA-URL-FETCH-ROUND-TRIP-IN-IMAGE-PIPELINE.md) |
+| **71** | ZodError uses .issues not .errors | Build | — | #77 | [📄](documentations/issues/71-ZODERROR-USES-ISSUES-NOT-ERRORS.md) |
+| **72** | Optional image missing fallback | Build | — | — | [📄](documentations/issues/72-OPTIONAL-IMAGE-FIELD-MISSING-FALLBACK.md) |
+| **73** | useAuth import conflict | Build | — | — | [📄](documentations/issues/73-USEAUTH-IMPORT-NAME-CONFLICT.md) |
+| **74** | Request aborted no images | Runtime | #70 | #76 | [📄](documentations/issues/74-REQUEST-ABORTED-NO-IMAGES.md) |
+| **75** | Form styles button/preview/wizard | UI/UX | #54 | — | [📄](documentations/issues/75-FORM-STYLES-BUTTON-PREVIEW-WIZARD.md) |
+| **76** | Documentation and bugfixes | Build/Docs | #74 | — | [📄](documentations/issues/76-DOCUMENTATION-AND-BUGFIXES.md) |
+| **77** | Centralized Zod validation | Security | #71, #64 | — | [📄](documentations/issues/77-ZOD-VALIDATION-CENTRALIZATION.md) |
+| **78** | DB retry mechanism | Reliability | #67, #62 | #82 | [📄](documentations/issues/78-DB-RETRY-MECHANISM.md) |
+| **80** | Card click navigation | UI/UX | — | #81, #82, #84 | [📄](documentations/issues/80-GAMEPAGE-CARD-CLICK-NAVIGATION.md) |
+| **81** | Binary-search hotness cache | Performance | #80 | #82 | [📄](documentations/issues/81-GAMEPAGE-BINARY-SEARCH-HOTNESS-CACHE.md) |
+| **82** | Batch MongoDB fetch | Performance | #80, #81 | #84 | [📄](documentations/issues/82-GAMEPAGE-BATCH-MONGODB-FETCH.md) |
+| **84** | FullGameResponse type + UI | Feature | #80, #82 | #85 | [📄](documentations/issues/84-GAMEPAGE-FULLGAMERESPONSE-TYPE-UI.md) |
+| **85** | Responsive + accessibility | UX/A11y | #84 | — | [📄](documentations/issues/85-GAMEPAGE-RESPONSIVE-ACCESSIBILITY.md) |
+| **86** | Branch cleanup | Maintenance | — | — | [📄](documentations/issues/86-GAMES-BRANCH-CLEANUP.md) |
+| **87** | Duplicate of #78 | Duplicate | — | — | [📄](documentations/issues/87-DUPLICATE-DB-RETRY-MECHANISM.md) |
+| **88** | Centralized errors | Maintenance | — | — | [📄](documentations/issues/88-GAMES-CENTRALIZED-ERRORS.md) |
+| **89** | Likes instant write + async drain | Feature | #90 | #95 | [📄](documentations/issues/89-LIKES-SYSTEM-INSTANT-WRITE.md) |
+| **90** | Centralize Redis queue utilities | Refactor | — | #89, #91, #92, #93 | [📄](documentations/issues/90-CENTRALIZED-REDIS-QUEUES.md) |
+| **91** | State sync with JSON Patch | Feature | #90 | — | [📄](documentations/issues/91-STATE-SYNC-JSON-PATCH.md) |
+| **92** | Remove dead 'load' key | Refactor | #90 | — | [📄](documentations/issues/92-REMOVE-DEAD-LOAD-KEY.md) |
+| **93** | Migrate to Upstash Redis | Infrastructure | #90 | #94 | [📄](documentations/issues/93-MIGRATE-TO-UPSTASH-REDIS.md) |
+| **94** | Remove ioredis dependency | Cleanup | #93 | — | [📄](documentations/issues/94-REMOVE-IORedis.md) |
+| **95** | Zustand Likes Store | Feature | #89 | — | [📄](documentations/issues/95-ZUSTAND-LIKES-STORE.md) |
+
+**Stats:** 45 unique issues · 42 closed, 3 open (#81, #82, #94) · 11 dependency chains · fully documented.
 
 ### By impact area
 
 | Area | Issues |
 |------|--------|
-| **Performance/Reliability** | #78, #67, #70, #57, #49 |
-| **Data Integrity** | #69, #61 |
-| **Security** | #66, #77 |
-| **UX/Accessibility** | #53, #54, #51, #48, #50, #52, #75 |
-| **Code Quality** | #60, #64, #62, #58, #76 |
-| **Build/Bugs** | #71, #72, #73, #59, #68, #56, #65, #74 |
-| **Architecture** | #55 |
+| **Redis Infrastructure** | #90, #89, #93, #94, #92, #67, #81 |
+| **Image Pipeline** | #56, #70, #69, #74, #76 |
+| **Form System** | #57, #58, #54, #75 |
+| **GamePage** | #80, #81, #82, #84, #85 |
+| **Design System** | #48, #49, #50, #51, #52 |
+| **Validation** | #64, #71, #77 |
+| **Auth/Security** | #66, #65, #77 |
+| **Build Fixes** | #71, #72, #73, #76 |
+| **Accessibility** | #53, #54, #85 |
+| **State Management** | #55, #91, #95 |
 
 ---
 
 ## Knowledge graph (`graphify-out/`)
 
-The codebase is auto-extracted into a navigable knowledge graph: **2,217 nodes, 2,362 edges, 158 communities**. Open [`graphify-out/graph.html`](graphify-out/graph.html) in a browser, or read [`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md) for the audit.
+The codebase is auto-extracted into a navigable knowledge graph: **2,591 nodes, 3,117 edges, 186 communities**. Open [`graphify-out/graph.html`](graphify-out/graph.html) in a browser, or read [`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md) for the audit.
 
-Highlights (from the latest re-update, 2026-06-06):
-- **God nodes** (most-connected): `Deepslate Dungeons — Architecture Document`, `PostHog Next.js app router example`, `compilerOptions`, `Neon Serverless Postgres`, and the top issues (#59, #60, #62, #64, #55)
+Highlights (from the latest re-update, 2026-06-07):
+- **God nodes** (most-connected): `classifyError()` (54 edges), `tryApiRoute()` (22), `Upstash Redis SDK` (22), `validateJWTMiddleware()` (20)
 - **Surprising connections** auto-discovered:
-  - `GET()` → `connectDB()` (app/api/games/[id]/route.ts → models/games/mongodb/client.ts)
+  - `useMutationTracker` → `applyGamePatches` (hooks → lib/patch-applier.ts)
+  - `useAuth` → `validateJWTMiddleware` (hooks → lib/jwt-validate.ts)
+  - `saveCache()` / `loadCache()` → `tryOrErrorSync()` (cards-grid → errorHandler.ts)
   - `GET()` → `validateJWTMiddleware()` (route → lib/jwt-validate.ts)
-  - `GET()` → `retry()` (route → lib/retry.ts)
-  - `POST()` → `rateLimitMiddleware()` (push route → lib/middleware/rate-limit.ts)
-- **Import cycles:** none.
-- **Knowledge gaps:** 1,518 isolated nodes (mostly skill metadata); 21 thin communities omitted — see `GRAPH_REPORT.md` for the full list.
+- **Import cycles:** 1 (notifications barrel export)
+- **Issue communities:** 30 isolated issue clusters with 0 external edges — dependency tracking added manually
 
 Community labels were regenerated from the actual content — see [`.graphify_labels.json`](graphify-out/.graphify_labels.json). To rebuild:
 
@@ -488,7 +524,7 @@ npx convex dashboard    # Open Convex dashboard
 - [`convex/_generated/ai/guidelines.md`](convex/_generated/ai/guidelines.md) — **Always read first** for Convex code
 
 ### Knowledge graph
-- [`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md) — Audit report (re-updated 2026-06-06)
+- [`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md) — Audit report (re-updated 2026-06-07)
 - [`graphify-out/graph.html`](graphify-out/graph.html) — Interactive graph (open in any browser)
 - [`graphify-out/graph.json`](graphify-out/graph.json) — Raw graph data
 - [`graphify-out/.graphify_labels.json`](graphify-out/.graphify_labels.json) — Community labels

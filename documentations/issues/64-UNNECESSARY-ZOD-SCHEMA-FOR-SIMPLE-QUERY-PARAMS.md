@@ -224,6 +224,13 @@ describe('GET /api/games', () => {
 - [x] Update tests
 - [x] Verify API functionality
 
+
+## Depends On
+— (none)
+
+## Blocks
+- [#77](77-ZOD-VALIDATION-CENTRALIZATION.md)
+
 ## Related Issues
 
 - #63: Unnecessary Zod schema for simple query params (duplicate)

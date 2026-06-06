@@ -82,6 +82,13 @@ export const ConvexProvider = ({ children }) => (
 - [x] Bundle size reduced
 - [x] Tests passing
 
+
+## Depends On
+— (none)
+
+## Blocks
+- [#52](52-COMPONENT-COUPLING-REUSABILITY.md)
+
 ## Related Issues
 
 - #27: Rendering strategy inefficiencies (duplicate)

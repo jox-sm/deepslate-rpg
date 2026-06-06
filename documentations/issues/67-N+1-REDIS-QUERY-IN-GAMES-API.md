@@ -192,6 +192,13 @@ describe('GET /api/games', () => {
 - [x] Response times improved
 - [x] Proper error handling
 
+
+## Depends On
+— (none)
+
+## Blocks
+- [#78](78-DB-RETRY-MECHANISM.md)
+
 ## Related Issues
 
 - #45: N+1 Redis query (duplicate of this)

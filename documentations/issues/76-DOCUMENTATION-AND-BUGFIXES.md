@@ -15,6 +15,13 @@ Pull request that consolidated documentation for issues #74 and #75, added the `
 - `components/adventures/form/form.tsx` (refactored imports)
 - Various documentation files
 
+
+## Depends On
+- [#74](74-REQUEST-ABORTED-NO-IMAGES.md)
+
+## Blocks
+— (none)
+
 ## Related Issues
 - #74: Request aborted when no images
 - #75: Form styles - button, preview, wizard layout

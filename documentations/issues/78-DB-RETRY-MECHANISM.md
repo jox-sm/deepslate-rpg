@@ -174,6 +174,14 @@ describe('Cache warm-up with retry', () => {
 - [x] No infinite retries — all calls have `maxTries` limits (2-3)
 - [x] Retry delay is consistent at 500ms between attempts
 
+
+## Depends On
+- [#67](67-N+1-REDIS-QUERY-IN-GAMES-API.md)
+- [#62](62-ROUTE-SPECIFIC-HELPERS-IN-CACHE-WARMUP-MODULE.md)
+
+## Blocks
+- [#82](82-GAMEPAGE-BATCH-MONGODB-FETCH.md)
+
 ## Related Issues
 
 - #67: N+1 Redis query in games API

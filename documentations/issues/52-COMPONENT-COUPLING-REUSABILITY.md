@@ -90,6 +90,13 @@ export function GameListPage() {
 - [x] Reusable across app
 - [x] Tests passing
 
+
+## Depends On
+- [#49](49-RENDERING-STRATEGY-INEFFICIENCIES.md)
+
+## Blocks
+— (none)
+
 ## Related Issues
 
 - #31: Component coupling and reusability (duplicate)

@@ -141,6 +141,13 @@ describe('Form File Handling', () => {
 - [x] FormData implementation working
 - [x] All image uploads successful
 
+
+## Depends On
+- [#70](70-WASTEFUL-DATA-URL-FETCH-ROUND-TRIP-IN-IMAGE-PIPELINE.md)
+
+## Blocks
+— (none)
+
 ## Related Issues
 
 - #70: Wasteful data URL fetch round-trip in image pipeline

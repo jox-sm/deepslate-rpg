@@ -66,11 +66,11 @@ export async function processBatch(): Promise<void> {
     await new Promise((resolve) => setTimeout(resolve, BATCH_TIMEOUT_MS));
 
     // Get up to BATCH_SIZE requests from queue
-    const requestsJson = await redis.lrange(
+    const requestsJson = (await redis.lrange(
       QUEUE_KEYS.FETCH_QUEUE,
       0,
       BATCH_SIZE - 1
-    );
+    )) as string[];
 
     if (requestsJson.length === 0) {
       return;
@@ -132,26 +132,27 @@ export async function processBatch(): Promise<void> {
     }
 
     // Store results and clean queue
-    const pipeline = redis.pipeline();
+    const operations: Promise<unknown>[] = [];
 
     for (const request of requests) {
       const result = resultMap.get(request.uuid);
       const resultKey = `${QUEUE_KEYS.REQUEST_RESULTS}${request.requestId}`;
 
-      pipeline.set(
-        resultKey,
-        JSON.stringify(result || { success: false, error: 'Not found' }),
-        'EX',
-        3600 // 1 hour expiry
+      operations.push(
+        redis.set(
+          resultKey,
+          JSON.stringify(result || { success: false, error: 'Not found' }),
+          { ex: 3600 }
+        )
       );
     }
 
     // Remove processed requests from queue
     for (let i = 0; i < requests.length; i++) {
-      pipeline.rpop(QUEUE_KEYS.FETCH_QUEUE);
+      operations.push(redis.rpop(QUEUE_KEYS.FETCH_QUEUE));
     }
 
-    await pipeline.exec();
+    await Promise.all(operations);
 
     console.log(
       `[GameFetchPipeline] Batch processed, results stored for ${requests.length} requests`
@@ -174,7 +175,7 @@ export async function waitForFetchResult(
 
   // Poll with backoff
   while (Date.now() - startTime < timeoutMs) {
-    const result = await redis.get(resultKey);
+    const result = await redis.get<string>(resultKey);
 
     if (result) {
       const parseResult = tryOrErrorSync(() => JSON.parse(result), { context: "parseFetchResult" });

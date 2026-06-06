@@ -30,5 +30,6 @@ All agent skills are centralized in `.agents/skills/`. Available skills:
 - `convex-performance-audit/` — Performance investigations
 - `integration-nextjs-app-router/` — PostHog for Next.js App Router
 - `neon-postgres/` — Neon Serverless Postgres
+- `upstash-redis-js/` — Upstash Redis SDK (caching, sessions, rate limiting, leaderboards, search)
 
 <!-- agents-skills-end -->

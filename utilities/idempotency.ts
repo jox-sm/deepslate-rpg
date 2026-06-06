@@ -17,7 +17,7 @@ export async function isRequestProcessed(key: string): Promise<boolean> {
 
 // Get cached result for a processed request
 export async function getCachedResult<T>(key: string): Promise<T | null> {
-  const cached = await redis.get(`idempotency:${key}`);
+  const cached = await redis.get<string>(`idempotency:${key}`);
   if (cached) {
     const result = tryOrErrorSync(() => JSON.parse(cached) as T, { context: "idempotency.getCachedResult" });
     return result.ok ? result.data : null;
@@ -30,8 +30,7 @@ export async function cacheResult<T>(key: string, result: T): Promise<void> {
   await redis.set(
     `idempotency:${key}`,
     JSON.stringify(result),
-    'EX',
-    IDEMPOTENCY_TTL_SECONDS
+    { ex: IDEMPOTENCY_TTL_SECONDS }
   );
 }
 
