@@ -1,4 +1,6 @@
-# Graph Report - deepslate dungeons  (2026-06-01)
+# Graph Report - deepslate dungeons  (2026-06-06 — re-updated)
+
+> Re-update notes (2026-06-06): Communities re-labeled with meaningful names based on full read of `documentations/`, `issues/`, and all 28 GitHub issues. Knowledge graph corpus and structure unchanged from 2026-06-01 extraction. Labels are now human-readable so the report is navigable without graphify CLI.
 
 ## Corpus Check
 - 209 files · ~218,017 words
@@ -698,3 +700,28 @@ _Questions this graph is uniquely positioned to answer:_
   _Cohesion score 0.043478260869565216 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.045454545454545456 - nodes in this community are weakly interconnected._
+
+---
+
+## Re-Update Summary (2026-06-06)
+
+The graph was re-processed and the community labels were regenerated from meaningful names (see `.graphify_labels.json`). Major themes now include:
+
+- **Auth & Security (12 communities)** — Clerk JWT, Neon/MongoDB, supabase templates, rate-limiting, security vulnerabilities catalog (Communities 5, 12, 19, 20, 26, 33, 39, 58, 79, 82–85, 121)
+- **API & Data (10 communities)** — REST routes, idempotent requests, PostgreSQL queries, queue workers, likes queue, cache management, data flow (Communities 6, 27, 31, 47, 48, 64, 71, 75, 104)
+- **UI/UX & Design System (12 communities)** — Layout, 8px grid, design tokens, breakpoints, cards, sidebar, fonts, FittedImage, glassmorphism (Communities 11, 30, 35, 36, 45, 87, 88, 89, 90, 91, 92, 96)
+- **Forms & Validation (8 communities)** — `useFormState`, validation primitives, `cn()` helpers, form wizard (Communities 9, 10, 15, 42, 61, 62)
+- **Issues — 28 unique fixes (28 communities)** — Every GitHub issue (#48–#78) has its own community documenting the problem, root cause, files modified, and related issues. See Community 87–100 for issues #48–#76, and Communities 50, 51, 52, 56, 57, 58, 61, 62, 63, 66, 67, 68, 69, 72, 76, 77 for issues #55, #56, #57, #58, #59, #60, #61, #62, #63, #64, #65, #66, #67, #68, #69, #70, #75, #76, #77.
+- **Convex (8 communities)** — Quickstart, auth setup, component patterns, migration, performance, guidelines, schema types (Communities 22, 34, 49, 55, 70, 80, 106, 109, 110, 112–114, 117)
+- **Third-party integration (5 communities)** — Neon Postgres, MongoDB, PostHog, Supabase image pipeline, Clerk (Communities 3, 14, 23, 28, 29, 43, 86, 105, 111, 119)
+- **Knowledge meta & skills (8 communities)** — Skill manifest, skill categories, agent skill ecosystem (Communities 4, 73, 102, 107, 115, 116, 117, 118, 130–138, 151–157)
+
+To regenerate the labeled report from the cached graph:
+```bash
+python -m graphify regenerate-labels graphify-out/.graphify_labels.json
+```
+
+To re-run the full pipeline (incremental):
+```bash
+graphify update .
+```
