@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { paginationOptsValidator } from "convex/server";
+import { api } from "./_generated/api";
 
 export const list = query({
   args: { paginationOpts: paginationOptsValidator },
@@ -27,12 +28,16 @@ export const create = mutation({
     tags: v.array(v.string()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
     const gameId = await ctx.db.insert("games", {
       name: args.name,
       description: args.description,
       image: args.image,
       tags: args.tags,
       likesCount: 0,
+      ownerId: identity.tokenIdentifier,
     });
     return gameId;
   },
@@ -47,6 +52,14 @@ export const update = mutation({
     tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const game = await ctx.db.get(args.gameId);
+    if (!game) throw new Error("Game not found");
+    if (game.ownerId !== identity.tokenIdentifier)
+      throw new Error("Unauthorized");
+
     const { gameId, ...fields } = args;
     await ctx.db.patch(gameId, fields);
   },
@@ -55,6 +68,14 @@ export const update = mutation({
 export const remove = mutation({
   args: { gameId: v.id("games") },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const game = await ctx.db.get(args.gameId);
+    if (!game) throw new Error("Game not found");
+    if (game.ownerId !== identity.tokenIdentifier)
+      throw new Error("Unauthorized");
+
     const characters = await ctx.db
       .query("characters")
       .withIndex("by_game_id", (q) => q.eq("gameId", args.gameId))

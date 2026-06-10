@@ -1,33 +1,29 @@
 # Security & Authentication Issues
 
 ## New Findings (Not in 01-SECURITY_VULNERABILITIES.md)
+### 1. Convex Functions Have No Authentication Guards — API Endpoint Security Vulnerability
 
-### 1. Convex Functions Have No Authentication Guards — Full Public Access to All CRUD Operations
-
-**Severity:** CRITICAL
+**Severity:** HIGH
 **Location:** `convex/games.ts:5-83`, `convex/characters.ts:4-49`, `convex/maps.ts:4-52`, `convex/items.ts:4-46`
 **Status:** ❌ Unresolved
 
 **Description:**
-All Convex query and mutation handlers across every table (games, characters, maps, items) are defined using `query()` and `mutation()` — never `authenticatedQuery()` or `authenticatedMutation()`. None of the handlers call `ctx.auth` or check `ctx.auth.userId`. While `convex/auth.config.ts` defines a Clerk provider domain, the actual functions never enforce identity. This means any unauthenticated client that can reach the Convex deployment endpoint can list, get, create, update, and delete all data.
+All Convex query and mutation handlers across every table (games, characters, maps, items) are defined using `query()` and `mutation()` — never `authenticatedQuery()` or `authenticatedMutation()`. None of the handlers call `ctx.auth` or check `ctx.auth.userId`. While `convex/auth.config.ts` defines a Clerk provider domain, the actual functions never enforce identity. This means any unauthenticated client that can reach the Convex deployment endpoint can access all API endpoints.
+
+**Architecture Clarification:**
+Convex acts as an **authentication/authorization gateway**, not data storage. The actual data is stored in:
+- **Neon PostgreSQL** - Primary game data
+- **MongoDB** - Extended data (characters, maps, items)
+- **Redis** - Cache layer for games list, individual game, metadata
 
 **Impact:**
-- Anonymous attackers can read all game data (names, descriptions, images, like counts)
-- Anonymous attackers can create, modify, or delete games, characters, maps, and items via the Convex HTTP endpoint
-- Data integrity of the entire Convex-backed dataset is compromised
-- Even if Next.js API routes are protected, the Convex endpoint itself is a parallel attack surface with zero authentication
+- Anonymous attackers can access all API endpoints via the Convex HTTP endpoint
+- Bypass any Next.js API route protection since Convex is a parallel attack surface
+- Unauthorized access to game creation, modification, and deletion operations
+- Compromises the entire API security model
 
-**Suggested Remediation:**
-- Replace `query()` with `queryWithAuth()` wrapper (or `authenticatedQuery`) and `mutation()` with `authenticatedMutation()` in every handler
-- Add `ctx.auth` check at the top of each handler:
-  ```typescript
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) throw new Error("Unauthenticated");
-  ```
-- For user-scoped data, verify `identity.subject` matches the resource owner
-- Review `convex/_generated/ai/guidelines.md` for Convex auth patterns
 
----
+-----
 
 ### 2. Idempotency Keys Not Scoped to Authenticated User — Cross-User Cache Replay
 
@@ -43,13 +39,7 @@ The `withIdempotency()` function stores operation results in Redis under the key
 - Denial of service: an attacker can pre-register idempotency keys to prevent legitimate users from completing operations
 - Violates the principle of idempotency being scoped to the requesting client
 
-**Suggested Remediation:**
-- Prefix idempotency cache keys with the user's identity: `idempotency:${userId}:${key}`
-- Add the authenticated user ID as a parameter to `withIdempotency()` calls
-- Verify the cached result belongs to the same user before returning it
-
----
-
+------
 ### 3. No Authorization Layer — All Authenticated Users Are Equally Privileged
 
 **Severity:** HIGH
@@ -64,17 +54,6 @@ The `validateJWTMiddleware()` function only checks that a user is authenticated 
 - No way to restrict destructive operations (drain, patches) to trusted users
 - In a multiplayer/RPG context, one player could modify another player's game data
 - If a user account is compromised, the attacker gains full access to the entire system, not just that user's data
-
-**Suggested Remediation:**
-- Implement a role-based access control system (e.g., `admin`, `creator`, `viewer` roles)
-- Add a `role` field to the user profile in the database
-- Create an `authorize(userId, requiredRole)` helper that checks the user's role
-- Apply authorization checks after authentication in every API route:
-  ```typescript
-  const { payload, error } = await validateJWTMiddleware(request);
-  if (error) return error;
-  await authorize(payload.userId, 'creator');
-  ```
 
 ---
 
@@ -95,12 +74,6 @@ The `maybeTriggerDrain()` function in `games/route.ts` makes internal `fetch()` 
 - No audit trail distinguishing internal drain calls from user-triggered drains
 - If the await/async pattern in `maybeTriggerDrain()` causes concurrent drains, the in-memory `lastLikesDrain`/`lastGamesDrain` guards can be bypassed by multiple simultaneous requests
 
-**Suggested Remediation:**
-- Add a server-side environment variable `INTERNAL_API_SECRET` for service-to-service authentication
-- Check this secret on the drain route (via `x-internal-drain` header value being the hash of the secret)
-- Alternatively, move drain logic to a server-only module rather than routing through an HTTP endpoint
-- Log all drain operations with the requesting user ID
-
 ---
 
 ### 5. GET `/api/drain` Performs State-Changing Operations — CSRF Vulnerable
@@ -117,11 +90,6 @@ The `/api/drain` endpoint is implemented as a `GET` handler that performs state-
 - Repeated force-drain requests can cause database write contention
 - Combined with finding #4 (no internal auth), CSRF can drain queues on demand
 
-**Suggested Remediation:**
-- Change `/api/drain` to `POST` or `PATCH` (idempotent safe methods don't apply here, but POST is correct for state-changing operations)
-- Add CSRF protection (e.g., custom header check, anti-CSRF token, or SameSite cookie enforcement)
-- Move queue draining to a server-side cron or schedule rather than HTTP-triggered
-
 ---
 
 ### 6. Rate Limiter Bypass via Missing or Spoofed `x-forwarded-for` Header
@@ -137,11 +105,6 @@ The `rateLimitMiddleware()` function keys on `x-forwarded-for` header to identif
 - Brute-force attacks can bypass rate limiting by omitting or rotating the `x-forwarded-for` header
 - All non-proxied traffic collapses into one shared rate limit bucket
 - The `queued() > 100` check on line 16 uses `Bottleneck.Group.key()` which returns a new limiter per key, but the queued check measures all queued items across all keys in the group, not per-IP — this means IP A's queued items could trigger rate limiting for IP B
-
-**Suggested Remediation:**
-- Combine `x-forwarded-for` with additional signals: `x-real-ip`, `cf-connecting-ip` (Cloudflare), or use the Vercel edge-compatible rate limiting approach
-- Implement a per-IP rate limiter using Redis (sorted sets or the Upstash rate limit API) instead of Bottleneck in-process queues
-- Add a fallback that uses a combination of user-agent + accept-language + other headers when IP is unavailable
 
 ---
 

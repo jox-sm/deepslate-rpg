@@ -1,58 +1,6 @@
 {
   "communities": {
     "0": [
-      "app_page",
-      "app_page_page",
-      "cards_cards",
-      "cards_cards_grid",
-      "cards_cards_grid_cardsgrid",
-      "cards_cards_grid_cardsgridprops",
-      "cards_cards_grid_loadcache",
-      "cards_cards_grid_savecache",
-      "cards_cards_grid_wrapper",
-      "cards_cards_grid_wrapper_cardsgridwrapper",
-      "cards_cards_profilecard",
-      "clientutilities_usegamecache_usegamecache",
-      "clientutilities_usegamecache_usegamepreload",
-      "clientutilities_usegamecache_usegamepreloadstore",
-      "game_charactertabs",
-      "game_charactertabs_charactertabs",
-      "game_charactertabs_charactertabsprops",
-      "game_gameheader",
-      "game_gameheader_gameheader",
-      "game_gameheader_gameheaderprops",
-      "game_itemgrid",
-      "game_itemgrid_itemgrid",
-      "game_itemgrid_itemgridprops",
-      "game_maplist",
-      "game_maplist_maplist",
-      "game_maplist_maplistprops",
-      "shared_fittedimage",
-      "shared_fittedimage_fittedimage",
-      "shared_fittedimage_fittedimageprops",
-      "types_cards",
-      "types_cards_apigameresponse",
-      "types_cards_apiresponse",
-      "types_cards_cardgrid",
-      "types_cards_cardprops",
-      "types_cards_gamecardprops",
-      "types_db",
-      "types_db_likes",
-      "utilities_db",
-      "utilities_db_getgamesqueue",
-      "utilities_db_pushgametoqueue",
-      "utilities_db_pushlikestoqueue",
-      "utilities_db_pushtoqueue",
-      "utilities_db_validatequeue",
-      "utilities_utils",
-      "utilities_utils_fetchgamesfromapi",
-      "utilities_utils_preparegamecard",
-      "utilities_utils_preparegamecards",
-      "uuid_game_detail",
-      "uuid_game_detail_gamedetailclient",
-      "uuid_game_detail_gamedetailclientprops"
-    ],
-    "1": [
       "architicture_architecture",
       "architicture_architecture_authentication_architecture",
       "architicture_architecture_authentication_flow",
@@ -102,7 +50,7 @@
       "architicture_architecture_tech_stack",
       "architicture_architecture_wizard_form"
     ],
-    "2": [
+    "1": [
       "new_folder_problems",
       "new_folder_problems_architecture_overview_intentional_free_tier_optimization",
       "new_folder_problems_array_index_as_key_fixed",
@@ -150,7 +98,7 @@
       "new_folder_problems_unsafe_url_construction_in_sidebar",
       "new_folder_problems_usecallback_over_dependency_on_form_state"
     ],
-    "3": [
+    "2": [
       "accessibility_critical",
       "agent_skills_centralized",
       "agents_md",
@@ -197,7 +145,7 @@
       "upstash_redis_sdk",
       "ux_guidelines"
     ],
-    "4": [
+    "3": [
       "plan",
       "plan_abortcontroller_for_request_cancellation",
       "plan_changes_made",
@@ -243,7 +191,7 @@
       "plan_what_s_unclear_274",
       "plan_what_s_unclear_98"
     ],
-    "5": [
+    "4": [
       "project_description_plan",
       "project_description_plan_10_supabase_storage_bucket_name_hardcoded",
       "project_description_plan_1_no_retry_mechanism_on_supabase_operations",
@@ -288,6 +236,51 @@
       "project_description_plan_testing_strategy",
       "project_description_plan_unit_tests",
       "project_description_plan_utilities_insertgameimages_ts"
+    ],
+    "5": [
+      "cards_like_button",
+      "cards_like_button_likebutton",
+      "cards_like_button_likebuttonprops",
+      "exceptions_notifications_index_ts_notifications_index",
+      "notifications_index",
+      "notifications_success",
+      "notifications_success_successnotification",
+      "notifications_success_successnotificationprops",
+      "notifications_success_successtoasttrigger",
+      "notifications_toaster",
+      "notifications_toaster_toaster",
+      "notifications_use_toast",
+      "notifications_use_toast_action",
+      "notifications_use_toast_actiontype",
+      "notifications_use_toast_actiontypes",
+      "notifications_use_toast_addtoremovequeue",
+      "notifications_use_toast_dispatch",
+      "notifications_use_toast_genid",
+      "notifications_use_toast_listeners",
+      "notifications_use_toast_memorystate",
+      "notifications_use_toast_reducer",
+      "notifications_use_toast_state",
+      "notifications_use_toast_successtoast",
+      "notifications_use_toast_toast",
+      "notifications_use_toast_toastertoast",
+      "notifications_use_toast_toastoptions",
+      "notifications_use_toast_toasttimeouts",
+      "notifications_use_toast_toastvariant",
+      "notifications_use_toast_usetoast",
+      "primitives_toast",
+      "primitives_toast_toast",
+      "primitives_toast_toastaction",
+      "primitives_toast_toastactionelement",
+      "primitives_toast_toastclose",
+      "primitives_toast_toastdescription",
+      "primitives_toast_toastprops",
+      "primitives_toast_toasttitle",
+      "primitives_toast_toastvariants",
+      "primitives_toast_toastviewport",
+      "stores_likes_store",
+      "stores_likes_store_likesstore",
+      "stores_likes_store_uselikesstore",
+      "ui_notifications_index_ts_notifications_index"
     ],
     "6": [
       "guides_01_jwt_setup",
@@ -377,46 +370,6 @@
       "useIdempotentRequest_tsx_useIdempotentRequest"
     ],
     "8": [
-      "cards_like_button",
-      "cards_like_button_likebutton",
-      "cards_like_button_likebuttonprops",
-      "notifications_index",
-      "notifications_toaster",
-      "notifications_toaster_toaster",
-      "notifications_use_toast",
-      "notifications_use_toast_action",
-      "notifications_use_toast_actiontype",
-      "notifications_use_toast_actiontypes",
-      "notifications_use_toast_addtoremovequeue",
-      "notifications_use_toast_dispatch",
-      "notifications_use_toast_genid",
-      "notifications_use_toast_listeners",
-      "notifications_use_toast_memorystate",
-      "notifications_use_toast_reducer",
-      "notifications_use_toast_state",
-      "notifications_use_toast_successtoast",
-      "notifications_use_toast_toast",
-      "notifications_use_toast_toastertoast",
-      "notifications_use_toast_toastoptions",
-      "notifications_use_toast_toasttimeouts",
-      "notifications_use_toast_toastvariant",
-      "notifications_use_toast_usetoast",
-      "primitives_toast",
-      "primitives_toast_toast",
-      "primitives_toast_toastaction",
-      "primitives_toast_toastactionelement",
-      "primitives_toast_toastclose",
-      "primitives_toast_toastdescription",
-      "primitives_toast_toastprops",
-      "primitives_toast_toasttitle",
-      "primitives_toast_toastvariants",
-      "primitives_toast_toastviewport",
-      "stores_likes_store",
-      "stores_likes_store_likesstore",
-      "stores_likes_store_uselikesstore",
-      "ui_notifications_index_ts_notifications_index"
-    ],
-    "9": [
       "package_dependencies",
       "package_dependencies_autoprefixer",
       "package_dependencies_babel_plugin_react_compiler",
@@ -456,7 +409,7 @@
       "package_dependencies_zod",
       "package_dependencies_zustand"
     ],
-    "10": [
+    "9": [
       "guides_02_api_implementation",
       "guides_02_api_implementation_api_implementation_guide",
       "guides_02_api_implementation_cache_population",
@@ -495,13 +448,49 @@
       "guides_02_api_implementation_transaction_handling",
       "guides_02_api_implementation_validation_error_handler"
     ],
+    "10": [
+      "types_validation",
+      "types_validation_apigameresponseschema",
+      "types_validation_apiresponseschema",
+      "types_validation_cardgrid",
+      "types_validation_cardgridschema",
+      "types_validation_cardprops",
+      "types_validation_cardpropsschema",
+      "types_validation_characterdatadb",
+      "types_validation_characterdatadbschema",
+      "types_validation_gamecardprops",
+      "types_validation_gamecardpropsschema",
+      "types_validation_gamesformdatadb",
+      "types_validation_gamesformdatadbschema",
+      "types_validation_idempotencyerror",
+      "types_validation_idempotencyerrorschema",
+      "types_validation_idempotentrequest",
+      "types_validation_idempotentrequestschema",
+      "types_validation_idempotentresponse",
+      "types_validation_idempotentresponseschema",
+      "types_validation_itemdatadb",
+      "types_validation_itemdatadbschema",
+      "types_validation_likes",
+      "types_validation_likesschema",
+      "types_validation_mapdatadb",
+      "types_validation_mapdatadbschema",
+      "types_validation_paginatedresponseschema",
+      "types_validation_pagination",
+      "types_validation_paginationschema",
+      "types_validation_pushgamedata",
+      "types_validation_pushgamedataschema",
+      "types_validation_pushrequest",
+      "types_validation_pushrequestschema",
+      "types_validation_requeststate",
+      "types_validation_requeststateschema",
+      "types_validation_uploadprogress",
+      "types_validation_uploadprogressschema"
+    ],
     "11": [
       "clientutilities_gamefetch",
       "clientutilities_gamefetch_getgamewithbatchqueue",
       "clientutilities_gamefetch_pollgameresult",
       "clientutilities_gamefetch_requestgamefetch",
-      "clientutilities_usegamecache",
-      "clientutilities_usegamecache_usegamecacheresult",
       "errors_exceptions",
       "errors_exceptions_useerrorhandler",
       "notifications_use_toast_errortoast",
@@ -531,43 +520,41 @@
       "utilities_errorhandler_showtoastfor",
       "utilities_errorhandler_toastconfigmap",
       "utilities_errorhandler_tryfetch",
-      "utilities_errorhandler_tryorerror",
-      "utilities_errorhandler_tryorerrorsync"
+      "utilities_errorhandler_tryorerror"
     ],
     "12": [
-      "types_validation",
-      "types_validation_apigameresponseschema",
-      "types_validation_apiresponseschema",
-      "types_validation_cardgrid",
-      "types_validation_cardgridschema",
-      "types_validation_cardprops",
-      "types_validation_cardpropsschema",
-      "types_validation_characterdatadb",
-      "types_validation_characterdatadbschema",
-      "types_validation_gamecardprops",
-      "types_validation_gamecardpropsschema",
-      "types_validation_gamesformdatadb",
-      "types_validation_gamesformdatadbschema",
-      "types_validation_idempotencyerror",
-      "types_validation_idempotencyerrorschema",
-      "types_validation_idempotentrequest",
-      "types_validation_idempotentrequestschema",
-      "types_validation_idempotentresponse",
-      "types_validation_idempotentresponseschema",
-      "types_validation_itemdatadb",
-      "types_validation_itemdatadbschema",
-      "types_validation_likes",
-      "types_validation_mapdatadb",
-      "types_validation_mapdatadbschema",
-      "types_validation_paginatedresponseschema",
-      "types_validation_pagination",
-      "types_validation_paginationschema",
-      "types_validation_pushgamedata",
-      "types_validation_pushrequest",
-      "types_validation_requeststate",
-      "types_validation_requeststateschema",
-      "types_validation_uploadprogress",
-      "types_validation_uploadprogressschema"
+      "gamesformui_charactersstep",
+      "gamesformui_charactersstep_charactersstep",
+      "gamesformui_itemsstep",
+      "gamesformui_itemsstep_itemsstep",
+      "gamesformui_mapsstep",
+      "gamesformui_mapsstep_mapsstep",
+      "gamesformui_mapsstep_mapsstepprops",
+      "lib_gamesformvalidation_charactervalidators",
+      "lib_gamesformvalidation_itemvalidators",
+      "lib_gamesformvalidation_mapvalidators",
+      "lib_utils",
+      "lib_utils_cn",
+      "primitives_button",
+      "primitives_button_buttonprops",
+      "primitives_button_buttonvariants",
+      "primitives_card",
+      "primitives_card_card",
+      "primitives_card_cardcontent",
+      "primitives_card_carddescription",
+      "primitives_card_cardfooter",
+      "primitives_card_cardheader",
+      "primitives_card_cardtitle",
+      "primitives_input",
+      "primitives_input_input",
+      "primitives_input_inputprops",
+      "primitives_label",
+      "primitives_label_label",
+      "primitives_label_labelvariants",
+      "primitives_textarea",
+      "primitives_textarea_textarea",
+      "primitives_textarea_textareaprops",
+      "types_gameform_mapdata"
     ],
     "13": [
       "db_migrate",
@@ -671,6 +658,72 @@
       "documentations_02_authentication_troubleshooting"
     ],
     "16": [
+      "gamesformui_charactersstep_charactersstepprops",
+      "gamesformui_form",
+      "gamesformui_form_gamesformwizard",
+      "gamesformui_form_gamesformwizardprops",
+      "gamesformui_itemsstep_itemsstepprops",
+      "hooks_gameform",
+      "hooks_gameform_createemptycharacter",
+      "hooks_gameform_createemptyitem",
+      "hooks_gameform_createemptymap",
+      "hooks_gameform_step_keys",
+      "hooks_gameform_usegamesform",
+      "mongodb_schema",
+      "mongodb_schema_characterschema",
+      "mongodb_schema_gameschema",
+      "mongodb_schema_itemschema",
+      "mongodb_schema_mapschema",
+      "types_gameform",
+      "types_gameform_character_validation",
+      "types_gameform_characterdata",
+      "types_gameform_characterdatadb",
+      "types_gameform_games_form_steps",
+      "types_gameform_gamesformdata",
+      "types_gameform_gamesformstep",
+      "types_gameform_initialformdata",
+      "types_gameform_item_validation",
+      "types_gameform_itemdata",
+      "types_gameform_itemdatadb",
+      "types_gameform_map_validation",
+      "types_gameform_mapdatadb",
+      "types_gameform_stepconfig",
+      "types_gameform_usegamesformreturn"
+    ],
+    "17": [
+      "clientutilities_exceptions",
+      "clientutilities_exceptions_filterentrieswithimages",
+      "clientutilities_imagesutils",
+      "clientutilities_imagesutils_arraybuffertobase64",
+      "form_form",
+      "form_form_createform",
+      "form_form_status_color_map",
+      "formui_imagecomponent",
+      "formui_imagecomponent_imageupload",
+      "formui_textcomponent",
+      "formui_textcomponent_tagscomponent",
+      "formui_textcomponent_textareafield",
+      "hooks_form",
+      "hooks_form_usegameform",
+      "hooks_useidempotentrequest",
+      "hooks_useidempotentrequest_abortablerequest",
+      "hooks_useidempotentrequest_useidempotentrequest",
+      "types_form",
+      "types_form_character_validation",
+      "types_form_game_form_field_config",
+      "types_form_gameformstate",
+      "types_form_games_form_steps",
+      "types_form_imageuploadprops",
+      "types_form_initialgameformstate",
+      "types_form_item_validation",
+      "types_form_map_validation",
+      "types_form_pre_existing_tags",
+      "types_form_stepconfig",
+      "types_form_tagscomponentprops",
+      "types_form_textareafieldprops",
+      "types_form_validationconfig"
+    ],
+    "18": [
       "82_batch_mongodb_fetch",
       "82_batch_worker",
       "82_redis_batch_pipeline",
@@ -702,7 +755,7 @@
       "95_zustand_likes_store",
       "issues_readme_index"
     ],
-    "17": [
+    "19": [
       "references_example",
       "references_example_1_install_dependencies",
       "references_example_2_configure_environment_variables",
@@ -734,7 +787,7 @@
       "references_example_src_lib_posthog_server_ts",
       "references_example_user_identification_authcontext_tsx"
     ],
-    "18": [
+    "20": [
       "app_auth_gate",
       "app_auth_gate_authgate",
       "app_convex_client_provider",
@@ -765,7 +818,69 @@
       "sidebar_sidebar",
       "sidebar_sidebar_sbar"
     ],
-    "19": [
+    "21": [
+      "games_route",
+      "games_route_ensurecacheprimed",
+      "games_route_get",
+      "games_route_maybetriggerdrain",
+      "id_route",
+      "id_route_cache_keys",
+      "id_route_get",
+      "lib_cache_warmup",
+      "lib_cache_warmup_cache_keys",
+      "lib_cache_warmup_checkcacheprimed",
+      "lib_cache_warmup_getcachedgameids",
+      "lib_cache_warmup_getgamefromcache",
+      "lib_cache_warmup_setcacheprimed",
+      "lib_cache_warmup_setgameincache",
+      "lib_cache_warmup_warmupcache",
+      "lib_db_getgamespaginated",
+      "lib_queue",
+      "lib_queue_globalforredis",
+      "lib_queue_redis",
+      "lib_queue_redisclient",
+      "lib_retry",
+      "lib_retry_retry",
+      "middleware_rate_limit",
+      "middleware_rate_limit_limitergroup",
+      "middleware_rate_limit_ratelimitmiddleware",
+      "mongodb_client",
+      "mongodb_client_connectdb",
+      "push_route",
+      "push_route_post"
+    ],
+    "22": [
+      "convertgameimages_route",
+      "convertgameimages_route_post",
+      "converturl_route",
+      "converturl_route_post",
+      "drain_route",
+      "drain_route_get",
+      "id_route_gamepage",
+      "id_route_gamepage_get",
+      "lib_auth",
+      "lib_auth_createauthenticatedsupabaseclient",
+      "lib_auth_getservicetoken",
+      "lib_auth_serviceconfig",
+      "lib_auth_serviceconfigs",
+      "lib_auth_servicename",
+      "lib_jwt_validate",
+      "lib_jwt_validate_jwtpayload",
+      "lib_jwt_validate_validatejwtmiddleware",
+      "patches_route",
+      "patches_route_patchopschema",
+      "patches_route_patchrequestschema",
+      "patches_route_post",
+      "pushgames_route_post",
+      "test_supabase_auth_route",
+      "test_supabase_auth_route_get",
+      "utilities_apierrorhandler",
+      "utilities_apierrorhandler_handleapirouteerror",
+      "utilities_apierrorhandler_tryapiroute",
+      "utilities_idempotency_withidempotency",
+      "utilities_pull_drainlikes"
+    ],
+    "23": [
       "references_next_js",
       "references_next_js_accessing_posthog",
       "references_next_js_app_router",
@@ -796,98 +911,7 @@
       "references_next_js_yarn",
       "references_next_js_yarn_202"
     ],
-    "20": [
-      "convertgameimages_route",
-      "convertgameimages_route_post",
-      "converturl_route",
-      "converturl_route_post",
-      "id_route_gamepage",
-      "id_route_gamepage_get",
-      "lib_auth",
-      "lib_auth_createauthenticatedsupabaseclient",
-      "lib_auth_getservicetoken",
-      "lib_auth_serviceconfig",
-      "lib_auth_serviceconfigs",
-      "lib_auth_servicename",
-      "lib_jwt_validate",
-      "lib_jwt_validate_jwtpayload",
-      "lib_jwt_validate_validatejwtmiddleware",
-      "lib_storage_uploadimage",
-      "patches_route",
-      "patches_route_patchopschema",
-      "patches_route_patchrequestschema",
-      "patches_route_post",
-      "push_route_post",
-      "pushgames_route_post",
-      "test_supabase_auth_route",
-      "test_supabase_auth_route_get",
-      "utilities_apierrorhandler",
-      "utilities_apierrorhandler_handleapirouteerror",
-      "utilities_apierrorhandler_tryapiroute",
-      "utilities_idempotency_withidempotency",
-      "utilities_insertgameimages_convertcomponentimagesjson"
-    ],
-    "21": [
-      "gamesformui_charactersstep",
-      "gamesformui_charactersstep_charactersstep",
-      "gamesformui_charactersstep_charactersstepprops",
-      "gamesformui_mapsstep",
-      "gamesformui_mapsstep_mapsstep",
-      "gamesformui_mapsstep_mapsstepprops",
-      "lib_gamesformvalidation_charactervalidators",
-      "lib_gamesformvalidation_mapvalidators",
-      "lib_utils",
-      "lib_utils_cn",
-      "primitives_card",
-      "primitives_card_card",
-      "primitives_card_cardcontent",
-      "primitives_card_carddescription",
-      "primitives_card_cardfooter",
-      "primitives_card_cardheader",
-      "primitives_card_cardtitle",
-      "primitives_input",
-      "primitives_input_input",
-      "primitives_input_inputprops",
-      "primitives_label",
-      "primitives_label_label",
-      "primitives_label_labelvariants",
-      "primitives_textarea",
-      "primitives_textarea_textarea",
-      "primitives_textarea_textareaprops",
-      "types_gameform_characterdata",
-      "types_gameform_mapdata"
-    ],
-    "22": [
-      "games_route",
-      "games_route_ensurecacheprimed",
-      "games_route_get",
-      "games_route_maybetriggerdrain",
-      "id_route",
-      "id_route_cache_keys",
-      "id_route_get",
-      "lib_cache_warmup",
-      "lib_cache_warmup_cache_keys",
-      "lib_cache_warmup_checkcacheprimed",
-      "lib_cache_warmup_getcachedgameids",
-      "lib_cache_warmup_getgamefromcache",
-      "lib_cache_warmup_setcacheprimed",
-      "lib_cache_warmup_setgameincache",
-      "lib_cache_warmup_warmupcache",
-      "lib_queue",
-      "lib_queue_globalforredis",
-      "lib_queue_redis",
-      "lib_queue_redisclient",
-      "lib_retry",
-      "lib_retry_retry",
-      "middleware_rate_limit",
-      "middleware_rate_limit_limitergroup",
-      "middleware_rate_limit_ratelimitmiddleware",
-      "push_route",
-      "types_validation_likesschema",
-      "types_validation_pushgamedataschema",
-      "types_validation_pushrequestschema"
-    ],
-    "23": [
+    "24": [
       "documentations_01_architecture",
       "documentations_01_architecture_api_layer",
       "documentations_01_architecture_architecture_overview",
@@ -916,7 +940,7 @@
       "documentations_01_architecture_system_architecture_diagram",
       "documentations_01_architecture_vertical_scaling"
     ],
-    "24": [
+    "25": [
       "documentation_complete",
       "documentation_complete_architecture_connections",
       "documentation_complete_building_features",
@@ -943,34 +967,6 @@
       "documentation_complete_system_architecture",
       "documentation_complete_topics_covered",
       "documentation_complete_what_s_documented"
-    ],
-    "25": [
-      "formui_imagecomponent",
-      "formui_imagecomponent_imageupload",
-      "formui_textcomponent",
-      "formui_textcomponent_textareafield",
-      "lib_usegamesform",
-      "lib_usegamesform_createemptycharacter",
-      "lib_usegamesform_createemptyitem",
-      "lib_usegamesform_createemptymap",
-      "lib_usegamesform_initialformdata",
-      "lib_usegamesform_step_keys",
-      "lib_usegamesform_usegamesformreturn",
-      "types_form",
-      "types_form_characterdata",
-      "types_form_game_form_field_config",
-      "types_form_games_form_steps",
-      "types_form_gamesformdata",
-      "types_form_gamesformstep",
-      "types_form_imageuploadprops",
-      "types_form_item_validation",
-      "types_form_itemdata",
-      "types_form_map_validation",
-      "types_form_mapdata",
-      "types_form_stepconfig",
-      "types_form_tagscomponentprops",
-      "types_form_textareafieldprops",
-      "types_form_validationconfig"
     ],
     "26": [
       "issues_readme",
@@ -1165,6 +1161,33 @@
       "problems_02_known_issues_scalability_issues"
     ],
     "33": [
+      "cards_cards",
+      "cards_cards_profilecard",
+      "clientutilities_usegamecache",
+      "clientutilities_usegamecache_usegamecache",
+      "clientutilities_usegamecache_usegamecacheresult",
+      "clientutilities_usegamecache_usegamepreload",
+      "clientutilities_usegamecache_usegamepreloadstore",
+      "game_charactertabs",
+      "game_charactertabs_charactertabs",
+      "game_charactertabs_charactertabsprops",
+      "game_gameheader",
+      "game_gameheader_gameheader",
+      "game_gameheader_gameheaderprops",
+      "game_itemgrid",
+      "game_itemgrid_itemgrid",
+      "game_itemgrid_itemgridprops",
+      "game_maplist",
+      "game_maplist_maplist",
+      "game_maplist_maplistprops",
+      "shared_fittedimage",
+      "shared_fittedimage_fittedimage",
+      "shared_fittedimage_fittedimageprops",
+      "uuid_game_detail",
+      "uuid_game_detail_gamedetailclient",
+      "uuid_game_detail_gamedetailclientprops"
+    ],
+    "34": [
       "components",
       "components_aliases",
       "components_aliases_components",
@@ -1190,7 +1213,7 @@
       "components_tailwind_prefix",
       "components_tsx"
     ],
-    "34": [
+    "35": [
       "documentations_readme",
       "documentations_readme_add_a_new_api_route",
       "documentations_readme_architecture",
@@ -1216,7 +1239,7 @@
       "documentations_readme_setup_authentication",
       "documentations_readme_what_could_go_wrong"
     ],
-    "35": [
+    "36": [
       "references_hot_path_rules",
       "references_hot_path_rules_1_push_filters_to_storage",
       "references_hot_path_rules_2_minimize_data_sources",
@@ -1242,7 +1265,7 @@
       "references_hot_path_rules_verification",
       "references_hot_path_rules_when_to_denormalize"
     ],
-    "36": [
+    "37": [
       "references_identify_users",
       "references_identify_users_1_call_identify_as_soon_as_you_re_able_to",
       "references_identify_users_2_use_unique_strings_for_distinct_ids",
@@ -1268,7 +1291,32 @@
       "references_identify_users_web",
       "references_identify_users_web_117"
     ],
-    "37": [
+    "38": [
+      "errorpages_bad_request",
+      "errorpages_bad_request_badrequesterrorpage",
+      "errorpages_bad_request_badrequesterrorpageprops",
+      "errorpages_forbidden",
+      "errorpages_forbidden_forbiddenerrorpage",
+      "errorpages_forbidden_forbiddenerrorpageprops",
+      "errorpages_general_error",
+      "errorpages_general_error_generalerrorpage",
+      "errorpages_general_error_generalerrorpageprops",
+      "errorpages_index",
+      "errorpages_not_found",
+      "errorpages_not_found_notfounderrorpage",
+      "errorpages_not_found_notfounderrorpageprops",
+      "errorpages_server_error",
+      "errorpages_server_error_servererrorpage",
+      "errorpages_server_error_servererrorpageprops",
+      "errorpages_service_unavailable",
+      "errorpages_service_unavailable_serviceunavailableerrorpage",
+      "errorpages_service_unavailable_serviceunavailableerrorpageprops",
+      "primitives_button_button",
+      "primitives_error_page_shell",
+      "primitives_error_page_shell_errorpageshell",
+      "primitives_error_page_shell_errorpageshellprops"
+    ],
+    "39": [
       "documentations_03_data_flow",
       "documentations_03_data_flow_api_request_response_flow",
       "documentations_03_data_flow_api_routes_mongodb",
@@ -1293,32 +1341,7 @@
       "documentations_03_data_flow_state_transitions",
       "documentations_03_data_flow_validation_error"
     ],
-    "38": [
-      "lib_gamesinsert",
-      "lib_gamesinsert_processgamesqueue",
-      "mongodb_client",
-      "mongodb_client_connectdb",
-      "pushgames_route",
-      "types_operations",
-      "types_operations_getqueueconfig",
-      "types_operations_operationprovider",
-      "types_operations_queueconfig",
-      "types_operations_queuename",
-      "utilities_insertgame",
-      "utilities_insertgame_getgamesqueue",
-      "utilities_insertgame_pushgametoqueue",
-      "utilities_insertgame_settoidle",
-      "utilities_insertgame_settoworking",
-      "utilities_insertgame_validatequeue",
-      "utilities_insertgame_validatequeueworking",
-      "utilities_queue",
-      "utilities_queue_drain",
-      "utilities_queue_enqueue",
-      "utilities_queue_queuesize",
-      "utilities_sleep",
-      "utilities_sleep_sleep"
-    ],
-    "39": [
+    "40": [
       "deploymentchecks_skill",
       "deploymentchecks_skill_build_output_analysis",
       "deploymentchecks_skill_build_process_specifics",
@@ -1341,30 +1364,6 @@
       "deploymentchecks_skill_typescript_type_errors",
       "deploymentchecks_skill_typescript_type_safety",
       "deploymentchecks_skill_variable_declaration_issues"
-    ],
-    "40": [
-      "errorpages_bad_request",
-      "errorpages_bad_request_badrequesterrorpage",
-      "errorpages_bad_request_badrequesterrorpageprops",
-      "errorpages_forbidden",
-      "errorpages_forbidden_forbiddenerrorpage",
-      "errorpages_forbidden_forbiddenerrorpageprops",
-      "errorpages_general_error",
-      "errorpages_general_error_generalerrorpage",
-      "errorpages_general_error_generalerrorpageprops",
-      "errorpages_index",
-      "errorpages_not_found",
-      "errorpages_not_found_notfounderrorpage",
-      "errorpages_not_found_notfounderrorpageprops",
-      "errorpages_server_error",
-      "errorpages_server_error_servererrorpage",
-      "errorpages_server_error_servererrorpageprops",
-      "errorpages_service_unavailable",
-      "errorpages_service_unavailable_serviceunavailableerrorpage",
-      "errorpages_service_unavailable_serviceunavailableerrorpageprops",
-      "primitives_error_page_shell",
-      "primitives_error_page_shell_errorpageshell",
-      "primitives_error_page_shell_errorpageshellprops"
     ],
     "41": [
       "project_description_to_learn",
@@ -1504,6 +1503,28 @@
       "jwt_implementation_summary_what_was_done"
     ],
     "47": [
+      "lib_gamesinsert",
+      "lib_gamesinsert_processgamesqueue",
+      "pushgames_route",
+      "types_gameform_gamesformdatadb",
+      "types_operations",
+      "types_operations_getqueueconfig",
+      "types_operations_operationprovider",
+      "types_operations_queueconfig",
+      "types_operations_queuename",
+      "utilities_insertgame",
+      "utilities_insertgame_getgamesqueue",
+      "utilities_insertgame_pushgametoqueue",
+      "utilities_insertgame_settoidle",
+      "utilities_insertgame_settoworking",
+      "utilities_insertgame_validatequeue",
+      "utilities_insertgame_validatequeueworking",
+      "utilities_queue",
+      "utilities_queue_drain",
+      "utilities_queue_enqueue",
+      "utilities_queue_queuesize"
+    ],
+    "48": [
       "readme",
       "readme_api_routes",
       "readme_architecture_overview",
@@ -1524,28 +1545,6 @@
       "readme_services_used",
       "readme_storage",
       "readme_what_is_this"
-    ],
-    "48": [
-      "db_client",
-      "db_client_sql",
-      "drain_route",
-      "drain_route_get",
-      "lib_db",
-      "lib_db_getgamebyid",
-      "lib_db_getgames",
-      "lib_db_getgamespaginated",
-      "lib_db_insertgame",
-      "lib_db_insertgamesbatch",
-      "lib_db_updategamelikes",
-      "lib_db_updategameslikesbatch",
-      "utilities_db_getlikesqueue",
-      "utilities_pull",
-      "utilities_pull_draingames",
-      "utilities_pull_drainlikes",
-      "utilities_pull_get",
-      "uuid_page",
-      "uuid_page_gamepage",
-      "uuid_page_generatemetadata"
     ],
     "49": [
       "tsconfig",
@@ -1570,27 +1569,6 @@
       "tsconfig_paths"
     ],
     "50": [
-      "gamesformui_form",
-      "gamesformui_form_gamesformwizard",
-      "gamesformui_form_gamesformwizardprops",
-      "hooks_gameform",
-      "hooks_gameform_createemptycharacter",
-      "hooks_gameform_createemptyitem",
-      "hooks_gameform_createemptymap",
-      "hooks_gameform_step_keys",
-      "hooks_gameform_usegamesform",
-      "hooks_useformstate",
-      "hooks_useformstate_formactions",
-      "hooks_useformstate_formstate",
-      "hooks_useformstate_useformstate",
-      "lib_usegamesform_usegamesform",
-      "types_gameform_games_form_steps",
-      "types_gameform_gamesformdata",
-      "types_gameform_gamesformstep",
-      "types_gameform_initialformdata",
-      "types_gameform_usegamesformreturn"
-    ],
-    "51": [
       "progress",
       "progress_10_implemented_clerk_jwt_integration_for_multiple_services",
       "progress_11_implemented_idempotency_with_uuid_v7_and_abortcontroller",
@@ -1611,7 +1589,7 @@
       "progress_pending_tasks",
       "progress_progress_log_supabase_image_storage_improvements"
     ],
-    "52": [
+    "51": [
       "references_function_budget",
       "references_function_budget_1_bound_your_reads",
       "references_function_budget_2_read_smaller_shapes",
@@ -1632,7 +1610,7 @@
       "references_function_budget_unbounded_collection",
       "references_function_budget_verification"
     ],
-    "53": [
+    "52": [
       "ui_design_skill",
       "ui_design_skill_8px_grid_system",
       "ui_design_skill_auth_pages_centered",
@@ -1653,7 +1631,7 @@
       "ui_design_skill_tailwind_config_extension",
       "ui_design_skill_theming_design_tokens"
     ],
-    "54": [
+    "53": [
       "assesment_skill",
       "assesment_skill_2a_technical_architecture_analysis",
       "assesment_skill_2b_ui_architecture_analysis",
@@ -1673,7 +1651,7 @@
       "assesment_skill_when_not_to_use",
       "assesment_skill_workflow"
     ],
-    "55": [
+    "54": [
       "convex_migration_helper_skill",
       "convex_migration_helper_skill_adding_index",
       "convex_migration_helper_skill_adding_new_table",
@@ -1693,7 +1671,7 @@
       "convex_migration_helper_skill_when_not_to_use",
       "convex_migration_helper_skill_when_to_use"
     ],
-    "56": [
+    "55": [
       "issues_59_array_index_as_react_key",
       "issues_59_array_index_as_react_key_category",
       "issues_59_array_index_as_react_key_code_example_problem",
@@ -1713,7 +1691,7 @@
       "issues_59_array_index_as_react_key_verification_checklist",
       "issues_59_array_index_as_react_key_why_index_keys_are_bad"
     ],
-    "57": [
+    "56": [
       "issues_60_duplicate_sleep_utility",
       "issues_60_duplicate_sleep_utility_best_practice_pattern",
       "issues_60_duplicate_sleep_utility_category",
@@ -1733,7 +1711,7 @@
       "issues_60_duplicate_sleep_utility_verification_checklist",
       "issues_60_duplicate_sleep_utility_why_it_s_critical"
     ],
-    "58": [
+    "57": [
       "issues_64_unnecessary_zod_schema_for_simple_query_params",
       "issues_64_unnecessary_zod_schema_for_simple_query_params_benefits",
       "issues_64_unnecessary_zod_schema_for_simple_query_params_best_practice_decision_tree",
@@ -1752,6 +1730,26 @@
       "issues_64_unnecessary_zod_schema_for_simple_query_params_verification_checklist",
       "issues_64_unnecessary_zod_schema_for_simple_query_params_when_to_use_zod_vs_manual",
       "issues_64_unnecessary_zod_schema_for_simple_query_params_why_it_s_critical"
+    ],
+    "58": [
+      "db_client",
+      "db_client_sql",
+      "lib_db",
+      "lib_db_getgamebyid",
+      "lib_db_getgames",
+      "lib_db_insertgame",
+      "lib_db_insertgamesbatch",
+      "lib_db_updategamelikes",
+      "lib_db_updategameslikesbatch",
+      "utilities_db_getlikesqueue",
+      "utilities_pull",
+      "utilities_pull_draingames",
+      "utilities_pull_get",
+      "utilities_sleep",
+      "utilities_sleep_sleep",
+      "uuid_page",
+      "uuid_page_gamepage",
+      "uuid_page_generatemetadata"
     ],
     "59": [
       "new_folder_full_assessment",
@@ -1813,23 +1811,23 @@
       "convex_create_component_skill_workflow"
     ],
     "62": [
-      "lib_gamesformvalidation",
-      "lib_gamesformvalidation_createfieldvalidator",
-      "lib_gamesformvalidation_validatecharacter",
-      "lib_gamesformvalidation_validatecharacterslist",
-      "lib_gamesformvalidation_validateitem",
-      "lib_gamesformvalidation_validateitemslist",
-      "lib_gamesformvalidation_validatemap",
-      "lib_gamesformvalidation_validatemapslist",
-      "lib_gamesformvalidation_validationfn",
-      "lib_gamesformvalidation_validationresult",
-      "types_form_character_validation",
-      "utilities_formutils",
-      "utilities_formutils_sql_injection_patterns",
-      "utilities_formutils_validatetext",
-      "utilities_formutils_validationoptions",
-      "utilities_formutils_validationresult",
-      "utilities_formutils_weird_character_patterns"
+      "hooks_useformstate",
+      "hooks_useformstate_formactions",
+      "hooks_useformstate_formstate",
+      "hooks_useformstate_useformstate",
+      "lib_usegamesform",
+      "lib_usegamesform_createemptycharacter",
+      "lib_usegamesform_createemptyitem",
+      "lib_usegamesform_createemptymap",
+      "lib_usegamesform_initialformdata",
+      "lib_usegamesform_step_keys",
+      "lib_usegamesform_usegamesform",
+      "lib_usegamesform_usegamesformreturn",
+      "types_form_characterdata",
+      "types_form_gamesformdata",
+      "types_form_gamesformstep",
+      "types_form_itemdata",
+      "types_form_mapdata"
     ],
     "63": [
       "issues_55_inadequate_state_management",
@@ -1908,6 +1906,24 @@
       "project_description_obstacles_obstacles_troubles_faced"
     ],
     "67": [
+      "convex_authHelpers",
+      "convex_auth_issue",
+      "convex_characters_auth",
+      "convex_games_fixed",
+      "convex_items_auth",
+      "convex_maps_auth",
+      "convex_schema_ownerid",
+      "convex_staff",
+      "getStaffDegree",
+      "ownerId_field",
+      "requireAuth",
+      "requireStaff",
+      "security_authorize",
+      "security_constants",
+      "security_types",
+      "tokenIdentifier_auth"
+    ],
+    "68": [
       "convex_performance_audit_skill",
       "convex_performance_audit_skill_1_scope_the_problem",
       "convex_performance_audit_skill_2_trace_the_full_read_and_write_set",
@@ -1925,25 +1941,25 @@
       "convex_performance_audit_skill_when_to_use",
       "convex_performance_audit_skill_workflow"
     ],
-    "68": [
-      "clientutilities_exceptions",
-      "clientutilities_exceptions_filterentrieswithimages",
-      "clientutilities_imagesutils",
-      "clientutilities_imagesutils_arraybuffertobase64",
-      "form_form",
-      "form_form_createform",
-      "form_form_status_color_map",
-      "formui_textcomponent_tagscomponent",
-      "hooks_form",
-      "hooks_form_usegameform",
-      "hooks_useidempotentrequest",
-      "hooks_useidempotentrequest_abortablerequest",
-      "hooks_useidempotentrequest_useidempotentrequest",
-      "types_form_gameformstate",
-      "types_form_initialgameformstate",
-      "types_form_pre_existing_tags"
-    ],
     "69": [
+      "lib_gamesformvalidation",
+      "lib_gamesformvalidation_createfieldvalidator",
+      "lib_gamesformvalidation_validatecharacter",
+      "lib_gamesformvalidation_validatecharacterslist",
+      "lib_gamesformvalidation_validateitem",
+      "lib_gamesformvalidation_validateitemslist",
+      "lib_gamesformvalidation_validatemap",
+      "lib_gamesformvalidation_validatemapslist",
+      "lib_gamesformvalidation_validationfn",
+      "lib_gamesformvalidation_validationresult",
+      "utilities_formutils",
+      "utilities_formutils_sql_injection_patterns",
+      "utilities_formutils_validatetext",
+      "utilities_formutils_validationoptions",
+      "utilities_formutils_validationresult",
+      "utilities_formutils_weird_character_patterns"
+    ],
+    "70": [
       "issues_57_excessive_prop_drilling",
       "issues_57_excessive_prop_drilling_category",
       "issues_57_excessive_prop_drilling_code_example_problem",
@@ -1961,7 +1977,7 @@
       "issues_57_excessive_prop_drilling_verification_checklist",
       "issues_57_excessive_prop_drilling_why_it_s_critical"
     ],
-    "70": [
+    "71": [
       "issues_58_form_hooks_code_duplication",
       "issues_58_form_hooks_code_duplication_category",
       "issues_58_form_hooks_code_duplication_code_example_problem",
@@ -1979,7 +1995,7 @@
       "issues_58_form_hooks_code_duplication_verification_checklist",
       "issues_58_form_hooks_code_duplication_why_it_s_critical"
     ],
-    "71": [
+    "72": [
       "issues_61_likes_count_reset_to_zero",
       "issues_61_likes_count_reset_to_zero_before_after",
       "issues_61_likes_count_reset_to_zero_best_practice_pattern",
@@ -1997,7 +2013,7 @@
       "issues_61_likes_count_reset_to_zero_verification_checklist",
       "issues_61_likes_count_reset_to_zero_why_it_s_critical"
     ],
-    "72": [
+    "73": [
       "project_description_v1",
       "project_description_v1_api_routes",
       "project_description_v1_architecture_overview",
@@ -2015,7 +2031,7 @@
       "project_description_v1_testing",
       "project_description_v1_types"
     ],
-    "73": [
+    "74": [
       "references_occ_conflicts",
       "references_occ_conflicts_1_reduce_read_set_size",
       "references_occ_conflicts_2_split_hot_documents",
@@ -2032,23 +2048,6 @@
       "references_occ_conflicts_symptoms",
       "references_occ_conflicts_verification",
       "references_occ_conflicts_write_then_read_chains"
-    ],
-    "74": [
-      "mongodb_schema",
-      "mongodb_schema_characterschema",
-      "mongodb_schema_gameschema",
-      "mongodb_schema_itemschema",
-      "mongodb_schema_mapschema",
-      "types_gameform",
-      "types_gameform_character_validation",
-      "types_gameform_characterdatadb",
-      "types_gameform_gamesformdatadb",
-      "types_gameform_item_validation",
-      "types_gameform_itemdatadb",
-      "types_gameform_map_validation",
-      "types_gameform_mapdatadb",
-      "types_gameform_stepconfig",
-      "utilities_insertgameimages"
     ],
     "75": [
       "api_convertUrl",
@@ -2153,20 +2152,20 @@
       "references_migrations_component_setup"
     ],
     "81": [
-      "exceptions_notifications_index_ts_notifications_index",
-      "gamesformui_itemsstep",
-      "gamesformui_itemsstep_itemsstep",
-      "gamesformui_itemsstep_itemsstepprops",
-      "lib_gamesformvalidation_itemvalidators",
-      "notifications_success",
-      "notifications_success_successnotification",
-      "notifications_success_successnotificationprops",
-      "notifications_success_successtoasttrigger",
-      "primitives_button",
-      "primitives_button_button",
-      "primitives_button_buttonprops",
-      "primitives_button_buttonvariants",
-      "types_gameform_itemdata"
+      "app_page",
+      "app_page_page",
+      "cards_cards_grid_wrapper",
+      "cards_cards_grid_wrapper_cardsgridwrapper",
+      "types_cards",
+      "types_cards_apigameresponse",
+      "types_cards_apiresponse",
+      "types_cards_cardgrid",
+      "types_cards_cardprops",
+      "types_cards_gamecardprops",
+      "utilities_utils",
+      "utilities_utils_fetchgamesfromapi",
+      "utilities_utils_preparegamecard",
+      "utilities_utils_preparegamecards"
     ],
     "82": [
       "issues_70_wasteful_data_url_fetch_round_trip_in_image_pipeline",
@@ -2185,6 +2184,38 @@
       "issues_70_wasteful_data_url_fetch_round_trip_in_image_pipeline_verification_checklist"
     ],
     "83": [
+      "cards_cards_grid",
+      "cards_cards_grid_cardsgrid",
+      "cards_cards_grid_cardsgridprops",
+      "cards_cards_grid_loadcache",
+      "cards_cards_grid_savecache",
+      "utilities_errorhandler_tryorerrorsync",
+      "utilities_idempotency",
+      "utilities_idempotency_cacheresult",
+      "utilities_idempotency_clearidempotencykey",
+      "utilities_idempotency_generateidempotencykey",
+      "utilities_idempotency_getcachedresult",
+      "utilities_idempotency_getidempotencykeyinfo",
+      "utilities_idempotency_isrequestprocessed",
+      "utilities_idempotency_withidempotencysafe"
+    ],
+    "84": [
+      "lib_storage",
+      "lib_storage_uploadimage",
+      "lib_supabase",
+      "lib_supabase_supabase",
+      "types_images",
+      "types_images_imageuploadoptions",
+      "types_images_uploadoptions",
+      "types_images_uploadprogress",
+      "utilities_imagesutils",
+      "utilities_imagesutils_converttowebp",
+      "utilities_imagesutils_createuploadcontroller",
+      "utilities_imagesutils_uploadimagewithprogress",
+      "utilities_insertgameimages",
+      "utilities_insertgameimages_convertcomponentimagesjson"
+    ],
+    "85": [
       "self_assessment_skill",
       "self_assessment_skill_backwards_compatibility_migration",
       "self_assessment_skill_deliverable_checklist",
@@ -2200,7 +2231,7 @@
       "self_assessment_skill_when_not_to_use",
       "self_assessment_skill_when_to_use"
     ],
-    "84": [
+    "86": [
       "personality_refrences_skill",
       "personality_refrences_skill_1_mbti_core_type_lens_1",
       "personality_refrences_skill_2_grip_stress_states_lens_2",
@@ -2215,77 +2246,7 @@
       "personality_refrences_skill_when_not_to_use",
       "personality_refrences_skill_workflow"
     ],
-    "85": [
-      "issues_75_form_styles_button_preview_wizard",
-      "issues_75_form_styles_button_preview_wizard_button_fix",
-      "issues_75_form_styles_button_preview_wizard_category",
-      "issues_75_form_styles_button_preview_wizard_files_modified",
-      "issues_75_form_styles_button_preview_wizard_issue_75_form_styles_button_preview_and_wizard_layout_issues",
-      "issues_75_form_styles_button_preview_wizard_preview_image_fix",
-      "issues_75_form_styles_button_preview_wizard_problem_description",
-      "issues_75_form_styles_button_preview_wizard_solution_implemented",
-      "issues_75_form_styles_button_preview_wizard_status",
-      "issues_75_form_styles_button_preview_wizard_verification_checklist",
-      "issues_75_form_styles_button_preview_wizard_wizard_fix",
-      "issues_75_form_styles_button_preview_wizard_wrapper_fix"
-    ],
-    "86": [
-      "issues_77_zod_validation_centralization",
-      "issues_77_zod_validation_centralization_1_created_types_validation_ts_centralized_zod_schema_definitions",
-      "issues_77_zod_validation_centralization_2_refactored_app_api_push_route_ts_to_use_shared_schemas",
-      "issues_77_zod_validation_centralization_3_security_benefits",
-      "issues_77_zod_validation_centralization_category",
-      "issues_77_zod_validation_centralization_files_modified",
-      "issues_77_zod_validation_centralization_issue_77_centralized_zod_validation_security_and_consistency",
-      "issues_77_zod_validation_centralization_problem_description",
-      "issues_77_zod_validation_centralization_related_issues",
-      "issues_77_zod_validation_centralization_solution_implemented",
-      "issues_77_zod_validation_centralization_status",
-      "issues_77_zod_validation_centralization_verification_checklist"
-    ],
     "87": [
-      "new_folder_ui_problems",
-      "new_folder_ui_problems_problem_10_form_accessibility_deficiencies",
-      "new_folder_ui_problems_problem_1_inconsistent_layout_system",
-      "new_folder_ui_problems_problem_2_excessive_prop_drilling_in_wizard_form",
-      "new_folder_ui_problems_problem_3_missing_design_system_maturity",
-      "new_folder_ui_problems_problem_4_accessibility_gaps",
-      "new_folder_ui_problems_problem_5_rendering_strategy_inefficiencies",
-      "new_folder_ui_problems_problem_6_missing_performance_optimizations",
-      "new_folder_ui_problems_problem_7_inadequate_state_management",
-      "new_folder_ui_problems_problem_8_responsiveness_implementation_gaps",
-      "new_folder_ui_problems_problem_9_component_coupling_and_reusability_issues",
-      "new_folder_ui_problems_ui_problems"
-    ],
-    "88": [
-      "references_convex_auth",
-      "references_convex_auth_checklist",
-      "references_convex_auth_concrete_steps",
-      "references_convex_auth_convex_auth",
-      "references_convex_auth_expected_files_and_decisions",
-      "references_convex_auth_gotchas",
-      "references_convex_auth_human_handoff",
-      "references_convex_auth_production",
-      "references_convex_auth_validation",
-      "references_convex_auth_what_this_reference_is_for",
-      "references_convex_auth_what_to_do",
-      "references_convex_auth_workflow"
-    ],
-    "89": [
-      "references_migration_patterns",
-      "references_migration_patterns_adding_a_required_field",
-      "references_migration_patterns_changing_a_field_type",
-      "references_migration_patterns_cleaning_up_orphaned_documents",
-      "references_migration_patterns_deleting_a_field",
-      "references_migration_patterns_dual_read",
-      "references_migration_patterns_dual_write_preferred",
-      "references_migration_patterns_migration_patterns_reference",
-      "references_migration_patterns_small_table_shortcut",
-      "references_migration_patterns_splitting_nested_data_into_a_separate_table",
-      "references_migration_patterns_verifying_a_migration",
-      "references_migration_patterns_zero_downtime_strategies"
-    ],
-    "90": [
       "claude_md",
       "data_structures_doc",
       "doc_readme",
@@ -2299,7 +2260,77 @@
       "upstash_ttl_expiration",
       "web_design_guidelines_skill"
     ],
+    "88": [
+      "issues_75_form_styles_button_preview_wizard",
+      "issues_75_form_styles_button_preview_wizard_button_fix",
+      "issues_75_form_styles_button_preview_wizard_category",
+      "issues_75_form_styles_button_preview_wizard_files_modified",
+      "issues_75_form_styles_button_preview_wizard_issue_75_form_styles_button_preview_and_wizard_layout_issues",
+      "issues_75_form_styles_button_preview_wizard_preview_image_fix",
+      "issues_75_form_styles_button_preview_wizard_problem_description",
+      "issues_75_form_styles_button_preview_wizard_solution_implemented",
+      "issues_75_form_styles_button_preview_wizard_status",
+      "issues_75_form_styles_button_preview_wizard_verification_checklist",
+      "issues_75_form_styles_button_preview_wizard_wizard_fix",
+      "issues_75_form_styles_button_preview_wizard_wrapper_fix"
+    ],
+    "89": [
+      "issues_77_zod_validation_centralization",
+      "issues_77_zod_validation_centralization_1_created_types_validation_ts_centralized_zod_schema_definitions",
+      "issues_77_zod_validation_centralization_2_refactored_app_api_push_route_ts_to_use_shared_schemas",
+      "issues_77_zod_validation_centralization_3_security_benefits",
+      "issues_77_zod_validation_centralization_category",
+      "issues_77_zod_validation_centralization_files_modified",
+      "issues_77_zod_validation_centralization_issue_77_centralized_zod_validation_security_and_consistency",
+      "issues_77_zod_validation_centralization_problem_description",
+      "issues_77_zod_validation_centralization_related_issues",
+      "issues_77_zod_validation_centralization_solution_implemented",
+      "issues_77_zod_validation_centralization_status",
+      "issues_77_zod_validation_centralization_verification_checklist"
+    ],
+    "90": [
+      "new_folder_ui_problems",
+      "new_folder_ui_problems_problem_10_form_accessibility_deficiencies",
+      "new_folder_ui_problems_problem_1_inconsistent_layout_system",
+      "new_folder_ui_problems_problem_2_excessive_prop_drilling_in_wizard_form",
+      "new_folder_ui_problems_problem_3_missing_design_system_maturity",
+      "new_folder_ui_problems_problem_4_accessibility_gaps",
+      "new_folder_ui_problems_problem_5_rendering_strategy_inefficiencies",
+      "new_folder_ui_problems_problem_6_missing_performance_optimizations",
+      "new_folder_ui_problems_problem_7_inadequate_state_management",
+      "new_folder_ui_problems_problem_8_responsiveness_implementation_gaps",
+      "new_folder_ui_problems_problem_9_component_coupling_and_reusability_issues",
+      "new_folder_ui_problems_ui_problems"
+    ],
     "91": [
+      "references_convex_auth",
+      "references_convex_auth_checklist",
+      "references_convex_auth_concrete_steps",
+      "references_convex_auth_convex_auth",
+      "references_convex_auth_expected_files_and_decisions",
+      "references_convex_auth_gotchas",
+      "references_convex_auth_human_handoff",
+      "references_convex_auth_production",
+      "references_convex_auth_validation",
+      "references_convex_auth_what_this_reference_is_for",
+      "references_convex_auth_what_to_do",
+      "references_convex_auth_workflow"
+    ],
+    "92": [
+      "references_migration_patterns",
+      "references_migration_patterns_adding_a_required_field",
+      "references_migration_patterns_changing_a_field_type",
+      "references_migration_patterns_cleaning_up_orphaned_documents",
+      "references_migration_patterns_deleting_a_field",
+      "references_migration_patterns_dual_read",
+      "references_migration_patterns_dual_write_preferred",
+      "references_migration_patterns_migration_patterns_reference",
+      "references_migration_patterns_small_table_shortcut",
+      "references_migration_patterns_splitting_nested_data_into_a_separate_table",
+      "references_migration_patterns_verifying_a_migration",
+      "references_migration_patterns_zero_downtime_strategies"
+    ],
+    "93": [
       "convex_setup_auth_skill",
       "convex_setup_auth_skill_after_choosing_a_provider",
       "convex_setup_auth_skill_checklist",
@@ -2312,7 +2343,7 @@
       "convex_setup_auth_skill_when_to_use",
       "convex_setup_auth_skill_workflow"
     ],
-    "92": [
+    "94": [
       "package_devdependencies",
       "package_devdependencies_eslint",
       "package_devdependencies_eslint_config_next",
@@ -2325,7 +2356,7 @@
       "package_devdependencies_types_sharp",
       "package_devdependencies_typescript"
     ],
-    "93": [
+    "95": [
       "references_auth0",
       "references_auth0_auth0",
       "references_auth0_checklist",
@@ -2338,7 +2369,7 @@
       "references_auth0_what_to_do",
       "references_auth0_workflow"
     ],
-    "94": [
+    "96": [
       "references_clerk",
       "references_clerk_checklist",
       "references_clerk_clerk",
@@ -2351,7 +2382,7 @@
       "references_clerk_what_to_do",
       "references_clerk_workflow"
     ],
-    "95": [
+    "97": [
       "references_workos_authkit",
       "references_workos_authkit_checklist",
       "references_workos_authkit_concrete_steps",
@@ -2364,20 +2395,7 @@
       "references_workos_authkit_workflow",
       "references_workos_authkit_workos_authkit"
     ],
-    "96": [
-      "lib_storage",
-      "lib_supabase",
-      "lib_supabase_supabase",
-      "types_images",
-      "types_images_imageuploadoptions",
-      "types_images_uploadoptions",
-      "types_images_uploadprogress",
-      "utilities_imagesutils",
-      "utilities_imagesutils_converttowebp",
-      "utilities_imagesutils_createuploadcontroller",
-      "utilities_imagesutils_uploadimagewithprogress"
-    ],
-    "97": [
+    "98": [
       "issues_48_inconsistent_layout_system",
       "issues_48_inconsistent_layout_system_8px_grid_benefits",
       "issues_48_inconsistent_layout_system_category",
@@ -2389,7 +2407,7 @@
       "issues_48_inconsistent_layout_system_status",
       "issues_48_inconsistent_layout_system_verification_checklist"
     ],
-    "98": [
+    "99": [
       "issues_49_rendering_strategy_inefficiencies",
       "issues_49_rendering_strategy_inefficiencies_benefits",
       "issues_49_rendering_strategy_inefficiencies_category",
@@ -2401,7 +2419,7 @@
       "issues_49_rendering_strategy_inefficiencies_status",
       "issues_49_rendering_strategy_inefficiencies_verification_checklist"
     ],
-    "99": [
+    "100": [
       "issues_50_missing_design_system",
       "issues_50_missing_design_system_category",
       "issues_50_missing_design_system_design_system_components",
@@ -2413,7 +2431,7 @@
       "issues_50_missing_design_system_status",
       "issues_50_missing_design_system_verification_checklist"
     ],
-    "100": [
+    "101": [
       "issues_51_responsiveness_implementation_gaps",
       "issues_51_responsiveness_implementation_gaps_breakpoint_strategy",
       "issues_51_responsiveness_implementation_gaps_category",
@@ -2425,7 +2443,7 @@
       "issues_51_responsiveness_implementation_gaps_status",
       "issues_51_responsiveness_implementation_gaps_verification_checklist"
     ],
-    "101": [
+    "102": [
       "issues_52_component_coupling_reusability",
       "issues_52_component_coupling_reusability_benefits",
       "issues_52_component_coupling_reusability_category",
@@ -2437,7 +2455,7 @@
       "issues_52_component_coupling_reusability_status",
       "issues_52_component_coupling_reusability_verification_checklist"
     ],
-    "102": [
+    "103": [
       "issues_53_accessibility_gaps",
       "issues_53_accessibility_gaps_category",
       "issues_53_accessibility_gaps_files_modified",
@@ -2449,7 +2467,7 @@
       "issues_53_accessibility_gaps_status",
       "issues_53_accessibility_gaps_verification_checklist"
     ],
-    "103": [
+    "104": [
       "new_folder_technical_architecture_analysis",
       "new_folder_technical_architecture_analysis_at_100_concurrent_users",
       "new_folder_technical_architecture_analysis_at_10_000_concurrent_users",
@@ -2461,7 +2479,7 @@
       "new_folder_technical_architecture_analysis_technical_architecture_analysis",
       "new_folder_technical_architecture_analysis_verdict"
     ],
-    "104": [
+    "105": [
       "types_api",
       "types_api_abortablerequest",
       "types_api_apiresponse",
@@ -2473,7 +2491,7 @@
       "types_api_requeststate",
       "types_api_requeststatus"
     ],
-    "105": [
+    "106": [
       "documentation_skill",
       "documentation_skill_api_documentation",
       "documentation_skill_architecture_doc",
@@ -2484,7 +2502,7 @@
       "documentation_skill_runbook",
       "documentation_skill_technical_documentation"
     ],
-    "106": [
+    "107": [
       "issues_54_form_accessibility_deficiencies",
       "issues_54_form_accessibility_deficiencies_category",
       "issues_54_form_accessibility_deficiencies_files_modified",
@@ -2495,7 +2513,7 @@
       "issues_54_form_accessibility_deficiencies_status",
       "issues_54_form_accessibility_deficiencies_verification_checklist"
     ],
-    "107": [
+    "108": [
       "issues_71_zoderror_uses_issues_not_errors",
       "issues_71_zoderror_uses_issues_not_errors_category",
       "issues_71_zoderror_uses_issues_not_errors_files_modified",
@@ -2506,7 +2524,7 @@
       "issues_71_zoderror_uses_issues_not_errors_status",
       "issues_71_zoderror_uses_issues_not_errors_verification_checklist"
     ],
-    "108": [
+    "109": [
       "issues_72_optional_image_field_missing_fallback",
       "issues_72_optional_image_field_missing_fallback_category",
       "issues_72_optional_image_field_missing_fallback_files_modified",
@@ -2517,7 +2535,7 @@
       "issues_72_optional_image_field_missing_fallback_status",
       "issues_72_optional_image_field_missing_fallback_verification_checklist"
     ],
-    "109": [
+    "110": [
       "issues_73_useauth_import_name_conflict",
       "issues_73_useauth_import_name_conflict_category",
       "issues_73_useauth_import_name_conflict_files_modified",
@@ -2528,7 +2546,7 @@
       "issues_73_useauth_import_name_conflict_status",
       "issues_73_useauth_import_name_conflict_verification_checklist"
     ],
-    "110": [
+    "111": [
       "issues_74_request_aborted_no_images",
       "issues_74_request_aborted_no_images_category",
       "issues_74_request_aborted_no_images_files_modified",
@@ -2539,7 +2557,7 @@
       "issues_74_request_aborted_no_images_status",
       "issues_74_request_aborted_no_images_verification_checklist"
     ],
-    "111": [
+    "112": [
       "package",
       "package_name",
       "package_private",
@@ -2550,7 +2568,7 @@
       "package_scripts_start",
       "package_version"
     ],
-    "112": [
+    "113": [
       "project_reference_skill",
       "project_reference_skill_capabilities",
       "project_reference_skill_implementation_notes",
@@ -2561,7 +2579,7 @@
       "project_reference_skill_usage",
       "project_reference_skill_when_not_to_use"
     ],
-    "113": [
+    "114": [
       "completion_summary",
       "completion_summary_1_n_1_query_problem_02_known_issues_md_section_1",
       "completion_summary_2_missing_input_validation_01_security_vulnerabilities_md_section_6",
@@ -2571,7 +2589,7 @@
       "completion_summary_task_completion_summary",
       "completion_summary_verification"
     ],
-    "114": [
+    "115": [
       "integration_nextjs_app_router_skill",
       "integration_nextjs_app_router_skill_error_tracking",
       "integration_nextjs_app_router_skill_framework_guidelines",
@@ -2581,7 +2599,17 @@
       "integration_nextjs_app_router_skill_reference_files",
       "integration_nextjs_app_router_skill_workflow"
     ],
-    "115": [
+    "116": [
+      "types_db",
+      "types_db_likes",
+      "utilities_db",
+      "utilities_db_getgamesqueue",
+      "utilities_db_pushgametoqueue",
+      "utilities_db_pushlikestoqueue",
+      "utilities_db_pushtoqueue",
+      "utilities_db_validatequeue"
+    ],
+    "117": [
       "references_packaged_components",
       "references_packaged_components_build_flow",
       "references_packaged_components_checklist",
@@ -2591,7 +2619,7 @@
       "references_packaged_components_testing",
       "references_packaged_components_when_to_choose_this"
     ],
-    "116": [
+    "118": [
       "references_skill",
       "references_skill_external_references",
       "references_skill_implementation_notes",
@@ -2601,17 +2629,7 @@
       "references_skill_usage",
       "references_skill_when_not_to_use"
     ],
-    "117": [
-      "utilities_idempotency",
-      "utilities_idempotency_cacheresult",
-      "utilities_idempotency_clearidempotencykey",
-      "utilities_idempotency_generateidempotencykey",
-      "utilities_idempotency_getcachedresult",
-      "utilities_idempotency_getidempotencykeyinfo",
-      "utilities_idempotency_isrequestprocessed",
-      "utilities_idempotency_withidempotencysafe"
-    ],
-    "118": [
+    "119": [
       "errorPages_bad-request",
       "errorPages_forbidden",
       "errorPages_general-error",
@@ -2620,7 +2638,7 @@
       "errorPages_server-error",
       "errorPages_service-unavailable"
     ],
-    "119": [
+    "120": [
       "issues_76_documentation_and_bugfixes",
       "issues_76_documentation_and_bugfixes_category",
       "issues_76_documentation_and_bugfixes_description",
@@ -2629,7 +2647,7 @@
       "issues_76_documentation_and_bugfixes_related_issues",
       "issues_76_documentation_and_bugfixes_status"
     ],
-    "120": [
+    "121": [
       "convex_schema",
       "generated_datamodel_d",
       "generated_datamodel_d_datamodel",
@@ -2637,7 +2655,7 @@
       "generated_datamodel_d_id",
       "generated_datamodel_d_tablenames"
     ],
-    "121": [
+    "122": [
       "generated_server_d",
       "generated_server_d_actionctx",
       "generated_server_d_databasereader",
@@ -2645,7 +2663,7 @@
       "generated_server_d_mutationctx",
       "generated_server_d_queryctx"
     ],
-    "122": [
+    "123": [
       "posthog_setup_report",
       "posthog_setup_report_agent_skill",
       "posthog_setup_report_changes_made",
@@ -2653,7 +2671,7 @@
       "posthog_setup_report_next_steps",
       "posthog_setup_report_posthog_post_wizard_report"
     ],
-    "123": [
+    "124": [
       "references_advanced_patterns",
       "references_advanced_patterns_advanced_component_patterns",
       "references_advanced_patterns_class_based_client_wrappers",
@@ -2661,7 +2679,7 @@
       "references_advanced_patterns_function_handles_for_callbacks",
       "references_advanced_patterns_static_configuration_with_a_globals_table"
     ],
-    "124": [
+    "125": [
       "references_hybrid_components",
       "references_hybrid_components_checklist",
       "references_hybrid_components_default_advice",
@@ -2669,7 +2687,7 @@
       "references_hybrid_components_risks",
       "references_hybrid_components_what_this_means"
     ],
-    "125": [
+    "126": [
       "references_local_components",
       "references_local_components_checklist",
       "references_local_components_default_layout",
@@ -2677,7 +2695,7 @@
       "references_local_components_when_to_choose_this",
       "references_local_components_workflow_notes"
     ],
-    "126": [
+    "127": [
       "upstash_search_adapters",
       "upstash_search_aggregating",
       "upstash_search_aliases",
@@ -2685,33 +2703,26 @@
       "upstash_search_overview",
       "upstash_search_querying"
     ],
-    "127": [
+    "128": [
       "ai_ai_files_state",
       "ai_ai_files_state_agentskillssha",
       "ai_ai_files_state_agentsmdsectionhash",
       "ai_ai_files_state_claudemdhash",
       "ai_ai_files_state_guidelineshash"
     ],
-    "128": [
+    "129": [
       "assessment_skill",
       "assessment_skill_assessment_deprecated",
       "assessment_skill_backwards_compatibility",
       "assessment_skill_notes_for_maintainers",
       "assessment_skill_recommended_usage"
     ],
-    "129": [
+    "130": [
       "convex_skill",
       "convex_skill_convex",
       "convex_skill_route_to_the_right_skill",
       "convex_skill_start_here",
       "convex_skill_when_not_to_use"
-    ],
-    "130": [
-      "game_CharacterTabs",
-      "game_GameHeader",
-      "game_ItemGrid",
-      "game_MapList",
-      "shared_FittedImage"
     ],
     "131": [
       "new_folder_personality_analysis",
@@ -2728,269 +2739,279 @@
       "references_basic_integration_1_3_conclude_status"
     ],
     "133": [
+      "game_CharacterTabs",
+      "game_GameHeader",
+      "game_ItemGrid",
+      "game_MapList",
+      "shared_FittedImage"
+    ],
+    "134": [
       "skills_lock_convex_migration_helper_computedhash",
       "skills_lock_convex_migration_helper_skillpath",
       "skills_lock_convex_migration_helper_source",
       "skills_lock_convex_migration_helper_sourcetype",
       "skills_lock_skills_convex_migration_helper"
     ],
-    "134": [
+    "135": [
       "skills_lock_convex_quickstart_computedhash",
       "skills_lock_convex_quickstart_skillpath",
       "skills_lock_convex_quickstart_source",
       "skills_lock_convex_quickstart_sourcetype",
       "skills_lock_skills_convex_quickstart"
     ],
-    "135": [
+    "136": [
       "skills_lock_convex_setup_auth_computedhash",
       "skills_lock_convex_setup_auth_skillpath",
       "skills_lock_convex_setup_auth_source",
       "skills_lock_convex_setup_auth_sourcetype",
       "skills_lock_skills_convex_setup_auth"
     ],
-    "136": [
+    "137": [
       "skills_lock_convex_computedhash",
       "skills_lock_convex_skillpath",
       "skills_lock_convex_source",
       "skills_lock_convex_sourcetype",
       "skills_lock_skills_convex"
     ],
-    "137": [
+    "138": [
       "skills_lock_convex_create_component_computedhash",
       "skills_lock_convex_create_component_skillpath",
       "skills_lock_convex_create_component_source",
       "skills_lock_convex_create_component_sourcetype",
       "skills_lock_skills_convex_create_component"
     ],
-    "138": [
+    "139": [
       "skills_lock_convex_performance_audit_computedhash",
       "skills_lock_convex_performance_audit_skillpath",
       "skills_lock_convex_performance_audit_source",
       "skills_lock_convex_performance_audit_sourcetype",
       "skills_lock_skills_convex_performance_audit"
     ],
-    "139": [
+    "140": [
       "skills_lock_documentation_computedhash",
       "skills_lock_documentation_skillpath",
       "skills_lock_documentation_source",
       "skills_lock_documentation_sourcetype",
       "skills_lock_skills_documentation"
     ],
-    "140": [
+    "141": [
       "skills_lock_neon_postgres_computedhash",
       "skills_lock_neon_postgres_skillpath",
       "skills_lock_neon_postgres_source",
       "skills_lock_neon_postgres_sourcetype",
       "skills_lock_skills_neon_postgres"
     ],
-    "141": [
+    "142": [
       "skills_lock_skills_ui_ux_pro_max",
       "skills_lock_ui_ux_pro_max_computedhash",
       "skills_lock_ui_ux_pro_max_skillpath",
       "skills_lock_ui_ux_pro_max_source",
       "skills_lock_ui_ux_pro_max_sourcetype"
     ],
-    "142": [
+    "143": [
       "skills_lock_skills_web_design_guidelines",
       "skills_lock_web_design_guidelines_computedhash",
       "skills_lock_web_design_guidelines_skillpath",
       "skills_lock_web_design_guidelines_source",
       "skills_lock_web_design_guidelines_sourcetype"
     ],
-    "143": [
+    "144": [
       "types_gamedata",
       "types_gamedata_characterdatajson",
       "types_gamedata_gamedatajson",
       "types_gamedata_itemdatajson",
       "types_gamedata_mapdatajson"
     ],
-    "144": [
+    "145": [
       "charactersStep_tsx_CharactersStep",
       "form_tsx_GamesFormWizard",
       "imageComponent_tsx_ImageUpload",
       "textComponent_tsx_TextAreaField"
     ],
-    "145": [
+    "146": [
       "upstash_data_serialization",
       "upstash_error_handling",
       "upstash_pipeline_optimization",
       "upstash_redis_replicas"
     ],
-    "146": [
+    "147": [
       "kilo_package",
       "kilo_package_dependencies",
       "kilo_package_dependencies_kilocode_plugin"
     ],
-    "147": [
+    "148": [
       "proxy",
       "proxy_config",
       "proxy_ispublicroute"
     ],
-    "148": [
+    "149": [
       "references_basic_integration_1_0_begin",
       "references_basic_integration_1_0_begin_abort_statuses",
       "references_basic_integration_1_0_begin_status"
     ],
-    "149": [
+    "150": [
       "settings_page",
       "settings_page_page",
       "settings_page_settingspage"
     ],
-    "150": [
+    "151": [
       "skills_lock",
       "skills_lock_skills",
       "skills_lock_version"
     ],
-    "151": [
+    "152": [
       "api_drain",
       "api_games"
     ],
-    "152": [
+    "153": [
       "api_games_id",
       "api_games_id_gamepage"
     ],
-    "153": [
+    "154": [
+      "auth_gate",
+      "root_layout"
+    ],
+    "155": [
       "authentication_auth_status",
       "authentication_auth_status_authstatus"
     ],
-    "154": [
+    "156": [
       "eslint_config",
       "eslint_config_eslintconfig"
     ],
-    "155": [
+    "157": [
       "features_gamepage",
       "features_gamepage_key_engineering_wins"
     ],
-    "156": [
+    "158": [
       "generated_api",
       "generated_api_components"
-    ],
-    "157": [
-      "next_config",
-      "next_config_nextconfig"
-    ],
-    "158": [
-      "opencode_opencode",
-      "opencode_opencode_plugin"
     ],
     "159": [
       "next-config",
       "package-json"
     ],
     "160": [
+      "next_config",
+      "next_config_nextconfig"
+    ],
+    "161": [
+      "opencode_opencode",
+      "opencode_opencode_plugin"
+    ],
+    "162": [
       "plugins_graphify",
       "plugins_graphify_graphifyplugin"
     ],
-    "161": [
+    "163": [
       "postcss_config",
       "postcss_config_config"
     ],
-    "162": [
+    "164": [
       "references_basic_integration_1_1_edit",
       "references_basic_integration_1_1_edit_status"
     ],
-    "163": [
+    "165": [
       "references_basic_integration_1_2_revise",
       "references_basic_integration_1_2_revise_status"
     ],
-    "164": [
+    "166": [
       "rest_page",
       "rest_page_profilepage"
     ],
-    "165": [
-      "auth_gate",
-      "root_layout"
-    ],
-    "166": [
+    "167": [
       "skills_agents",
       "skills_agents_this_is_not_the_next_js_you_know"
     ],
-    "167": [
+    "168": [
       "vscode_settings",
       "vscode_settings_editor_suggest_snippetspreventquicksuggestions"
     ],
-    "168": [
+    "169": [
       "convex_auth_config"
     ],
-    "169": [
+    "170": [
       "final_unique_issues"
     ],
-    "170": [
+    "171": [
       "hooks_usesupabase"
     ],
-    "171": [
+    "172": [
       "instrumentation_client"
     ],
-    "172": [
+    "173": [
       "issues_data"
     ],
-    "173": [
+    "174": [
       "lib_supabase_auth"
     ],
-    "174": [
+    "175": [
       "unique_issues"
     ],
-    "175": [
+    "176": [
       "claude"
     ],
-    "176": [
+    "177": [
       "generated_api_api"
     ],
-    "177": [
+    "178": [
       "generated_api_internal"
     ],
-    "178": [
+    "179": [
       "generated_server_internalquery"
     ],
-    "179": [
+    "180": [
       "generated_server_internalmutation"
     ],
-    "180": [
+    "181": [
       "generated_server_action"
     ],
-    "181": [
+    "182": [
       "generated_server_internalaction"
     ],
-    "182": [
+    "183": [
       "generated_server_httpaction"
     ],
-    "183": [
+    "184": [
       "api_games_id_patches"
     ],
-    "184": [
+    "185": [
       "api_test_supabase_auth"
     ],
-    "185": [
+    "186": [
       "86_branch_cleanup"
+    ],
+    "187": [
+      "STAFF_DEGREE"
     ]
   },
   "cohesion": {
-    "0": 0.06448979591836734,
-    "1": 0.041666666666666664,
-    "2": 0.043478260869565216,
-    "3": 0.05858585858585859,
+    "0": 0.041666666666666664,
+    "1": 0.043478260869565216,
+    "2": 0.05858585858585859,
+    "3": 0.045454545454545456,
     "4": 0.045454545454545456,
-    "5": 0.045454545454545456,
+    "5": 0.07751937984496124,
     "6": 0.047619047619047616,
     "7": 0.09268292682926829,
-    "8": 0.08677098150782361,
-    "9": 0.05263157894736842,
-    "10": 0.05405405405405406,
-    "11": 0.12312312312312312,
-    "12": 0.06060606060606061,
+    "8": 0.05263157894736842,
+    "9": 0.05405405405405406,
+    "10": 0.05555555555555555,
+    "11": 0.13012477718360071,
+    "12": 0.10685483870967742,
     "13": 0.12701612903225806,
     "14": 0.0625,
     "15": 0.06451612903225806,
-    "16": 0.09655172413793103,
-    "17": 0.06666666666666667,
-    "18": 0.07881773399014778,
-    "19": 0.06896551724137931,
-    "20": 0.16502463054187191,
-    "21": 0.11375661375661375,
-    "22": 0.1349206349206349,
-    "23": 0.07407407407407407,
-    "24": 0.07692307692307693,
-    "25": 0.11692307692307692,
+    "16": 0.1010752688172043,
+    "17": 0.1053763440860215,
+    "18": 0.09655172413793103,
+    "19": 0.06666666666666667,
+    "20": 0.07881773399014778,
+    "21": 0.13793103448275862,
+    "22": 0.16995073891625614,
+    "23": 0.06896551724137931,
+    "24": 0.07407407407407407,
+    "25": 0.07692307692307693,
     "26": 0.07692307692307693,
     "27": 0.07692307692307693,
     "28": 0.07692307692307693,
@@ -2998,71 +3019,71 @@
     "30": 0.08,
     "31": 0.08,
     "32": 0.08,
-    "33": 0.08333333333333333,
+    "33": 0.14333333333333334,
     "34": 0.08333333333333333,
     "35": 0.08333333333333333,
     "36": 0.08333333333333333,
-    "37": 0.08695652173913043,
+    "37": 0.08333333333333333,
     "38": 0.17786561264822134,
-    "39": 0.09090909090909091,
-    "40": 0.19047619047619047,
+    "39": 0.08695652173913043,
+    "40": 0.09090909090909091,
     "41": 0.09090909090909091,
     "42": 0.09523809523809523,
     "43": 0.09523809523809523,
     "44": 0.09523809523809523,
     "45": 0.1,
     "46": 0.1,
-    "47": 0.1,
-    "48": 0.20526315789473684,
+    "47": 0.21052631578947367,
+    "48": 0.1,
     "49": 0.1,
-    "50": 0.15204678362573099,
+    "50": 0.10526315789473684,
     "51": 0.10526315789473684,
     "52": 0.10526315789473684,
-    "53": 0.10526315789473684,
+    "53": 0.1111111111111111,
     "54": 0.1111111111111111,
     "55": 0.1111111111111111,
     "56": 0.1111111111111111,
     "57": 0.1111111111111111,
-    "58": 0.1111111111111111,
+    "58": 0.22875816993464052,
     "59": 0.1111111111111111,
     "60": 0.1111111111111111,
     "61": 0.11764705882352941,
-    "62": 0.1323529411764706,
+    "62": 0.16911764705882354,
     "63": 0.11764705882352941,
     "64": 0.11764705882352941,
     "65": 0.11764705882352941,
     "66": 0.11764705882352941,
-    "67": 0.125,
-    "68": 0.19166666666666668,
-    "69": 0.125,
+    "67": 0.21666666666666667,
+    "68": 0.125,
+    "69": 0.14166666666666666,
     "70": 0.125,
     "71": 0.125,
     "72": 0.125,
     "73": 0.125,
-    "74": 0.2,
+    "74": 0.125,
     "75": 0.1523809523809524,
     "76": 0.13333333333333333,
     "77": 0.13333333333333333,
     "78": 0.13333333333333333,
     "79": 0.13333333333333333,
     "80": 0.13333333333333333,
-    "81": 0.2087912087912088,
+    "81": 0.1978021978021978,
     "82": 0.14285714285714285,
-    "83": 0.14285714285714285,
-    "84": 0.15384615384615385,
-    "85": 0.16666666666666666,
-    "86": 0.16666666666666666,
-    "87": 0.16666666666666666,
+    "83": 0.18681318681318682,
+    "84": 0.23076923076923078,
+    "85": 0.14285714285714285,
+    "86": 0.15384615384615385,
+    "87": 0.22727272727272727,
     "88": 0.16666666666666666,
     "89": 0.16666666666666666,
-    "90": 0.22727272727272727,
-    "91": 0.18181818181818182,
-    "92": 0.18181818181818182,
+    "90": 0.16666666666666666,
+    "91": 0.16666666666666666,
+    "92": 0.16666666666666666,
     "93": 0.18181818181818182,
     "94": 0.18181818181818182,
     "95": 0.18181818181818182,
-    "96": 0.2727272727272727,
-    "97": 0.2,
+    "96": 0.18181818181818182,
+    "97": 0.18181818181818182,
     "98": 0.2,
     "99": 0.2,
     "100": 0.2,
@@ -3070,7 +3091,7 @@
     "102": 0.2,
     "103": 0.2,
     "104": 0.2,
-    "105": 0.2222222222222222,
+    "105": 0.2,
     "106": 0.2222222222222222,
     "107": 0.2222222222222222,
     "108": 0.2222222222222222,
@@ -3078,27 +3099,27 @@
     "110": 0.2222222222222222,
     "111": 0.2222222222222222,
     "112": 0.2222222222222222,
-    "113": 0.25,
+    "113": 0.2222222222222222,
     "114": 0.25,
     "115": 0.25,
-    "116": 0.25,
-    "117": 0.2857142857142857,
-    "118": 0.5238095238095238,
-    "119": 0.2857142857142857,
-    "120": 0.3333333333333333,
+    "116": 0.42857142857142855,
+    "117": 0.25,
+    "118": 0.25,
+    "119": 0.5238095238095238,
+    "120": 0.2857142857142857,
     "121": 0.3333333333333333,
     "122": 0.3333333333333333,
     "123": 0.3333333333333333,
     "124": 0.3333333333333333,
     "125": 0.3333333333333333,
-    "126": 0.4,
+    "126": 0.3333333333333333,
     "127": 0.4,
     "128": 0.4,
     "129": 0.4,
-    "130": 0.6,
+    "130": 0.4,
     "131": 0.4,
     "132": 0.4,
-    "133": 0.4,
+    "133": 0.6,
     "134": 0.4,
     "135": 0.4,
     "136": 0.4,
@@ -3109,14 +3130,14 @@
     "141": 0.4,
     "142": 0.4,
     "143": 0.4,
-    "144": 0.5,
+    "144": 0.4,
     "145": 0.5,
-    "146": 0.6666666666666666,
+    "146": 0.5,
     "147": 0.6666666666666666,
     "148": 0.6666666666666666,
     "149": 0.6666666666666666,
     "150": 0.6666666666666666,
-    "151": 1.0,
+    "151": 0.6666666666666666,
     "152": 1.0,
     "153": 1.0,
     "154": 1.0,
@@ -3150,7 +3171,9 @@
     "182": 1.0,
     "183": 1.0,
     "184": 1.0,
-    "185": 1.0
+    "185": 1.0,
+    "186": 1.0,
+    "187": 1.0
   },
   "gods": [
     {
@@ -3228,74 +3251,37 @@
       "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; semantically similar concepts with no structural link"
     },
     {
-      "source": "saveCache()",
-      "target": "tryOrErrorSync()",
+      "source": "games.ts \u2014 fixed import + auth guards",
+      "target": "Issue: Convex authorization \u2014 closed",
       "source_files": [
-        "components/adventures/cards/cards-grid.tsx",
-        "utilities/errorHandler.ts"
+        "convex/games.ts",
+        "documentations/issues/convex-authorization.md"
       ],
       "confidence": "EXTRACTED",
-      "relation": "calls",
-      "why": "connects across different repos/directories; bridges separate communities; peripheral node `saveCache()` unexpectedly reaches hub `tryOrErrorSync()`"
+      "relation": "documents",
+      "why": "crosses file types (code \u2194 doc); connects across different repos/directories"
     },
     {
-      "source": "loadCache()",
-      "target": "tryOrErrorSync()",
+      "source": "schema.ts \u2014 ownerId fields + staff table",
+      "target": "Issue: Convex authorization \u2014 closed",
       "source_files": [
-        "components/adventures/cards/cards-grid.tsx",
-        "utilities/errorHandler.ts"
+        "convex/schema.ts",
+        "documentations/issues/convex-authorization.md"
       ],
       "confidence": "EXTRACTED",
-      "relation": "calls",
-      "why": "connects across different repos/directories; bridges separate communities; peripheral node `loadCache()` unexpectedly reaches hub `tryOrErrorSync()`"
+      "relation": "documents",
+      "why": "crosses file types (code \u2194 doc); connects across different repos/directories"
     },
     {
-      "source": "GET()",
-      "target": "validateJWTMiddleware()",
+      "source": "authHelpers.ts \u2014 requireAuth() + requireStaff()",
+      "target": "Issue: Convex authorization \u2014 closed",
       "source_files": [
-        "app/api/games/[id]/route.ts",
-        "lib/jwt-validate.ts"
+        "convex/authHelpers.ts",
+        "documentations/issues/convex-authorization.md"
       ],
       "confidence": "EXTRACTED",
-      "relation": "calls",
-      "why": "connects across different repos/directories; bridges separate communities"
-    }
-  ],
-  "questions": [
-    {
-      "type": "bridge_node",
-      "question": "Why does `classifyError()` connect `Community 13` to `Community 0`, `Community 68`, `Community 38`, `Community 7`, `Community 74`, `Community 11`, `Community 48`, `Community 20`, `Community 117`, `Community 22`?",
-      "why": "High betweenness centrality (0.009) - this node is a cross-community bridge."
-    },
-    {
-      "type": "bridge_node",
-      "question": "Why does `useFormState()` connect `Community 50` to `Community 25`, `Community 68`?",
-      "why": "High betweenness centrality (0.001) - this node is a cross-community bridge."
-    },
-    {
-      "type": "bridge_node",
-      "question": "Why does `GamePatch` connect `Community 7` to `Community 20`?",
-      "why": "High betweenness centrality (0.001) - this node is a cross-community bridge."
-    },
-    {
-      "type": "isolated_nodes",
-      "question": "What connects `@kilocode/plugin`, `plugin`, `editor.suggest.snippetsPreventQuickSuggestions` to the rest of the system?",
-      "why": "1627 weakly-connected nodes found - possible documentation gaps or missing edges."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `Community 0` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.06448979591836734 - nodes in this community are weakly interconnected."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `Community 1` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.041666666666666664 - nodes in this community are weakly interconnected."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `Community 2` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.043478260869565216 - nodes in this community are weakly interconnected."
+      "relation": "documents",
+      "why": "crosses file types (code \u2194 doc); connects across different repos/directories"
     }
   ]
 }

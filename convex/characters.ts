@@ -20,11 +20,14 @@ export const create = mutation({
     image: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
     return await ctx.db.insert("characters", {
       gameId: args.gameId,
       name: args.name,
       description: args.description,
       image: args.image,
+      ownerId: identity.tokenIdentifier,
     });
   },
 });
@@ -37,7 +40,13 @@ export const update = mutation({
     image: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
     const { characterId, ...fields } = args;
+    const doc = await ctx.db.get(characterId);
+    if (!doc || doc.ownerId !== identity.tokenIdentifier) {
+      throw new Error("Forbidden");
+    }
     await ctx.db.patch(characterId, fields);
   },
 });
@@ -45,6 +54,12 @@ export const update = mutation({
 export const remove = mutation({
   args: { characterId: v.id("characters") },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+    const doc = await ctx.db.get(args.characterId);
+    if (!doc || doc.ownerId !== identity.tokenIdentifier) {
+      throw new Error("Forbidden");
+    }
     await ctx.db.delete(args.characterId);
   },
 });

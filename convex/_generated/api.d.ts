@@ -8,10 +8,12 @@
  * @module
  */
 
+import type * as authHelpers from "../authHelpers.js";
 import type * as characters from "../characters.js";
 import type * as games from "../games.js";
 import type * as items from "../items.js";
 import type * as maps from "../maps.js";
+import type * as staff from "../staff.js";
 
 import type {
   ApiFromModules,
@@ -20,10 +22,12 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  authHelpers: typeof authHelpers;
   characters: typeof characters;
   games: typeof games;
   items: typeof items;
   maps: typeof maps;
+  staff: typeof staff;
 }>;
 
 /**

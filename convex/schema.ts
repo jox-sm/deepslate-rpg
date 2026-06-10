@@ -8,6 +8,7 @@ export default defineSchema({
     image: v.optional(v.string()),
     tags: v.array(v.string()),
     likesCount: v.number(),
+    ownerId: v.string(),
   })
     .index("by_name", ["name"])
     .index("by_likes_count", ["likesCount"]),
@@ -17,6 +18,7 @@ export default defineSchema({
     name: v.string(),
     description: v.string(),
     image: v.optional(v.string()),
+    ownerId: v.string(),
   })
     .index("by_game_id", ["gameId"]),
 
@@ -26,6 +28,7 @@ export default defineSchema({
     image: v.optional(v.string()),
     sizeOfPlace: v.optional(v.string()),
     placesAtMap: v.optional(v.string()),
+    ownerId: v.string(),
   })
     .index("by_game_id", ["gameId"]),
 
@@ -33,6 +36,13 @@ export default defineSchema({
     gameId: v.id("games"),
     name: v.string(),
     image: v.optional(v.string()),
+    ownerId: v.string(),
   })
     .index("by_game_id", ["gameId"]),
+
+  staff: defineTable({
+    clerkUserId: v.string(),
+    degree: v.number(),
+  })
+    .index("by_clerkUserId", ["clerkUserId"]),
 });
