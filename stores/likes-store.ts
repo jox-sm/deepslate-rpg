@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { v7 as uuidv7 } from "uuid";
 import { successToast, errorToast } from "@/ui/notifications";
 
@@ -16,10 +17,12 @@ interface LikesStore {
   setInitialLiked: (ids: string[]) => void;
 }
 
-export const useLikesStore = create<LikesStore>((set, get) => ({
-  likedGameIds: new Set(),
-  likeCounts: {},
-  pendingLikes: new Set(),
+export const useLikesStore = create<LikesStore>()(
+  persist(
+    (set, get) => ({
+      likedGameIds: new Set(),
+      likeCounts: {},
+      pendingLikes: new Set(),
 
   isLiked: (gameId) => get().likedGameIds.has(gameId),
   getLikeCount: (gameId) => get().likeCounts[gameId] ?? 0,
@@ -112,4 +115,33 @@ export const useLikesStore = create<LikesStore>((set, get) => ({
         errorToast("Like failed", "Could not register your like. Please try again.");
       });
   },
-}));
+  }),
+    {
+      name: "likes-store",
+      storage: {
+        getItem: (name) => {
+          const raw = localStorage.getItem(name);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          if (parsed?.state) {
+            if (Array.isArray(parsed.state.likedGameIds)) parsed.state.likedGameIds = new Set(parsed.state.likedGameIds);
+            if (Array.isArray(parsed.state.pendingLikes)) parsed.state.pendingLikes = new Set(parsed.state.pendingLikes);
+          }
+          return parsed;
+        },
+        setItem: (name, value) => {
+          const serializable = {
+            ...value,
+            state: {
+              ...value.state,
+              likedGameIds: [...(value.state.likedGameIds as Set<string>)],
+              pendingLikes: [...(value.state.pendingLikes as Set<string>)],
+            },
+          };
+          localStorage.setItem(name, JSON.stringify(serializable));
+        },
+        removeItem: (name) => localStorage.removeItem(name),
+      },
+    },
+  ),
+);

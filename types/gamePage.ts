@@ -62,6 +62,7 @@ export interface GameCacheStats {
  * Hero section data structure
  */
 export interface GameHeroData {
+  id: string;
   name: string;
   description: string;
   image: string;

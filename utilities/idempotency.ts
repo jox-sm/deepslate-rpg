@@ -40,17 +40,23 @@ export async function withIdempotency<T>(
   key: string,
   fn: () => Promise<T>
 ): Promise<{ result: T; cached: boolean }> {
+  console.log('[Idempotency] checking key:', key);
   // Check if already processed
   const cached = await getCachedResult<T>(key);
   if (cached !== null) {
+    console.log('[Idempotency] cached HIT for key:', key);
     return { result: cached, cached: true };
   }
   
+  console.log('[Idempotency] cache MISS, executing fn...');
   // Execute the function
   const result = await fn();
+  console.log('[Idempotency] fn executed, result type:', typeof result);
   
   // Cache the result
+  console.log('[Idempotency] caching result...');
   await cacheResult(key, result);
+  console.log('[Idempotency] cached OK');
   
   return { result, cached: false };
 }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getGameById } from '@/lib/db';
 import connectDB from '@/models/games/mongodb/client';
 import Game from '@/models/games/mongodb/schema';
-import { getGameFromCache, setGameInCache } from '@/lib/cache-warmup';
+import { getGameFromCache, setGameInCache, mergePendingLikes } from '@/lib/cache-warmup';
 import { retry } from '@/lib/retry';
 import { validateJWTMiddleware } from '@/lib/jwt-validate';
 import { tryApiRoute } from '@/utilities/apiErrorHandler';
@@ -22,9 +22,10 @@ export async function GET(
       return NextResponse.json({ success: false, error: 'Invalid game ID' }, { status: 400 });
     }
 
-    const cachedGame = await retry(() => getGameFromCache(id), 3, 500);
+    let cachedGame = await retry(() => getGameFromCache(id), 3, 500);
 
     if (cachedGame) {
+      cachedGame = await mergePendingLikes(cachedGame);
       return NextResponse.json({ success: true, data: cachedGame }, { headers: { 'X-Cache': 'HIT' } });
     }
 
@@ -45,11 +46,13 @@ export async function GET(
       status: mongoGame?.status || 'draft',
     };
 
-    retry(() => setGameInCache(id, fullGame), 3, 500).catch((err) => {
+    const merged = await mergePendingLikes(fullGame);
+
+    retry(() => setGameInCache(id, merged), 3, 500).catch((err) => {
       const classified = classifyError(err, `route-games.backfill.${id}`);
       console.error(`[API /games/[id]] Failed to backfill cache for ${id}:`, classified.message);
     });
 
-    return NextResponse.json({ success: true, data: fullGame }, { headers: { 'X-Cache': 'MISS' } });
+    return NextResponse.json({ success: true, data: merged }, { headers: { 'X-Cache': 'MISS' } });
   }, "games/[id]");
 }

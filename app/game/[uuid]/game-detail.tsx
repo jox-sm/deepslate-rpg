@@ -54,6 +54,7 @@ export default function GameDetailClient({
   return (
     <div className="w-full">
       <GameHeader
+        id={displayData.id}
         name={displayData.name}
         description={displayData.description}
         image={displayData.image || '/images/default-game.png'}

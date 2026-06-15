@@ -1,4 +1,5 @@
 import { drain } from "@/utilities/queue";
+import { redis } from "@/lib/queue";
 import { insertGamesBatch, updateGamesLikesBatch } from "@/lib/db";
 import type { GameCardProps } from "@/types/cards";
 import type { Likes } from "@/types/db";
@@ -11,10 +12,14 @@ export async function drainLikes(): Promise<{ processed: number }> {
       return { processed: 0 };
     }
     const likesMap = new Map<string, number>();
+    const ids = new Set<string>();
     for (const like of likes) {
       likesMap.set(like.id, (likesMap.get(like.id) || 0) + like.likesDelta);
+      ids.add(like.id);
     }
     await updateGamesLikesBatch(likesMap);
+    const pendingKeys = [...ids].map(id => `likes:${id}`);
+    redis.del(...pendingKeys).catch(() => {});
     return { processed: likes.length };
   } catch (error) {
     const classified = classifyError(error, "pull.drainLikes");

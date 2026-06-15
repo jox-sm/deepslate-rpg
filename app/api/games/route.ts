@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getGamesPaginated } from '@/lib/db';
-import { getCachedGameIds, warmUpCache } from '@/lib/cache-warmup';
+import { getCachedGameIds, warmUpCache, mergePendingLikesBatch } from '@/lib/cache-warmup';
 import { redis } from '@/lib/queue';
 import { retry } from '@/lib/retry';
 import { validateJWTMiddleware } from '@/lib/jwt-validate';
@@ -93,10 +93,11 @@ export async function GET(request: NextRequest) {
         console.log('[GET /api/games] Redis hits:', filteredResults.length, '/', keys.length);
 
         if (filteredResults.length > 0) {
+          const data = await mergePendingLikesBatch(filteredResults);
           console.log('[GET /api/games] returning Redis-sourced response');
           return NextResponse.json({
             success: true,
-            data: filteredResults,
+            data,
             pagination: { page, limit, total: cachedCount, totalPages: Math.ceil(cachedCount / limit), hasMore: endIndex < cachedCount, source: 'redis' },
           });
         }
@@ -106,10 +107,11 @@ export async function GET(request: NextRequest) {
       const skip = offset - cachedCount;
       console.log('[GET /api/games] falling back to PostgreSQL, skip:', skip, 'limit:', limit);
       const { games, total } = await retry(() => getGamesPaginated(limit, skip), 3, 500);
+      const data = await mergePendingLikesBatch(games);
 
      return NextResponse.json({
-       success: true,
-       data: games,
+        success: true,
+        data,
        pagination: { page, limit, total, totalPages: Math.ceil(total / limit), hasMore: offset + limit < total, source: 'postgresql' },
      });
    }, "games");

@@ -1,7 +1,7 @@
 'use client';
 
-import { Heart } from 'lucide-react';
 import { FittedImage } from '@/components/shared/FittedImage';
+import LikeButton from '@/components/adventures/cards/like-button';
 import type { GameHeroData } from '@/types/gamePage';
 
 interface GameHeaderProps extends GameHeroData {
@@ -15,6 +15,7 @@ export function GameHeader({
   tags,
   likes,
   isPreload,
+  id,
 }: GameHeaderProps) {
   return (
     <header className="relative w-full overflow-hidden border-b border-border">
@@ -37,9 +38,8 @@ export function GameHeader({
           </div>
           <div className="flex flex-col justify-center">
             <h1 className="font-display text-4xl font-bold text-gradient md:text-5xl">{name}</h1>
-            <div className="mt-4 flex items-center gap-2">
-              <Heart className="h-5 w-5 text-destructive" fill="currentColor" />
-              <span className="text-sm font-medium text-text-secondary">{likes.toLocaleString()} likes</span>
+            <div className="mt-4">
+              <LikeButton gameId={id} initialLikes={likes} />
             </div>
             <p className="mt-6 text-base leading-relaxed text-text-muted">
               {description}
@@ -57,10 +57,6 @@ export function GameHeader({
               </div>
             )}
             <div className="mt-8 flex gap-4">
-              <button className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-ember-500 to-accent px-6 py-3 text-sm font-semibold text-white shadow-lg glow-accent-sm transition-all duration-200 ease-ember hover:from-ember-400 hover:to-accent-hover active:scale-[0.97]">
-                <Heart className="h-5 w-5" fill="currentColor" />
-                Like This Game
-              </button>
               <button className="rounded-lg border border-border bg-glass px-6 py-3 text-sm font-semibold text-text-secondary transition-all duration-200 hover:border-accent/30 hover:text-text-primary active:scale-[0.97]">
                 Share
               </button>
