@@ -1,6 +1,8 @@
 import { redis } from '@/lib/queue';
 import pako from 'pako';
 import { classifyError } from '@/utilities/errorHandler';
+import { retry } from '@/lib/retry';
+import { RedisHotnessCacheErrorPage } from '@/exceptions/errorPages/redis-hotness-cache';
 
 /**
  * Hotness Cache: Binary-Search Sorted Cache with Hotness Tracking
@@ -43,8 +45,19 @@ export async function checkMemoryPressure(): Promise<boolean> {
  */
 export async function getHotness(uuid: string): Promise<number> {
   const key = `${CACHE_KEYS.HOTNESS_PREFIX}${uuid}`;
-  const hotness = await redis.get<string>(key);
-  return hotness ? parseInt(hotness, 10) : 0;
+  try {
+    const hotness = await retry(
+      () => redis.get<string>(key),
+      3,
+      100,
+      true
+    );
+    return hotness ? parseInt(hotness, 10) : 0;
+  } catch (error) {
+    const classified = classifyError(error, `HotnessCache.getHotness.${uuid}`);
+    console.error(`[HotnessCache] Failed to get hotness for ${uuid} after retries:`, classified.message);
+    throw error;
+  }
 }
 
 /**
@@ -52,7 +65,18 @@ export async function getHotness(uuid: string): Promise<number> {
  */
 export async function incrementHotness(uuid: string): Promise<number> {
   const key = `${CACHE_KEYS.HOTNESS_PREFIX}${uuid}`;
-  return redis.incr(key);
+  try {
+    return await retry(
+      () => redis.incr(key),
+      3,
+      100,
+      true
+    );
+  } catch (error) {
+    const classified = classifyError(error, `HotnessCache.incrementHotness.${uuid}`);
+    console.error(`[HotnessCache] Failed to increment hotness for ${uuid} after retries:`, classified.message);
+    throw error;
+  }
 }
 
 /**
@@ -143,7 +167,12 @@ export async function cacheHit(
       return { status: 'hit', data };
     }
 
-    const { views, data: dataMap, hashmap } = await loadCacheState();
+    const { views, data: dataMap, hashmap } = await retry(
+      () => loadCacheState(),
+      3,
+      100,
+      true
+    );
     const idx = hashmap.get(uuid);
 
     if (idx === undefined) {
@@ -177,7 +206,12 @@ export async function cacheHit(
         hashmap.set(views[i].uuid, i);
       }
 
-      await saveCacheState(views, dataMap, hashmap);
+      await retry(
+        () => saveCacheState(views, dataMap, hashmap),
+        3,
+        100,
+        true
+      );
     }
 
     return { status: 'hit', data };
@@ -209,7 +243,12 @@ export async function cacheMiss(
       return { status: 'skip' };
     }
 
-    const { views, data: dataMap, hashmap } = await loadCacheState();
+    const { views, data: dataMap, hashmap } = await retry(
+      () => loadCacheState(),
+      3,
+      100,
+      true
+    );
 
     // Check barrier: can only enter if views > lowest entry (when full)
     if (views.length >= MAX_CACHE_ENTRIES) {
@@ -249,8 +288,18 @@ export async function cacheMiss(
       }
     }
 
-    await saveCacheState(views, dataMap, hashmap);
-    await redis.del(`${CACHE_KEYS.HOTNESS_PREFIX}${uuid}`);
+    await retry(
+      () => saveCacheState(views, dataMap, hashmap),
+      3,
+      100,
+      true
+    );
+    await retry(
+      () => redis.del(`${CACHE_KEYS.HOTNESS_PREFIX}${uuid}`),
+      3,
+      100,
+      true
+    );
 
     return { status: 'promoted', data };
   } catch (error) {
@@ -265,7 +314,12 @@ export async function cacheMiss(
  */
 export async function getCachedGameData(uuid: string): Promise<unknown | null> {
   try {
-    const { data: dataMap, hashmap } = await loadCacheState();
+    const { data: dataMap, hashmap } = await retry(
+      () => loadCacheState(),
+      3,
+      100,
+      true
+    );
 
     const idx = hashmap.get(uuid);
     if (idx === undefined) {
@@ -329,7 +383,12 @@ export async function getCacheStats(): Promise<{
   memoryPressure: boolean;
 }> {
   try {
-    const { views } = await loadCacheState();
+    const { views } = await retry(
+      () => loadCacheState(),
+      3,
+      100,
+      true
+    );
     const memoryPressure = await checkMemoryPressure();
 
     return {
@@ -353,11 +412,16 @@ export async function getCacheStats(): Promise<{
  */
 export async function clearCache(): Promise<void> {
   try {
-    await redis.del(
-      CACHE_KEYS.CACHE_VIEWS_ARRAY,
-      CACHE_KEYS.CACHE_DATA_ARRAY,
-      CACHE_KEYS.CACHE_HASHMAP,
-      CACHE_KEYS.CACHE_SIZE
+    await retry(
+      () => redis.del(
+        CACHE_KEYS.CACHE_VIEWS_ARRAY,
+        CACHE_KEYS.CACHE_DATA_ARRAY,
+        CACHE_KEYS.CACHE_HASHMAP,
+        CACHE_KEYS.CACHE_SIZE
+      ),
+      3,
+      100,
+      true
     );
     console.log('[HotnessCache] Cache cleared');
   } catch (error) {

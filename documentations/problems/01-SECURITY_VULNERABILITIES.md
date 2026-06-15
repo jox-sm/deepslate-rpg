@@ -6,7 +6,7 @@
 
 **Severity:** CRITICAL  
 **Risk Level:** 🔴 Critical
-
+**Status:** closed
 **Description:**
 JWT secrets stored in `.env.local` can be exposed if:
 - File is accidentally committed to git
@@ -54,10 +54,8 @@ echo ".env.*.local" >> .gitignore
 
 **Severity:** HIGH  
 **Risk Level:** 🟠 High
-
 **Description:**
 If JWT payload.exp is not checked, expired tokens could still be accepted.
-
 **Current Status:** ✅ Safe
 
 **Why it's safe:**
@@ -84,7 +82,8 @@ if (payload.exp && payload.exp * 1000 < Date.now()) {
 
 **Severity:** HIGH  
 **Risk Level:** 🟠 High
-
+**Status:** closed
+documentation: convex-authorization.md
 **Description:**
 Without rate limiting, attackers can:
 - Brute force authentication

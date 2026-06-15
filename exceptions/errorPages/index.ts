@@ -15,3 +15,6 @@ export type { BadRequestErrorPageProps } from "./bad-request"
 
 export { GeneralErrorPage } from "./general-error"
 export type { GeneralErrorPageProps } from "./general-error"
+
+export { RedisHotnessCacheErrorPage } from "./redis-hotness-cache"
+export type { RedisHotnessCacheErrorPageProps } from "./redis-hotness-cache"
