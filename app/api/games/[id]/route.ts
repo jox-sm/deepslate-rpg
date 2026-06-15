@@ -29,14 +29,14 @@ export async function GET(
       return NextResponse.json({ success: true, data: cachedGame }, { headers: { 'X-Cache': 'HIT' } });
     }
 
-    const pgGame = await retry(() => getGameById(id), 3, 500);
+    const [pgGame, mongoGame] = await Promise.all([
+      retry(() => getGameById(id), 3, 500),
+      retry(() => connectDB().then(() => Game.findOne({ id }).lean()), 3, 500),
+    ]);
 
     if (!pgGame) {
       return NextResponse.json({ success: false, error: 'Game not found' }, { status: 404 });
     }
-
-    await connectDB();
-    const mongoGame = await retry(() => Game.findOne({ id }).lean(), 3, 500);
 
     const fullGame = {
       ...pgGame,

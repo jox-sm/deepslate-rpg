@@ -1,6 +1,7 @@
 import { redis } from "@/lib/queue";
 import { getQueueConfig } from "@/types/operations";
 import type { OperationProvider, QueueName } from "@/types/operations";
+import { v7 as uuidv7 } from "uuid";
 
 export async function enqueue(
   provider: OperationProvider,
@@ -20,7 +21,7 @@ export async function drain<T = unknown>(
   queue: QueueName
 ): Promise<T[]> {
   const { redisKey } = getQueueConfig(provider, queue);
-  const tempKey = `${redisKey}:processing:${Date.now()}`;
+  const tempKey = `${redisKey}:processing:${uuidv7()}`;
 
   try {
     await redis.rename(redisKey, tempKey);

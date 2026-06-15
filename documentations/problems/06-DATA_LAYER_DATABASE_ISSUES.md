@@ -1,26 +1,7 @@
 # Data Layer & Database Issues
 
-### Missing Critical PostgreSQL Indexes on `likes_count` and `created_at`
-**Severity:** CRITICAL
-**Location:** `db/schema.sql:2-11`, `lib/db.ts:103-118`, `lib/db.ts:120-137`
-**Status:** ❌ Unresolved
-**Description:** The `schema.sql` only defines indexes on `tags` (GIN) and `name`. The `getGames()` function queries `WHERE likes_count >= $1 ORDER BY likes_count DESC` which performs a full sequential scan + sort with no supporting index. Similarly, `getGamesPaginated()` orders by `created_at DESC` with no index, causing an expensive sort on every paginated query. At even 10K+ rows, these become multi-second queries.
-**Impact:** Full table scans on every paginated game listing and likes-based query. API latency degrades linearly with table size. Cache misses become expensive.
-**Suggested Fix:**
-```sql
-CREATE INDEX IF NOT EXISTS idx_games_likes_count ON games (likes_count DESC);
-CREATE INDEX IF NOT EXISTS idx_games_created_at ON games (created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_games_updated_at ON games (updated_at);
-```
-Also consider a composite index for the `getGames` query pattern:
-```sql
-CREATE INDEX IF NOT EXISTS idx_games_likes_created ON games (likes_count DESC, created_at DESC);
-```
-
----
-
 ### MongoDB Connection Pool Lacks Serverless Configuration
-**Severity:** HIGH
+**Severity:** LOW
 **Location:** `models/games/mongodb/client.ts:5`
 **Status:** ❌ Unresolved
 **Description:** `mongoose.connect(process.env.MONGODB_URI!)` uses zero configuration options — no `maxPoolSize`, `minPoolSize`, `serverSelectionTimeoutMS`, `socketTimeoutMS`, or `heartbeatFrequencyMS`. In a Next.js serverless/edge runtime, each invocation can create new connections or contend on the default pool (Mongoose default `maxPoolSize=100`), leading to connection starvation under concurrent load. Additionally, the connection readiness check (`mongoose.connection.readyState >= 1`) is a singleton — multiple concurrent requests can race past the guard and all attempt to connect simultaneously.
@@ -34,12 +15,13 @@ await mongoose.connect(process.env.MONGODB_URI!, {
   socketTimeoutMS: 30000,
   heartbeatFrequencyMS: 10000,
 });
+App is in development
 ```
 
 ---
 
 ### Game `id` Field in MongoDB Missing `unique` Constraint
-**Severity:** HIGH
+**Severity:** LOW
 **Location:** `models/games/mongodb/schema.ts:26`
 **Status:** ❌ Unresolved
 **Description:** The `GameSchema` defines `id: { type: String, index: true }` without `unique: true`. This permits duplicate game IDs in MongoDB via `Game.insertMany(gamesQueue, { ordered: false })`. When `ordered: false`, a duplicate ID causes only that single document to fail while the rest insert — but a retry or pipeline glitch can insert a second document with the same `id`. Downstream reads merge Postgres + Mongo data and silently pick whichever Mongo document the query returns first, producing non-deterministic data.
@@ -55,7 +37,7 @@ Also add validation before `insertMany` to check for pre-existing IDs, or use `b
 ### Cross-Database Read/Write Inconsistency (PostgreSQL + MongoDB)
 **Severity:** HIGH
 **Location:** `app/api/games/[id]/route.ts:31-45`, `app/api/games/[id]/route-gamepage.ts:44-59`, `lib/GamesInsert.ts:10-16`, `lib/db.ts:7-23`
-**Status:** ❌ Unresolved
+**Status:** ✅ Resolved
 **Description:** Game data is split across PostgreSQL (core scalar fields) and MongoDB (characters/maps/items arrays). The write path goes: (1) `insertGame()` inserts into Postgres, (2) a Redis queue triggers `processGamesQueue()` which calls `Game.insertMany()` into MongoDB. There is no distributed transaction or two-phase commit. If the queue processor fails after the Postgres insert but before MongoDB, the game exists in Postgres with empty arrays forever. At read time, the API merges Postgres + Mongo results — if one is stale or missing, the user sees partial data.
 **Impact:** Orphaned Postgres records with no MongoDB counterpart; inconsistent game detail pages; data recovery requires manual reconciliation.
 **Suggested Fix:**

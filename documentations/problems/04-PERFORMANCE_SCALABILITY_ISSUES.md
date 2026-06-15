@@ -29,7 +29,7 @@ Restructure the hotness cache to avoid full-state serialization:
 ### 2. Redis `rename` in Drain Pattern Causes Silent Data Loss Under Concurrency
 **Severity:** CRITICAL
 **Location:** `utilities/queue.ts:26`
-**Status:** ❌ Unresolved
+**Status:** ✅ Resolved
 
 **Description:**
 The `drain()` function atomically renames the queue key to a temp processing key via `redis.rename(redisKey, tempKey)`. If two drain calls execute concurrently (e.g., from two API server instances or rapid sequential requests), the second `rename` silently overwrites the first's `tempKey`. The first batch of jobs becomes orphaned — the temp key is gone, jobs are lost permanently.
@@ -49,37 +49,11 @@ The function then reads ALL items from the queue in a single `redis.lrange(tempK
 
 ---
 
-### 3. Convex `remove` Mutation Exceeds Function Budget for Large Games
-**Severity:** HIGH
-**Location:** `convex/games.ts:55-83`
-**Status:** ❌ Unresolved
-
-**Description:**
-The `remove` mutation deletes a game and its children by first calling `.collect()` (unbounded) on three separate indexes (characters, maps, items), then iterating each result with sequential `ctx.db.delete()` calls in a `for` loop. Convex mutations have a **5-second timeout** and an **OCC conflict budget** — a game with 50+ characters + 20 maps + 30 items would issue 100+ individual write operations in a single mutation. This routinely causes:
-- `Mutation too large` errors
-- OCC conflict retries that compound the problem
-- Timeout failures mid-way through, leaving partial deletion
-
-The `.collect()` calls are also unbounded — a game with 1000+ children would hit Convex's 5000-row read limit.
-
-**Impact:**
-- Delete operations on popular/growth games silently fail or partially complete
-- Orphaned child documents accumulate in Convex tables
-- OCC retries multiply the write load on the system
-- No idempotency in partial-failure scenarios — some children deleted, some not
-
-**Suggested Remediation:**
-- Move child deletion to a **Convex Action** (which has a 15-minute timeout and no OCC limitations) instead of a mutation
-- Within the action, use `ctx.runMutation()` in batches of 10-20 deletions, or use `ctx.db.delete()` directly in the action
-- Add a paginated deletion pattern: delete in batches of 50, re-query, repeat
-- Consider a scheduled function / cron for batch cleanup instead of blocking the user request
-
----
 
 ### 4. Serialized Independent DB Queries Double Cache-Miss Latency
 **Severity:** HIGH
 **Location:** `app/api/games/[id]/route.ts:31-46` and `app/api/games/[id]/route-gamepage.ts:44-51`
-**Status:** ❌ Unresolved
+**Status:** ✅ Resolved
 
 **Description:**
 On cache miss, both game detail routes perform two independent queries sequentially:
@@ -110,10 +84,10 @@ const [pgGame, mongoGame] = await Promise.all([
 ---
 
 ### 5. Like Count Dual-Write Pattern Causes Infinite Redis Cache Growth
-**Severity:** HIGH
+**Severity:** low
 **Location:** `app/api/push/route.ts:63-66`
 **Status:** ❌ Unresolved
-
+**app is still in development process**
 **Description:**
 When processing a "like" event, the push route performs two writes on different Redis keys:
 
@@ -140,7 +114,7 @@ Additionally, the Redis `incrby` call happens BEFORE the drain enqueue — if th
 ### 6. Cache Warmup Issues Independent HTTP Requests Instead of Redis Pipeline
 **Severity:** MEDIUM
 **Location:** `lib/cache-warmup.ts:42-58`
-**Status:** ❌ Unresolved
+**Status:** ✅ Resolved
 
 **Description:**
 The cache warmup loop pushes individual `redis.set()` and `redis.zadd()` operations into a `Promise.all()`:
@@ -228,6 +202,6 @@ The `getGamesPaginated` function unconditionally runs `SELECT COUNT(*) as total 
 | 3 | Convex Remove Budget Exceeded | HIGH | `convex/games.ts:55` | Mutation failures, orphaned children |
 | 4 | Serialized Independent DB Queries | HIGH | `app/api/games/[id]/route.ts:31` | Double cache-miss latency |
 | 5 | Like Count Dual-Write Divergence | HIGH | `app/api/push/route.ts:64` | Infinite Redis key growth, inconsistency |
-| 6 | Cache Warmup No Pipeline | MEDIUM | `lib/cache-warmup.ts:42` | 200+ HTTP requests for 100 games |
+| 6 | Cache Warmup No Pipeline | MEDIUM | `lib/cache-warmup.ts:42` | ✅ Resolved — batched via `redis.pipeline()` |
 | 7 | Convex Pagination No Server Guard | MEDIUM | `convex/games.ts:5` | Read amplification, no cap |
 | 8 | Unnecessary COUNT(*) Queries | LOW | `lib/db.ts:130` | Sequential scan on deep pagination |

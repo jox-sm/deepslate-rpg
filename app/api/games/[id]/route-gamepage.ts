@@ -41,14 +41,14 @@ export async function GET(
       );
     }
 
-    const pgGame = await retry(() => getGameById(id), 2, 300);
+    const [pgGame, mongoGame] = await Promise.all([
+      retry(() => getGameById(id), 2, 300),
+      retry(() => connectDB().then(() => Game.findOne({ id }).lean()), 2, 300),
+    ]);
 
     if (!pgGame) {
       return NextResponse.json({ success: false, error: 'Game not found' }, { status: 404 });
     }
-
-    await connectDB();
-    const mongoGame = await retry(() => Game.findOne({ id }).lean(), 2, 300);
 
     const fullGame = {
       ...pgGame,

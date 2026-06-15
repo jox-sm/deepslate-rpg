@@ -46,33 +46,22 @@ export async function warmUpCache(): Promise<boolean> {
       return false;
     }
 
-    const operations: Promise<unknown>[] = [];
     const gameIds: string[] = [];
+    const p = redis.pipeline();
 
     for (const game of games) {
-      const key = `${CACHE_KEYS.GAME_PREFIX}${game.id}`;
-      const gameData = JSON.stringify(game);
-      operations.push(redisWithExponentialRetry(
-        () => redis.set(key, gameData, { ex: CACHE_TTL }),
-        `setGame.${game.id}`
-      ));
+      p.set(`${CACHE_KEYS.GAME_PREFIX}${game.id}`, JSON.stringify(game), { ex: CACHE_TTL });
       gameIds.push(game.id);
     }
 
     if (gameIds.length > 0) {
-      operations.push(redisWithExponentialRetry(
-        () => redis.del(CACHE_KEYS.GAME_IDS_SET),
-        'delGameIdsSet'
-      ));
+      p.del(CACHE_KEYS.GAME_IDS_SET);
       for (let i = 0; i < gameIds.length; i++) {
-        operations.push(redisWithExponentialRetry(
-          () => redis.zadd(CACHE_KEYS.GAME_IDS_SET, { score: i + 1, member: gameIds[i] }),
-          `zaddGameId.${gameIds[i]}`
-        ));
+        p.zadd(CACHE_KEYS.GAME_IDS_SET, { score: i + 1, member: gameIds[i] });
       }
     }
 
-    await Promise.all(operations);
+    await p.exec();
     await setCachePrimed();
 
     console.log(`[CacheWarmup] Successfully cached ${games.length} games`);
