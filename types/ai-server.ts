@@ -80,20 +80,30 @@ export interface AiCombatResult {
   loot?: AiInventoryItem[];
 }
 
-export interface AiRagChunk {
-  text: string;
-  metadata?: Record<string, unknown>;
+export interface AiMemoryChunk {
+  id: string;
+  content: Record<string, unknown>;
+  metadata?: Record<string, unknown> | null;
 }
 
-export interface AiRagStagingItem {
-  uuid: string;
-  text: string;
-  chunk_count: number;
+export interface AiMemoryHit extends AiMemoryChunk {
+  score: number;
 }
 
-export interface AiStoredChunk {
-  text: string;
-  metadata: Record<string, unknown> | null;
+export interface AiMemoryQueryResponse {
+  hits: AiMemoryHit[];
+}
+
+export interface AiMemoryExportResponse {
+  sid: string;
+  saved_at: number;
+  next_cursor?: string | null;
+  chunks: AiMemoryChunk[];
+}
+
+export interface AiMemoryRestoreRequest {
+  namespace: string;
+  chunks: AiMemoryChunk[];
 }
 
 export interface AiLockResult {

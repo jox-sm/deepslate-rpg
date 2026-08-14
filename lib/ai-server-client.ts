@@ -13,8 +13,10 @@ import type {
   AiReleaseResult,
   AiCounterResponse,
   AiHealthResponse,
-  AiRagStagingItem,
-  AiStoredChunk,
+  AiMemoryChunk,
+  AiMemoryQueryResponse,
+  AiMemoryExportResponse,
+  AiMemoryRestoreRequest,
   AiDbsizeResponse,
 } from '@/types/ai-server';
 
@@ -162,25 +164,33 @@ export const aiServer = {
       request(`/games/${uuid}/expire?ttl=${ttl}`, { method: 'POST' }),
   },
 
-  rag: {
-    staging: {
-      push: (item: AiRagStagingItem): Promise<AiOkResponse> =>
-        request('/rag/staging/push', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(item),
-        }),
+  memory: {
+    query: (namespace: string, query: string, topK = 5): Promise<AiMemoryQueryResponse> =>
+      request('/memory/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ namespace, query, top_k: topK }),
+      }),
 
-      pop: (): Promise<{ ok: boolean; item: AiRagStagingItem | null }> =>
-        request('/rag/staging/pop'),
+    upsert: (namespace: string, documents: AiMemoryChunk[]): Promise<AiOkResponse> =>
+      request('/memory/upsert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ namespace, documents }),
+      }),
 
-      count: (): Promise<{ count: number }> => request('/rag/staging/count'),
-    },
+    export: (sid: string): Promise<AiMemoryExportResponse> =>
+      request(`/memory/export/${sid}`),
 
-    chunk: {
-      get: (uuid: string, index: number): Promise<AiStoredChunk> =>
-        request(`/rag/chunk/${uuid}/${index}`),
-    },
+    restore: (payload: AiMemoryRestoreRequest): Promise<AiOkResponse> =>
+      request('/memory/restore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }),
+
+    clear: (namespace: string): Promise<AiOkResponse> =>
+      request(buildUrl('/memory/clear', { namespace }), { method: 'DELETE' }),
   },
 
   output: {
