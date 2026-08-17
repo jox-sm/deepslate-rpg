@@ -1,0 +1,25 @@
+/* Composable animation classes for pages / sections.
+ * Relies on global keyframes from animations.css (imported by app/globals.css).
+ *   import anim from "@/styles/animations/page.module.css";
+ *   <main className={cn(anim.enter, ...)} />
+ */
+
+.enter {
+  animation: dd-slide-up 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.fade {
+  animation: dd-fade-in 0.45s ease both;
+}
+
+.scaleIn {
+  animation: dd-scale-in 0.4s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter,
+  .fade,
+  .scaleIn {
+    animation: none !important;
+  }
+}

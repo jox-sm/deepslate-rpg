@@ -1,0 +1,37 @@
+/* Composable animation classes for buttons.
+ * Relies on the global keyframes defined in animations.css (imported by
+ * app/globals.css). Import this module wherever you want hashed classNames:
+ *   import anim from "@/styles/animations/button.module.css";
+ *   <button className={cn(anim.glow, ...)} />
+ */
+
+.glow {
+  animation: dd-glow-pulse 2.6s ease-in-out infinite;
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(212, 165, 116, 0.18) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: dd-shimmer 2.8s linear infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow,
+  .shimmer,
+  .shimmer::after {
+    animation: none !important;
+  }
+}

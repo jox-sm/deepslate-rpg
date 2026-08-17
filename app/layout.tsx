@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`}>
+      <html lang="en" data-scroll-behavior="smooth" className={`${cormorant.variable} ${dmSans.variable}`}>
         <body className="min-h-screen bg-bg-base text-text-primary antialiased">
           <ConvexClientProvider>
             <AuthGate>

@@ -1,0 +1,91 @@
+/*
+ * Deepslate Dungeons — shared animation layer.
+ * Imported globally by app/globals.css so every component (module CSS or
+ * Tailwind utility) can reference these keyframes and utility classes.
+ * Keyframe + class names are global; dark-fantasy torchlit palette.
+ */
+
+@keyframes dd-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dd-slide-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dd-scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes dd-glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 165, 116, 0); }
+  50% { box-shadow: 0 0 18px 2px rgba(212, 165, 116, 0.45); }
+}
+
+@keyframes dd-torch-flicker {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(212, 165, 116, 0.5)); }
+  45% { opacity: 0.92; filter: drop-shadow(0 0 3px rgba(212, 165, 116, 0.3)); }
+  70% { opacity: 0.97; filter: drop-shadow(0 0 9px rgba(212, 165, 116, 0.65)); }
+}
+
+@keyframes dd-shimmer {
+  0% { background-position: -150% 0; }
+  100% { background-position: 150% 0; }
+}
+
+/* torchlight "breathing" glow — for active/nav indicators */
+@keyframes dd-torch-pulse {
+  0%, 100% {
+    box-shadow:
+      inset 0 0 16px color-mix(in srgb, var(--color-torch-400) 12%, transparent),
+      0 0 8px color-mix(in srgb, var(--color-torch-400) 10%, transparent);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 22px color-mix(in srgb, var(--color-torch-400) 28%, transparent),
+      0 0 18px color-mix(in srgb, var(--color-torch-400) 22%, transparent);
+  }
+}
+
+/* ---- global utility classes (use via cn("dd-fade-in", ...) ---- */
+.dd-fade-in { animation: dd-fade-in 0.5s ease both; }
+.dd-slide-up { animation: dd-slide-up 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+.dd-scale-in { animation: dd-scale-in 0.4s ease both; }
+.dd-glow-pulse { animation: dd-glow-pulse 2.6s ease-in-out infinite; }
+.dd-torch-pulse { animation: dd-torch-pulse 3.2s ease-in-out infinite; }
+.dd-torch-flicker { animation: dd-torch-flicker 4s ease-in-out infinite; }
+
+.dd-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.dd-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(212, 165, 116, 0.18) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: dd-shimmer 2.8s linear infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dd-fade-in,
+  .dd-slide-up,
+  .dd-scale-in,
+  .dd-glow-pulse,
+  .dd-torch-pulse,
+  .dd-torch-flicker,
+  .dd-shimmer,
+  .dd-shimmer::after {
+    animation: none !important;
+  }
+}

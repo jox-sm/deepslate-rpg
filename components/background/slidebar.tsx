@@ -38,7 +38,7 @@ export default function Sidebar({
     <aside
       className={cn(
         styles.sidebar,
-        "flex h-screen flex-col",
+        "dd-fade-in flex h-screen flex-col",
         collapsed ? styles.collapsed : ""
       )}
     >
@@ -73,7 +73,7 @@ export default function Sidebar({
               className={cn(
                 styles.menuItem,
                 collapsed ? "" : "",
-                isActive ? styles.active : ""
+                isActive ? cn(styles.active, "dd-torch-pulse") : ""
               )}
               title={collapsed ? item.label : undefined}
             >

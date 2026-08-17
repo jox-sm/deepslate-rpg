@@ -5,6 +5,7 @@ import ProfileCard from '@/components/adventures/cards/cards';
 import { CardProps } from '@/types/cards';
 import { cn } from '@/lib/utils';
 import gridStyles from "@/styles/cards/CardsGrid.module.css";
+import { RevealItem } from '@/ui/primitives/motion';
 import { tryOrErrorSync, classifyError } from '@/utilities/errorHandler';
 
 type CardsGridProps = {
@@ -105,7 +106,7 @@ export default function CardsGrid({
   return (
     <div className={gridStyles.grid}>
       {cards.map((card, i) => (
-        <div key={`${card.name}-${i}`} className={gridStyles.cardWrapper}>
+        <RevealItem key={`${card.name}-${i}`} className={gridStyles.cardWrapper}>
           <ProfileCard
             id={card.id}
             likes_count={card.likes_count}
@@ -114,7 +115,7 @@ export default function CardsGrid({
             description={card.description}
             tags={card.tags}
           />
-        </div>
+        </RevealItem>
       ))}
 
       {isLoading && (

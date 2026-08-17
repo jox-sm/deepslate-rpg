@@ -26,6 +26,8 @@ const buttonVariants = cva(
           "bg-glass text-text-primary border border-border/50 hover:bg-bg-hover/70 hover:border-accent/30 glow-accent-sm",
         torch:
           "bg-torch-500 text-charcoal-950 hover:bg-torch-400 shadow-lg glow-torch active:glow-torch",
+        glow:
+          "bg-gradient-to-r from-torch-500 to-torch-400 text-charcoal-950 shadow-lg glow-torch dd-glow-pulse",
         gold:
           "bg-gold-500 text-charcoal-950 hover:bg-gold-400 shadow-lg glow-gold font-semibold",
         blood:
