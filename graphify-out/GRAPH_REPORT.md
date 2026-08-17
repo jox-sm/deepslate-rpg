@@ -1,830 +1,489 @@
-# Graph Report - .  (2026-06-10)
+# Graph Report - .  (2026-08-17)
 
 ## Corpus Check
-- 320 files · ~270,357 words
+- 349 files · ~278,678 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2608 nodes · 3143 edges · 188 communities (159 shown, 29 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 46 edges (avg confidence: 0.78)
+- 1297 nodes · 2238 edges · 108 communities (81 shown, 27 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 136 edges (avg confidence: 0.71)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Home Page & Card Grid|Home Page & Card Grid]]
-- [[_COMMUNITY_Architecture Documentation|Architecture Documentation]]
-- [[_COMMUNITY_UIUX Issue Catalog|UI/UX Issue Catalog]]
-- [[_COMMUNITY_Agent Skills Ecosystem|Agent Skills Ecosystem]]
-- [[_COMMUNITY_Implementation Plans|Implementation Plans]]
-- [[_COMMUNITY_Supabase & Image Pipeline Issues|Supabase & Image Pipeline Issues]]
-- [[_COMMUNITY_JWT Setup Tutorial|JWT Setup Tutorial]]
-- [[_COMMUNITY_Backend Game Processing|Backend Game Processing]]
-- [[_COMMUNITY_Like Button & Toast Notifications|Like Button & Toast Notifications]]
-- [[_COMMUNITY_Package Dependencies|Package Dependencies]]
-- [[_COMMUNITY_API Implementation Guide|API Implementation Guide]]
-- [[_COMMUNITY_Game Fetch Pipeline (Client)|Game Fetch Pipeline (Client)]]
-- [[_COMMUNITY_Zod Validation Schemas|Zod Validation Schemas]]
-- [[_COMMUNITY_Auth & Error Classification|Auth & Error Classification]]
-- [[_COMMUNITY_UI Architecture Analysis|UI Architecture Analysis]]
-- [[_COMMUNITY_Authentication Documentation|Authentication Documentation]]
-- [[_COMMUNITY_GamePage Feature Suite|GamePage Feature Suite]]
-- [[_COMMUNITY_PostHog Integration Setup|PostHog Integration Setup]]
-- [[_COMMUNITY_Root Layout & Convex Provider|Root Layout & Convex Provider]]
-- [[_COMMUNITY_PostHog MobileWeb|PostHog Mobile/Web]]
-- [[_COMMUNITY_API Routes & Auth Middleware|API Routes & Auth Middleware]]
-- [[_COMMUNITY_Form Step Components|Form Step Components]]
-- [[_COMMUNITY_Games API Cache & Drain|Games API Cache & Drain]]
-- [[_COMMUNITY_Architecture Overview Doc|Architecture Overview Doc]]
-- [[_COMMUNITY_Documentation Structure|Documentation Structure]]
-- [[_COMMUNITY_Form UI Components|Form UI Components]]
-- [[_COMMUNITY_Issues Index & Categories|Issues Index & Categories]]
-- [[_COMMUNITY_JWT Validation Guide|JWT Validation Guide]]
-- [[_COMMUNITY_Security Vulnerabilities|Security Vulnerabilities]]
-- [[_COMMUNITY_Convex CRUD Operations|Convex CRUD Operations]]
-- [[_COMMUNITY_Convex Quickstart|Convex Quickstart]]
-- [[_COMMUNITY_Neon PostgreSQL|Neon PostgreSQL]]
-- [[_COMMUNITY_Known Issues & Performance|Known Issues & Performance]]
-- [[_COMMUNITY_Project Aliases & Imports|Project Aliases & Imports]]
-- [[_COMMUNITY_Documentation Index|Documentation Index]]
-- [[_COMMUNITY_Convex Performance Rules|Convex Performance Rules]]
-- [[_COMMUNITY_PostHog User Identification|PostHog User Identification]]
-- [[_COMMUNITY_Data Flow Documentation|Data Flow Documentation]]
-- [[_COMMUNITY_MongoDB Game Queue|MongoDB Game Queue]]
-- [[_COMMUNITY_Deployment Checks Skill|Deployment Checks Skill]]
-- [[_COMMUNITY_Error Page Components|Error Page Components]]
-- [[_COMMUNITY_Learning Gotchas|Learning Gotchas]]
-- [[_COMMUNITY_Convex Guidelines|Convex Guidelines]]
-- [[_COMMUNITY_UI Architecture Assessment|UI Architecture Assessment]]
-- [[_COMMUNITY_Convex Subscription Costs|Convex Subscription Costs]]
-- [[_COMMUNITY_Issue 62 Cache Helpers|Issue #62 Cache Helpers]]
-- [[_COMMUNITY_JWT Implementation Summary|JWT Implementation Summary]]
-- [[_COMMUNITY_Original README Sections|Original README Sections]]
-- [[_COMMUNITY_PostgreSQL Queries|PostgreSQL Queries]]
-- [[_COMMUNITY_TypeScript Compiler Options|TypeScript Compiler Options]]
+- [[_COMMUNITY_Game Fetch & Auth Hooks|Game Fetch & Auth Hooks]]
+- [[_COMMUNITY_Tech Stack & Architecture Docs|Tech Stack & Architecture Docs]]
+- [[_COMMUNITY_Convex Agent Skills Index|Convex Agent Skills Index]]
+- [[_COMMUNITY_AI Server Client & Memory|AI Server Client & Memory]]
+- [[_COMMUNITY_Auth Helpers & Game Mutations|Auth Helpers & Game Mutations]]
+- [[_COMMUNITY_Project Dependencies Manifest|Project Dependencies Manifest]]
+- [[_COMMUNITY_Validation Schemas & Card Props|Validation Schemas & Card Props]]
 - [[_COMMUNITY_Games Form Wizard|Games Form Wizard]]
-- [[_COMMUNITY_Task Completion Summary|Task Completion Summary]]
-- [[_COMMUNITY_Convex Function Budget|Convex Function Budget]]
-- [[_COMMUNITY_UI Design Patterns|UI Design Patterns]]
-- [[_COMMUNITY_Self-Assessment Skill|Self-Assessment Skill]]
-- [[_COMMUNITY_Convex Migration Patterns|Convex Migration Patterns]]
-- [[_COMMUNITY_Issue 59 React Keys|Issue #59 React Keys]]
-- [[_COMMUNITY_Issue 60 Sleep Utility|Issue #60 Sleep Utility]]
-- [[_COMMUNITY_Issue 64 Unnecessary Zod|Issue #64 Unnecessary Zod]]
-- [[_COMMUNITY_Deepslate Full Assessment|Deepslate Full Assessment]]
-- [[_COMMUNITY_Architecture Scale Projection|Architecture Scale Projection]]
-- [[_COMMUNITY_Convex Component Patterns|Convex Component Patterns]]
-- [[_COMMUNITY_Form Validation Rules|Form Validation Rules]]
-- [[_COMMUNITY_Issue 55 State Management|Issue #55 State Management]]
-- [[_COMMUNITY_Issue 65 Rate Limiter|Issue #65 Rate Limiter]]
-- [[_COMMUNITY_Issue 66 JWT Auth|Issue #66 JWT Auth]]
-- [[_COMMUNITY_Development Obstacles|Development Obstacles]]
-- [[_COMMUNITY_Convex Performance Audit|Convex Performance Audit]]
-- [[_COMMUNITY_Image & Form Utilities|Image & Form Utilities]]
-- [[_COMMUNITY_Issue 57 Prop Drilling|Issue #57 Prop Drilling]]
-- [[_COMMUNITY_Issue 58 Form Hooks|Issue #58 Form Hooks]]
-- [[_COMMUNITY_Issue 61 Likes Count|Issue #61 Likes Count]]
-- [[_COMMUNITY_Project Version History|Project Version History]]
-- [[_COMMUNITY_Convex OCC Conflicts|Convex OCC Conflicts]]
-- [[_COMMUNITY_Mongoose Schemas|Mongoose Schemas]]
-- [[_COMMUNITY_Game Creation Pipeline|Game Creation Pipeline]]
-- [[_COMMUNITY_Issue 56 Memory Leak|Issue #56 Memory Leak]]
-- [[_COMMUNITY_Issue 67 N+1 Redis|Issue #67 N+1 Redis]]
-- [[_COMMUNITY_Issue 68 Double Read|Issue #68 Double Read]]
-- [[_COMMUNITY_Issue 69 File Loss|Issue #69 File Loss]]
-- [[_COMMUNITY_Convex Migrations Workflow|Convex Migrations Workflow]]
-- [[_COMMUNITY_Form Step Notifications|Form Step Notifications]]
-- [[_COMMUNITY_Issue 70 Data URL Round-trip|Issue #70 Data URL Round-trip]]
-- [[_COMMUNITY_Graph Skill Authoring|Graph Skill Authoring]]
-- [[_COMMUNITY_Personality Framework|Personality Framework]]
-- [[_COMMUNITY_Issue 75 Form Styles|Issue #75 Form Styles]]
-- [[_COMMUNITY_Issue 77 Zod Validation|Issue #77 Zod Validation]]
-- [[_COMMUNITY_Problems Index|Problems Index]]
-- [[_COMMUNITY_Convex Auth Setup|Convex Auth Setup]]
-- [[_COMMUNITY_Migration Patterns Reference|Migration Patterns Reference]]
-- [[_COMMUNITY_GamePage Documentation & Issues|GamePage Documentation & Issues]]
-- [[_COMMUNITY_Auth Provider Setup Checklist|Auth Provider Setup Checklist]]
-- [[_COMMUNITY_Dev Dependencies|Dev Dependencies]]
-- [[_COMMUNITY_Auth0 Setup|Auth0 Setup]]
-- [[_COMMUNITY_Clerk Setup|Clerk Setup]]
-- [[_COMMUNITY_WorkOS AuthKit Setup|WorkOS AuthKit Setup]]
-- [[_COMMUNITY_Supabase Storage & Images|Supabase Storage & Images]]
-- [[_COMMUNITY_Issue 48 Layout System|Issue #48 Layout System]]
-- [[_COMMUNITY_Issue 49 Rendering Strategy|Issue #49 Rendering Strategy]]
-- [[_COMMUNITY_Issue 50 Design System|Issue #50 Design System]]
-- [[_COMMUNITY_Issue 51 Responsiveness|Issue #51 Responsiveness]]
-- [[_COMMUNITY_Issue 52 Component Coupling|Issue #52 Component Coupling]]
-- [[_COMMUNITY_Issue 53 Accessibility|Issue #53 Accessibility]]
-- [[_COMMUNITY_Scale Projection Analysis|Scale Projection Analysis]]
-- [[_COMMUNITY_Idempotency Types|Idempotency Types]]
-- [[_COMMUNITY_Documentation Types|Documentation Types]]
-- [[_COMMUNITY_Issue 54 Form A11y|Issue #54 Form A11y]]
-- [[_COMMUNITY_Issue 71 ZodError|Issue #71 ZodError]]
-- [[_COMMUNITY_Issue 72 Optional Image|Issue #72 Optional Image]]
-- [[_COMMUNITY_Issue 73 useAuth|Issue #73 useAuth]]
-- [[_COMMUNITY_Issue 74 No Images|Issue #74 No Images]]
-- [[_COMMUNITY_Package.json|Package.json]]
-- [[_COMMUNITY_Project Reference Skill|Project Reference Skill]]
-- [[_COMMUNITY_Task Completion Summary|Task Completion Summary]]
-- [[_COMMUNITY_PostHog Integration Skill|PostHog Integration Skill]]
-- [[_COMMUNITY_Packaged Convex Components|Packaged Convex Components]]
-- [[_COMMUNITY_Skill References|Skill References]]
-- [[_COMMUNITY_Idempotency Utilities|Idempotency Utilities]]
-- [[_COMMUNITY_Error Page Barrel Export|Error Page Barrel Export]]
-- [[_COMMUNITY_Issue 76 Doc Updates|Issue #76 Doc Updates]]
-- [[_COMMUNITY_Convex Schema Types|Convex Schema Types]]
-- [[_COMMUNITY_Convex Context Types|Convex Context Types]]
-- [[_COMMUNITY_PostHog Wizard Report|PostHog Wizard Report]]
-- [[_COMMUNITY_Convex Components Advanced|Convex Components Advanced]]
-- [[_COMMUNITY_Hybrid Convex Components|Hybrid Convex Components]]
-- [[_COMMUNITY_Local Convex Components|Local Convex Components]]
-- [[_COMMUNITY_Redis Search Commands|Redis Search Commands]]
-- [[_COMMUNITY_Convex AI State|Convex AI State]]
-- [[_COMMUNITY_Assessment Deprecation|Assessment Deprecation]]
-- [[_COMMUNITY_Convex Skill Router|Convex Skill Router]]
-- [[_COMMUNITY_GamePage UI Components|GamePage UI Components]]
-- [[_COMMUNITY_ENTP 5w4 Profile|ENTP 5w4 Profile]]
-- [[_COMMUNITY_PostHog Agent|PostHog Agent]]
-- [[_COMMUNITY_Skill convex-migration-helper|Skill: convex-migration-helper]]
-- [[_COMMUNITY_Skill convex-quickstart|Skill: convex-quickstart]]
-- [[_COMMUNITY_Skill convex-setup-auth|Skill: convex-setup-auth]]
-- [[_COMMUNITY_Skill convex|Skill: convex]]
-- [[_COMMUNITY_Skill convex-create-component|Skill: convex-create-component]]
-- [[_COMMUNITY_Skill convex-performance-audit|Skill: convex-performance-audit]]
-- [[_COMMUNITY_Skill documentation|Skill: documentation]]
-- [[_COMMUNITY_Skill neon-postgres|Skill: neon-postgres]]
-- [[_COMMUNITY_Skill ui-ux-pro-max|Skill: ui-ux-pro-max]]
-- [[_COMMUNITY_Skill web-design-guidelines|Skill: web-design-guidelines]]
-- [[_COMMUNITY_Game Data JSON Types|Game Data JSON Types]]
-- [[_COMMUNITY_Form Step Components (Code)|Form Step Components (Code)]]
-- [[_COMMUNITY_Redis Performance Topics|Redis Performance Topics]]
-- [[_COMMUNITY_KiloCode Plugin Config|KiloCode Plugin Config]]
-- [[_COMMUNITY_Proxy Config|Proxy Config]]
-- [[_COMMUNITY_PostHog Basic Integration|PostHog Basic Integration]]
-- [[_COMMUNITY_Settings Page|Settings Page]]
-- [[_COMMUNITY_Drain & Games Routes|Drain & Games Routes]]
-- [[_COMMUNITY_Game Detail API Routes|Game Detail API Routes]]
-- [[_COMMUNITY_Auth Status Component|Auth Status Component]]
-- [[_COMMUNITY_ESLint Config|ESLint Config]]
-- [[_COMMUNITY_Convex Generated API|Convex Generated API]]
+- [[_COMMUNITY_Game Detail Page Components|Game Detail Page Components]]
+- [[_COMMUNITY_Form Wizard Steps|Form Wizard Steps]]
+- [[_COMMUNITY_Neon DB Client & Migrations|Neon DB Client & Migrations]]
+- [[_COMMUNITY_Play Screen & Scenarios|Play Screen & Scenarios]]
+- [[_COMMUNITY_Game Pipeline Design Docs|Game Pipeline Design Docs]]
+- [[_COMMUNITY_Create Form & Image Upload|Create Form & Image Upload]]
+- [[_COMMUNITY_Mutation Tracker & Patch Backup|Mutation Tracker & Patch Backup]]
+- [[_COMMUNITY_Error Page Components|Error Page Components]]
+- [[_COMMUNITY_Project Issues & DX Audit|Project Issues & DX Audit]]
+- [[_COMMUNITY_UI Component Aliases Config|UI Component Aliases Config]]
+- [[_COMMUNITY_Redis Data Structure Docs|Redis Data Structure Docs]]
+- [[_COMMUNITY_Service Auth & JWT Routes|Service Auth & JWT Routes]]
+- [[_COMMUNITY_Likes Queue & Rate Limit|Likes Queue & Rate Limit]]
+- [[_COMMUNITY_Cache Warmup & Hotness Cache|Cache Warmup & Hotness Cache]]
+- [[_COMMUNITY_Sidebar & Profile Menu|Sidebar & Profile Menu]]
+- [[_COMMUNITY_Games Form Validation|Games Form Validation]]
+- [[_COMMUNITY_Form Context & Cache Queries|Form Context & Cache Queries]]
+- [[_COMMUNITY_TypeScript Config|TypeScript Config]]
+- [[_COMMUNITY_Likes Batch API Routes|Likes Batch API Routes]]
+- [[_COMMUNITY_GitHub Issues Documentation|GitHub Issues Documentation]]
+- [[_COMMUNITY_System Architecture Overview|System Architecture Overview]]
+- [[_COMMUNITY_Home Page Card Grid|Home Page Card Grid]]
+- [[_COMMUNITY_Database Layer Issues|Database Layer Issues]]
+- [[_COMMUNITY_Upstash Redis Search|Upstash Redis Search]]
+- [[_COMMUNITY_Documentation & DX Issues|Documentation & DX Issues]]
+- [[_COMMUNITY_UIUX Design System Issues|UI/UX Design System Issues]]
+- [[_COMMUNITY_Performance & Scalability Issues|Performance & Scalability Issues]]
+- [[_COMMUNITY_Observability & Monitoring Issues|Observability & Monitoring Issues]]
+- [[_COMMUNITY_Game Fetch Batch Pipeline|Game Fetch Batch Pipeline]]
+- [[_COMMUNITY_Clerk Staff Authorization|Clerk Staff Authorization]]
+- [[_COMMUNITY_Supabase Image Upload|Supabase Image Upload]]
+- [[_COMMUNITY_Root Layout & Convex Provider|Root Layout & Convex Provider]]
+- [[_COMMUNITY_Games Form State Hook|Games Form State Hook]]
+- [[_COMMUNITY_Architecture & Code Quality Issues|Architecture & Code Quality Issues]]
+- [[_COMMUNITY_Convex Performance Audit Skill|Convex Performance Audit Skill]]
+- [[_COMMUNITY_Dev Dependencies & Type Tooling|Dev Dependencies & Type Tooling]]
+- [[_COMMUNITY_Idempotent API Client|Idempotent API Client]]
+- [[_COMMUNITY_Package.json Scripts|Package.json Scripts]]
+- [[_COMMUNITY_Card UI Primitive|Card UI Primitive]]
+- [[_COMMUNITY_Security & Auth Issues|Security & Auth Issues]]
+- [[_COMMUNITY_PostHog Analytics Setup|PostHog Analytics Setup]]
+- [[_COMMUNITY_Convex Data Model Schema|Convex Data Model Schema]]
+- [[_COMMUNITY_Convex Server Context Types|Convex Server Context Types]]
+- [[_COMMUNITY_API Proxy Route|API Proxy Route]]
+- [[_COMMUNITY_Convex Migration Helper Skill|Convex Migration Helper Skill]]
+- [[_COMMUNITY_Convex AI Files State|Convex AI Files State]]
+- [[_COMMUNITY_Proxy Relay Route|Proxy Relay Route]]
+- [[_COMMUNITY_Convex Setup Auth Skill|Convex Setup Auth Skill]]
+- [[_COMMUNITY_Convex Core Skill|Convex Core Skill]]
+- [[_COMMUNITY_Convex Create Component Skill|Convex Create Component Skill]]
+- [[_COMMUNITY_Convex Performance Audit Skill|Convex Performance Audit Skill]]
+- [[_COMMUNITY_Convex Quickstart Skill|Convex Quickstart Skill]]
+- [[_COMMUNITY_Documentation Skill|Documentation Skill]]
+- [[_COMMUNITY_Neon Postgres Skill|Neon Postgres Skill]]
+- [[_COMMUNITY_UI UX Pro Max Skill|UI UX Pro Max Skill]]
+- [[_COMMUNITY_Web Design Guidelines Skill|Web Design Guidelines Skill]]
+- [[_COMMUNITY_Kilo & OpenCode Plugin Packages|Kilo & OpenCode Plugin Packages]]
+- [[_COMMUNITY_Bottleneck & Clerk Auth Issues|Bottleneck & Clerk Auth Issues]]
+- [[_COMMUNITY_Convex Authorization Guards|Convex Authorization Guards]]
+- [[_COMMUNITY_Convex Migration Helper Config|Convex Migration Helper Config]]
+- [[_COMMUNITY_Plugin Package Dependencies|Plugin Package Dependencies]]
+- [[_COMMUNITY_Rendering Strategy Issues|Rendering Strategy Issues]]
+- [[_COMMUNITY_Kilo Code Plugin Package|Kilo Code Plugin Package]]
+- [[_COMMUNITY_OpenCode Config|OpenCode Config]]
+- [[_COMMUNITY_Auth Proxy Middleware|Auth Proxy Middleware]]
+- [[_COMMUNITY_Graphify OpenCode Plugin|Graphify OpenCode Plugin]]
+- [[_COMMUNITY_Web Design Guidelines Docs|Web Design Guidelines Docs]]
+- [[_COMMUNITY_Shared Sleep Utility|Shared Sleep Utility]]
+- [[_COMMUNITY_ESLint Configuration|ESLint Configuration]]
+- [[_COMMUNITY_Accessibility Patterns|Accessibility Patterns]]
+- [[_COMMUNITY_React List Reconciliation|React List Reconciliation]]
+- [[_COMMUNITY_Likes Count Formatting|Likes Count Formatting]]
+- [[_COMMUNITY_Zod Query Validation|Zod Query Validation]]
 - [[_COMMUNITY_Next.js Config|Next.js Config]]
-- [[_COMMUNITY_OpenCode Plugin Config|OpenCode Plugin Config]]
-- [[_COMMUNITY_Config & Dependencies|Config & Dependencies]]
-- [[_COMMUNITY_Graphify Plugin|Graphify Plugin]]
-- [[_COMMUNITY_PostCSS Config|PostCSS Config]]
-- [[_COMMUNITY_PostHog Revise Integration|PostHog Revise Integration]]
-- [[_COMMUNITY_Profile Page|Profile Page]]
-- [[_COMMUNITY_Auth Gate & Layout|Auth Gate & Layout]]
-- [[_COMMUNITY_VS Code Settings|VS Code Settings]]
-- [[_COMMUNITY_Auth Config|Auth Config]]
-- [[_COMMUNITY_Convex Internal|Convex Internal]]
+- [[_COMMUNITY_PostCSS Configuration|PostCSS Configuration]]
+- [[_COMMUNITY_Editor Settings|Editor Settings]]
+- [[_COMMUNITY_Convex Internal Query|Convex Internal Query]]
 - [[_COMMUNITY_Convex Internal Query|Convex Internal Query]]
 - [[_COMMUNITY_Convex Internal Mutation|Convex Internal Mutation]]
 - [[_COMMUNITY_Convex Action|Convex Action]]
 - [[_COMMUNITY_Convex Internal Action|Convex Internal Action]]
 - [[_COMMUNITY_Convex HTTP Action|Convex HTTP Action]]
-- [[_COMMUNITY_Game Patches API|Game Patches API]]
-- [[_COMMUNITY_Test Supabase Auth API|Test Supabase Auth API]]
-- [[_COMMUNITY_Branch Cleanup|Branch Cleanup]]
-- [[_COMMUNITY_Community 186|Community 186]]
-- [[_COMMUNITY_Community 187|Community 187]]
+- [[_COMMUNITY_GamePage Quickstart Doc|GamePage Quickstart Doc]]
+- [[_COMMUNITY_GamePage Readme Doc|GamePage Readme Doc]]
+- [[_COMMUNITY_GamePage Summary Doc|GamePage Summary Doc]]
+- [[_COMMUNITY_GamePage Integration Guide|GamePage Integration Guide]]
+- [[_COMMUNITY_GamePage Progress Doc|GamePage Progress Doc]]
+- [[_COMMUNITY_Deployment Checks Skill|Deployment Checks Skill]]
+- [[_COMMUNITY_Data Structures Doc|Data Structures Doc]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `classifyError()` - 54 edges
-2. `tryApiRoute()` - 22 edges
-3. `Upstash Redis SDK` - 22 edges
-4. `validateJWTMiddleware()` - 20 edges
-5. `Deepslate Dungeons — Architecture Document` - 20 edges
-6. `PostHog Next.js app router example` - 19 edges
+1. `classifyError()` - 62 edges
+2. `cn()` - 31 edges
+3. `retry()` - 30 edges
+4. `tryApiRoute()` - 22 edges
+5. `validateJWTMiddleware()` - 20 edges
+6. `Known Issues & Performance Problems` - 17 edges
 7. `compilerOptions` - 16 edges
-8. `Neon Serverless Postgres` - 16 edges
-9. `Issue #59: Array index as React key in list rendering` - 16 edges
-10. `Issue #60: Duplicate sleep utility defined in two files` - 16 edges
+8. `UI/UX & Design System Issues` - 16 edges
+9. `redisWithExponentialRetry()` - 15 edges
+10. `@upstash/redis SDK` - 15 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `useMutationTracker hook` --semantically_similar_to--> `applyGamePatches function`  [INFERRED] [semantically similar]
-  hooks/use-mutation-tracker.ts → lib/patch-applier.ts
-- `useAuth hook` --semantically_similar_to--> `validateJWTMiddleware function`  [INFERRED] [semantically similar]
-  hooks/useAuth.ts → lib/jwt-validate.ts
-- `games.ts — fixed import + auth guards` --documents--> `Issue: Convex authorization — closed`  [EXTRACTED]
-  convex/games.ts → documentations/issues/convex-authorization.md
-- `schema.ts — ownerId fields + staff table` --documents--> `Issue: Convex authorization — closed`  [EXTRACTED]
-  convex/schema.ts → documentations/issues/convex-authorization.md
-- `authHelpers.ts — requireAuth() + requireStaff()` --documents--> `Issue: Convex authorization — closed`  [EXTRACTED]
-  convex/authHelpers.ts → documentations/issues/convex-authorization.md
+- `UI/UX & Design System Issues` --conceptually_related_to--> `public/file.svg`  [AMBIGUOUS]
+  documentations/problems/05-UI_UX_DESIGN_ISSUES.md → public/file.svg
+- `UI/UX & Design System Issues` --conceptually_related_to--> `public/globe.svg`  [AMBIGUOUS]
+  documentations/problems/05-UI_UX_DESIGN_ISSUES.md → public/globe.svg
+- `UI/UX & Design System Issues` --conceptually_related_to--> `public/images/project.jpg`  [AMBIGUOUS]
+  documentations/problems/05-UI_UX_DESIGN_ISSUES.md → public/images/project.jpg
+- `UI/UX & Design System Issues` --conceptually_related_to--> `public/next.svg`  [AMBIGUOUS]
+  documentations/problems/05-UI_UX_DESIGN_ISSUES.md → public/next.svg
+- `UI/UX & Design System Issues` --conceptually_related_to--> `public/vercel.svg`  [AMBIGUOUS]
+  documentations/problems/05-UI_UX_DESIGN_ISSUES.md → public/vercel.svg
 
 ## Import Cycles
-- 2-file cycle: `exceptions/notifications/index.ts -> exceptions/notifications/success.tsx -> exceptions/notifications/index.ts`
+- None detected.
 
 ## Hyperedges (group relationships)
-- **Game Creation Pipeline** — create_form, api_convertUrl, api_push, api_convertUrl_ConvertGameImages, api_push_pushGames [EXTRACTED 1.00]
-- **Auth Middleware Pattern** — api_convertUrl, api_convertUrl_ConvertGameImages, api_drain, api_games, api_games_id, api_games_id_gamepage, api_games_id_patches, api_push, api_push_pushGames, api_test_supabase_auth [EXTRACTED 1.00]
-- **Card Display Pipeline** — home_page, cards_grid_wrapper, cards_grid, cards_profile, like_button [EXTRACTED 1.00]
-- **ErrorPageShell wrappers - all error page components delegate to ErrorPageShell with status-specific props** —  [EXTRACTED 1.00]
-- **Clerk auth components - all use Convex Unauthenticated + Clerk hooks for login/signup flow** —  [EXTRACTED 1.00]
-- **Sidebar consumers - ProfileMenu and Sbar are identical wrappers consuming Sidebar component** —  [EXTRACTED 1.00]
-- **Error handling with classifyError across all lib modules** — GamesInsert_tsx_processGamesQueue, cache-warmup_tsx_warmUpCache, db_tsx_insertGame, jwt-validate_tsx_validateJWTMiddleware, patch-applier_tsx_applyGamePatches, useAuth_tsx_useAuth, useIdempotentRequest_tsx_useIdempotentRequest [INFERRED 0.90]
-- **Redis client used for queue operations and cache warmup** — queue_tsx_redis, cache-warmup_tsx_warmUpCache, GamesInsert_tsx_processGamesQueue [INFERRED 0.85]
-- **MongoDB operations for game data via Mongoose schema** — GamesInsert_tsx_processGamesQueue, patch-applier_tsx_applyGamePatches [INFERRED 0.80]
-- **Redis Data Structures Family** —  [EXTRACTED 1.00]
-- **Redis Usage Patterns** —  [EXTRACTED 1.00]
-- **UX Priority Categories (Critical/High)** —  [EXTRACTED 1.00]
-- **Upstash Redis Search command categories** — upstash_search_querying, upstash_search_aggregating, upstash_search_index_management, upstash_search_aliases [EXTRACTED 1.00]
-- **Upstash Redis performance optimization topics** — upstash_data_serialization, upstash_error_handling, upstash_pipeline_optimization, upstash_ttl_expiration, upstash_redis_replicas [EXTRACTED 1.00]
-- **GamePage feature design and implementation issues** — gamepage_doc, issue_80, issue_81 [EXTRACTED 1.00]
-- **hyper_likes_system** — 89_likes_instant_write, 89_optimistic_ui, 90_centralized_redis_queues, 93_upstash_migration, 95_zustand_likes_store, 95_fire_and_forget [EXTRACTED 1.00]
-- **hyper_gamepage_suite** — 82_batch_mongodb_fetch, 84_full_game_response_type, 84_game_header, 84_character_card, 84_map_card, 84_item_card, 85_responsive_layout, 85_accessibility_verification [EXTRACTED 1.00]
-- **hyper_redis_infrastructure** — 90_centralized_redis_queues, 90_queue_config_registry, 90_enqueue_drain_api, 92_remove_load_key, 93_upstash_migration, 94_remove_ioredis [EXTRACTED 1.00]
+- **Multi-Database Storage Stack** — multi_db_architecture, dep_neon, dep_mongodb, upstash_redis, convex_realtime, supabase_storage [EXTRACTED 0.95]
+- **GamePage Open-Issue Suite** — gamepage_feature, issue_81_hotness, issue_82_batch [EXTRACTED 0.90]
+- **Convex Agent Skills Family** — convex_skill, convex_create_component_skill, convex_migration_helper_skill, convex_quickstart_skill, convex_setup_auth_skill, convex_performance_audit_skill, convex_migrations_component [INFERRED 0.80]
+- **Deepslate Issue Remediations (48-70)** — ui_primitives_design_system, cache_warmup_module, redis_mget_batching, clerk_auth, bottleneck_rate_limiter, imageupload_component, form_state_management [INFERRED 0.70]
+- **Convex Performance Audit Skill Package** — pa_skill, pa_openai, pa_icon, pa_function_budget, pa_hot_path, pa_occ_conflicts, pa_subscription_cost [INFERRED 0.85]
+- **Convex Migration Helper Skill Package** — mh_openai, mh_icon, mh_migration_patterns, mh_migrations_component [INFERRED 0.80]
+- **Convex Setup Auth provider reference set** — convex_setup_auth_auth0, convex_setup_auth_clerk, convex_setup_auth_convexauth, convex_setup_auth_workos [EXTRACTED 1.00]
+- **PostHog integration setup workflow** — integration_ph_begin, integration_ph_edit, integration_ph_revise, integration_ph_conclude [INFERRED 0.80]
+- **Project agent skills (SKILL.md set)** — convex_setup_auth_skill, deploymentchecks_skill, documentation_skill, integration_ph_skill [INFERRED 0.60]
+- **Self-Assessment Skill Suite** — self_assessment_skill, assesment_skill, personality_refrences_skill, tech_arch_analysis_skill, ui_arch_analysis_skill [INFERRED 0.85]
+- **Upstash Redis Advanced Operations** — upstash_redis_skill, auto_pipeline_doc, pipeline_transactions_doc, scripting_doc [EXTRACTED 0.90]
+- **Upstash Redis usage patterns built on core data structures** — pat_caching, pat_locks, pat_leaderboard, pat_ratelimit, pat_session, rs_string, rs_set, rs_sortedset, rs_hash [INFERRED 0.80]
+- **Upstash Redis Search Subsystem Reference** — n_search_overview, n_search_adapters, n_search_querying, n_search_aggregating, n_search_index_management, n_search_aliases, c_search_api, c_schema_builder, c_tantivy [INFERRED 0.90]
+- **Upstash Redis Performance Optimization Reference** — n_data_serialization, n_error_handling, n_pipeline_optimization, n_redis_replicas, n_ttl_expiration, c_upstash_redis_sdk [INFERRED 0.85]
+- **OpenCode / Kilo Tooling Configuration** — n_opencode_config, n_opencode_package, n_kilo_package, c_graphify_plugin, c_opencode_ai_plugin, c_kilocode_plugin [INFERRED 0.80]
+- **Security Findings Collection** — sec_csrf, sec_convex_auth, sec_idempotency, sec_jwt_s2s, sec_no_authz, sec_rate_limiter [INFERRED 0.85]
+- **Architecture Documentation Set** — doc_readme, arch_architecture, arch_auth, arch_dataflow, arch_ui [INFERRED 0.80]
+- **Convex Auth Security Cluster** — convex_guidelines, sec_convex_auth, concept_staff_rbac [INFERRED 0.80]
+- **GamePage Feature Documentation Set** — doc_gamepage_quickstart, doc_gamepage_readme, doc_gamepage_summary, doc_gamepage_feature, doc_gamepage_integration, doc_gamepage_progress [EXTRACTED 1.00]
+- **API Authentication Stack** — doc_jwt_setup, doc_api_impl, jwt_validate_lib, clerk_jwt [INFERRED 0.80]
+- **UI/UX Design System Remediation Chain** — issue_48, issue_50, issue_51, design_tokens, eight_px_grid, breakpoint_strategy [EXTRACTED 1.00]
+- **Form & Image Upload Subsystem** — issue_54_form_accessibility, issue_56_object_url_leak, issue_57_prop_drilling, issue_58_form_hooks_dup, issue_69_file_stringify, concept_gamewizard_component, concept_imageupload_component, concept_gameform_context, concept_unified_useform [INFERRED 0.80]
+- **Caching & Redis Subsystem** — issue_62_cache_warmup, issue_67_redis_n1, concept_cachewarmup_module, concept_cachequeries_module, concept_redis_batch [INFERRED 0.80]
+- **Auth & API Middleware Subsystem** — issue_65_rate_limiter, issue_66_jwt_auth, concept_bottleneck_group, concept_clerk_auth [INFERRED 0.75]
+- **Redis Infrastructure Consolidation** — issue_90, issue_92, issue_93, issue_94, queue_enqueue, queue_drain [INFERRED 0.90]
+- **Likes Instant-Write Pipeline** — issue_89, issue_95, zustand_likes_store, redis_upstash [INFERRED 0.85]
+- **Convex Security Hardening** — convex_auth, convex_auth_guards, ownerid_staff_schema, sec_vulns [INFERRED 0.80]
+- **documentations/problems issue-collection** — doc_02_known_issues, doc_03_security_auth, doc_04_performance_scalability, doc_05_ui_ux_design, doc_06_data_layer_database, doc_07_architecture_code_quality, doc_08_infrastructure_deployment, doc_09_monitoring_observability, doc_10_developer_experience_docs [EXTRACTED 1.00]
+- **Public static asset set** — img_file_svg, img_globe_svg, img_next_svg, img_vercel_svg, img_window_svg, img_project_jpg [INFERRED 0.70]
+- **Authentication/Authorization Security Gaps** — convex_no_auth_guards, no_authorization_layer, internal_drain_no_s2s_auth, get_drain_csrf, idempotency_key_not_scoped, rate_limiter_bypass [EXTRACTED 0.85]
+- **Observability Blind Spots** — no_structured_logging, no_unhandled_exception_tracking, no_correlation_ids, drain_pipeline_silent_failure, mutation_tracker_silent_failure, cache_monitoring_missing, no_api_perf_instrumentation [INFERRED 0.80]
+- **Data Consistency Failure Modes** — cross_db_inconsistency, cache_database_divergence, redis_queue_concurrency_loss, like_count_dual_write_divergence, orphaned_records [INFERRED 0.75]
 
-## Communities (188 total, 29 thin omitted)
+## Communities (108 total, 27 thin omitted)
 
-### Community 0 - "Home Page & Card Grid"
-Cohesion: 0.04
-Nodes (47): Authentication Architecture, Authentication Flow, Caching, Caching Strategy, Card / Game, Component Hierarchy, CSS & Styling, Data Flow (+39 more)
-
-### Community 1 - "Architecture Documentation"
-Cohesion: 0.04
-Nodes (45): Architecture Overview — Intentional Free-Tier Optimization, Array Index as Key - FIXED, Batch Upload Has No Error Isolation, Body has `position: sticky`, Card Width Fights Grid Layout, Collapsed Menu Items Have 120px Bottom Margin, Contradictory Body Heights, CSS & Layout Conflicts (+37 more)
-
-### Community 2 - "UI/UX Issue Catalog"
+### Community 0 - "Game Fetch & Auth Hooks"
 Cohesion: 0.06
-Nodes (44): Accessibility (CRITICAL), Agent Skills Centralized, Animation (UX), Auto Serialization, Charts & Data, Convex Backend, Design System Generation, Redis Hashes (+36 more)
+Nodes (59): getGameWithBatchQueue(), pollGameResult(), requestGameFetch(), useErrorHandler(), AuthState, Toaster(), Action, ActionType (+51 more)
 
-### Community 3 - "Agent Skills Ecosystem"
-Cohesion: 0.05
-Nodes (43): AbortController for Request Cancellation, Changes Made, Files Modified, Implementation Plan, Implementation Steps, Implementation Steps, Implementation Steps, MongoDB JWT (+35 more)
+### Community 1 - "Tech Stack & Architecture Docs"
+Cohesion: 0.06
+Nodes (44): Bottleneck Rate Limiter, Cache Warmup Module, Clerk Auth, Convex Realtime, Bottleneck dependency, ioredis (legacy) dependency, MongoDB + Mongoose dependency, Neon PostgreSQL dependency (+36 more)
 
-### Community 4 - "Implementation Plans"
-Cohesion: 0.05
-Nodes (43): 10. Supabase Storage Bucket Name Hardcoded, 1. No Retry Mechanism on Supabase Operations, 2. Batch Upload Has No Error Isolation, 3. Missing Image Error Handling in UI, 4. Supabase Client Created with Non-null Assertions, 5. Supabase Auth Code Is Dead/Unused, 6. Image Upload Pipeline Uses Inefficient Data URL Conversion, 7. Public URL Generation Doesn't Verify Bucket Access (+35 more)
+### Community 2 - "Convex Agent Skills Index"
+Cohesion: 0.06
+Nodes (46): Agents Skills Index, Full Self Assessment (personality + architecture), Assessment Skill (deprecated), Automatic Pipelining (Upstash), CCC Advanced Patterns, CCC Hybrid Components, CCC Local Components, CCC Packaged Components (+38 more)
 
-### Community 5 - "Supabase & Image Pipeline Issues"
+### Community 3 - "AI Server Client & Memory"
 Cohesion: 0.08
-Nodes (35): LikeButton(), LikeButtonProps, notification barrel export, SuccessNotification(), SuccessNotificationProps, SuccessToastTrigger(), Toaster(), Action (+27 more)
+Nodes (40): aiServer, AiServerError, request(), counterIncr(), json(), MEM(), memoryClear(), memoryExport() (+32 more)
 
-### Community 6 - "JWT Setup Tutorial"
+### Community 4 - "Auth Helpers & Game Mutations"
+Cohesion: 0.08
+Nodes (29): requireAuth(), requireStaff(), STAFF_DEGREE, create, listByGame, remove, update, create (+21 more)
+
+### Community 5 - "Project Dependencies Manifest"
 Cohesion: 0.05
-Nodes (40): Access User Information, Add Claims to Token, After (With JWT), Automatic Refresh with Clerk, Before (No Auth), Best Practices, Create JWT Middleware Wrapper, Dynamic Template Selection (+32 more)
+Nodes (37): dependencies, autoprefixer, babel-plugin-react-compiler, bottleneck, class-variance-authority, clerk, @clerk/nextjs, clsx (+29 more)
 
-### Community 7 - "Backend Game Processing"
-Cohesion: 0.09
-Nodes (36): processGamesQueue function, warmUpCache function, getGamesPaginated function, insertGame function, UseMutationTrackerReturn, validateJWTMiddleware function, BackupEntry, backupPatches() (+28 more)
-
-### Community 8 - "Like Button & Toast Notifications"
-Cohesion: 0.05
-Nodes (38): dependencies, autoprefixer, babel-plugin-react-compiler, bottleneck, class-variance-authority, clerk, @clerk/nextjs, clsx (+30 more)
-
-### Community 9 - "Package Dependencies"
-Cohesion: 0.05
-Nodes (36): API Implementation Guide, Cache Population, Cache Retrieval, Caching Implementation, Check Idempotency, CORS Headers (if needed), Creating a New API Route, Database Operations (+28 more)
-
-### Community 10 - "API Implementation Guide"
+### Community 6 - "Validation Schemas & Card Props"
 Cohesion: 0.06
 Nodes (33): apiGameResponseSchema, CardGrid, cardGridSchema, CardProps, cardPropsSchema, CharacterDataDB, characterDataDBSchema, GameCardProps (+25 more)
 
-### Community 11 - "Game Fetch Pipeline (Client)"
-Cohesion: 0.13
-Nodes (30): getGameWithBatchQueue(), pollGameResult(), requestGameFetch(), useErrorHandler(), errorToast(), warningToast(), ApiErrorHandler, ClassifiedError (+22 more)
-
-### Community 12 - "Zod Validation Schemas"
-Cohesion: 0.11
-Nodes (20): MapsStepProps, characterValidators, itemValidators, mapValidators, cn(), ButtonProps, buttonVariants, Card (+12 more)
-
-### Community 13 - "Auth & Error Classification"
-Cohesion: 0.13
-Nodes (26): runMigration(), AuthState, classifyError(), clearQueue(), FetchRequest, FullGameData, getGameWithBatchQueue(), getQueueStats() (+18 more)
-
-### Community 14 - "UI Architecture Analysis"
-Cohesion: 0.06
-Nodes (31): 10. Micro-Frontends, 1. Layout System, 2. Component Architecture, 3. Design System Maturity Model, 4. Rendering Strategy, 5. State Management, 6. Responsiveness, 7. Performance Architecture (+23 more)
-
-### Community 15 - "Authentication Documentation"
-Cohesion: 0.06
-Nodes (30): Authenticated Client Creation, Authentication System Documentation, Clerk Integration, Dynamic Validation, Error Responses, Expired Token, Get Test Token, Implementation (+22 more)
-
-### Community 16 - "GamePage Feature Suite"
+### Community 7 - "Games Form Wizard"
 Cohesion: 0.10
-Nodes (26): CharactersStepProps, GamesFormWizardProps, ItemsStepProps, createEmptyCharacter(), createEmptyItem(), createEmptyMap(), STEP_KEYS, useGamesForm() (+18 more)
+Nodes (27): GamesFormWizardProps, createEmptyCharacter(), createEmptyItem(), createEmptyMap(), STEP_KEYS, useGamesForm(), FormActions, FormState (+19 more)
 
-### Community 17 - "PostHog Integration Setup"
+### Community 8 - "Game Detail Page Components"
 Cohesion: 0.11
-Nodes (21): filterEntriesWithImages(), arrayBufferToBase64(), CreateForm(), STATUS_COLOR_MAP, tagsComponent(), useGameForm(), AbortableRequest, useIdempotentRequest() (+13 more)
+Nodes (27): useGameCache(), UseGameCacheResult, useGamePreload(), CharacterTabs(), CharacterTabsProps, GameHeader(), GameHeaderProps, ItemGrid() (+19 more)
 
-### Community 18 - "Root Layout & Convex Provider"
-Cohesion: 0.10
-Nodes (30): Batch MongoDB Fetch via Redis Queue, Batch Worker, Redis Batch Pipeline, CharacterCard Component, FullGameResponse Type, GameHeader Component, GamePageError Boundary, GamePageSkeleton Loading State (+22 more)
+### Community 9 - "Form Wizard Steps"
+Cohesion: 0.12
+Nodes (20): CharactersStepProps, ItemsStepProps, MapsStepProps, characterValidators, itemValidators, SuccessNotification(), SuccessNotificationProps, SuccessToastTrigger() (+12 more)
 
-### Community 19 - "PostHog Mobile/Web"
-Cohesion: 0.07
-Nodes (29): 1. Install dependencies, 2. Configure environment variables, 3. Run the development server, App router differences from pages router, Client-side initialization (instrumentation-client.ts), Deploy on Vercel, .env.example, Error tracking (profile/page.tsx) (+21 more)
+### Community 10 - "Neon DB Client & Migrations"
+Cohesion: 0.16
+Nodes (26): sql, runMigration(), getGameById(), getGames(), getGamesPaginated(), insertGame(), updateGameLikes(), retry() (+18 more)
 
-### Community 20 - "API Routes & Auth Middleware"
-Cohesion: 0.08
-Nodes (11): convex, ConvexClientProvider(), cormorant, dmSans, geistMono, geistSans, metadata, AuthStatus (+3 more)
-
-### Community 21 - "Form Step Components"
+### Community 11 - "Play Screen & Scenarios"
 Cohesion: 0.14
-Nodes (19): ensureCachePrimed(), GET(), CACHE_KEYS, GET(), CACHE_KEYS, checkCachePrimed(), getCachedGameIds(), getGameFromCache() (+11 more)
+Nodes (23): PlayGate(), Message, PlayScreen(), PlayScreenProps, readJson(), ScenarioEntryProps, clearMemory(), createScenario() (+15 more)
 
-### Community 22 - "Games API Cache & Drain"
-Cohesion: 0.17
-Nodes (20): POST(), POST(), GET(), GET(), createAuthenticatedSupabaseClient(), getServiceToken(), ServiceConfig, serviceConfigs (+12 more)
+### Community 12 - "Game Pipeline Design Docs"
+Cohesion: 0.12
+Nodes (30): Batch MongoDB Merge Queue, Game Fetch Batch Pipeline, Binary-Search Hotness Cache Design, Breakpoint Strategy, cache-warmup getGameFromCache/setGameInCache, Clerk JWT Auth, CompactMap (archived hashmap design), DB Retry safeQuery/retry (+22 more)
 
-### Community 23 - "Architecture Overview Doc"
-Cohesion: 0.07
-Nodes (28): Accessing PostHog, App router, Beta: integration via LLM, Bun, Bun, Client-side setup, Community questions, Configuring a reverse proxy to PostHog (+20 more)
+### Community 13 - "Create Form & Image Upload"
+Cohesion: 0.12
+Nodes (17): filterEntriesWithImages(), arrayBufferToBase64(), CreateForm(), STATUS_COLOR_MAP, tagsComponent(), useGameForm(), AbortableRequest, useIdempotentRequest() (+9 more)
 
-### Community 24 - "Documentation Structure"
-Cohesion: 0.07
-Nodes (26): API Layer, Architecture Overview, Authentication Layer, Cache Invalidation Strategy, Cache Layer (Redis), Caching Strategy, Component Overview, Connection Matrix (+18 more)
+### Community 14 - "Mutation Tracker & Patch Backup"
+Cohesion: 0.15
+Nodes (22): UseMutationTrackerReturn, BackupEntry, backupPatches(), clearBackup(), restorePatches(), applyAdd(), applyGamePatches(), applyRemove() (+14 more)
 
-### Community 25 - "Form UI Components"
-Cohesion: 0.08
-Nodes (25): Architecture Connections, 🔧 Building Features, Document Maintenance, Documentation Structure Complete ✅, 📋 Documentations Folder (3 files), Files Created (8 Total), 🐛 Fixing Performance, Folder Structure Created (+17 more)
+### Community 15 - "Error Page Components"
+Cohesion: 0.15
+Nodes (15): BadRequestErrorPage(), BadRequestErrorPageProps, ForbiddenErrorPage(), ForbiddenErrorPageProps, GeneralErrorPage(), GeneralErrorPageProps, NotFoundErrorPage(), NotFoundErrorPageProps (+7 more)
 
-### Community 26 - "Issues Index & Categories"
-Cohesion: 0.08
-Nodes (25): ♿ Accessibility, 🏗️ Architecture/State Management, By Impact Area, By Severity, 🎯 Component & UI/UX, ✏️ Contributing, 🐛 Critical Bugs (Backend), For Code Review (+17 more)
-
-### Community 27 - "JWT Validation Guide"
-Cohesion: 0.08
-Nodes (25): 1. Get a Test Token, 1. Token Validation Flow, 2. API Routes with Validation, 2. Use Token in API Call, 3. Making Authenticated Requests, "CLERK_JWT_SECRET not configured", Environment Variables, Error Responses (+17 more)
-
-### Community 28 - "Security Vulnerabilities"
-Cohesion: 0.08
-Nodes (25): 10. Privilege Escalation via JWT, 11. Information Disclosure in Error Messages, 12. No Audit Logging, 13. No HTTPS Enforcement, 14. Missing Security Headers, 15. No API Versioning, 1. JWT Secret Exposure in Environment, 2. Missing Token Expiration Validation (+17 more)
-
-### Community 29 - "Convex CRUD Operations"
-Cohesion: 0.11
-Nodes (19): create, listByGame, remove, update, create, get, list, remove (+11 more)
-
-### Community 30 - "Convex Quickstart"
-Cohesion: 0.08
-Nodes (24): Agent Mode, Checklist, Convex Quickstart, Development vs Production, Environment variables, Install, Next.js (App Router), Next Steps (+16 more)
-
-### Community 31 - "Neon PostgreSQL"
-Cohesion: 0.08
-Nodes (24): Autoscaling, Branching, Connection Methods & Drivers, Connection Pooling, Developer Tools, Fetching Docs as Markdown, Finding the Right Page, Getting Started (+16 more)
-
-### Community 32 - "Known Issues & Performance"
-Cohesion: 0.08
-Nodes (24): 10. Orphaned Records, 11. Null/Undefined References, 12. No Performance Metrics, 13. No Error Tracking, 14. No Zero-Downtime Deployment, 15. Monolithic API Design, 1. N+1 Query Problem, 2. Cache Stampede (+16 more)
-
-### Community 33 - "Project Aliases & Imports"
+### Community 16 - "Project Issues & DX Audit"
 Cohesion: 0.14
-Nodes (17): ProfileCard(), useGameCache(), UseGameCacheResult, useGamePreload(), useGamePreloadStore(), CharacterTabs(), CharacterTabsProps, GameHeader() (+9 more)
+Nodes (25): Design System / CSS Modules (globals.css tokens), Project Configuration (package.json, .env, tsconfig), Known Issues & Performance Problems, Security & Authentication Issues, Performance & Scalability Issues, UI/UX & Design System Issues, Data Layer & Database Issues, Architecture & Code Quality Issues (+17 more)
 
-### Community 34 - "Documentation Index"
+### Community 17 - "UI Component Aliases Config"
 Cohesion: 0.08
 Nodes (23): aliases, components, hooks, lib, ui, utils, iconLibrary, menuAccent (+15 more)
 
-### Community 35 - "Convex Performance Rules"
-Cohesion: 0.08
-Nodes (23): Add a new API route, Architecture, Authentication, Common Tasks, Contributing to Documentation, Data Storage Strategy, Debug a performance issue, Documentation Index (+15 more)
+### Community 18 - "Redis Data Structure Docs"
+Cohesion: 0.14
+Nodes (24): Hashes data structure doc, JSON data structure doc, Lists data structure doc, Sets data structure doc, Sorted Sets data structure doc, Streams data structure doc, Strings data structure doc, Migrating from ioredis doc (+16 more)
 
-### Community 36 - "PostHog User Identification"
-Cohesion: 0.08
-Nodes (23): 1. Push Filters To Storage, 2. Minimize Data Sources, 3. Minimize Row Size, 4. Isolate Frequently-Updated Fields, 5. Match Consistency To Read Patterns, Aggregates, Backfills, Check for redundant indexes (+15 more)
-
-### Community 37 - "Data Flow Documentation"
-Cohesion: 0.08
-Nodes (23): 1\. Call `identify` as soon as you're able to, 2\. Use unique strings for distinct IDs, 3\. Reset after logout, 4\. Person profiles and properties, 5\. Use deep links between platforms, Android, Android, Android (+15 more)
-
-### Community 38 - "MongoDB Game Queue"
+### Community 19 - "Service Auth & JWT Routes"
 Cohesion: 0.18
-Nodes (15): BadRequestErrorPage(), BadRequestErrorPageProps, ForbiddenErrorPage(), ForbiddenErrorPageProps, GeneralErrorPage(), GeneralErrorPageProps, NotFoundErrorPage(), NotFoundErrorPageProps (+7 more)
+Nodes (16): POST(), POST(), GET(), createAuthenticatedSupabaseClient(), getServiceToken(), ServiceConfig, serviceConfigs, ServiceName (+8 more)
 
-### Community 39 - "Deployment Checks Skill"
-Cohesion: 0.09
-Nodes (22): API Request/Response Flow, API Routes → MongoDB, API Routes → PostgreSQL, API Routes → Redis, API Routes → Supabase, Cache Error, Complete Game Lifecycle, Data Flow Documentation (+14 more)
+### Community 20 - "Likes Queue & Rate Limit"
+Cohesion: 0.14
+Nodes (12): ensureCachePrimed(), GET(), getCachedGameIds(), mergePendingLikesBatch(), redis, limiterGroup, rateLimitMiddleware(), POST() (+4 more)
 
-### Community 40 - "Error Page Components"
-Cohesion: 0.09
-Nodes (21): Build Output Analysis, Build Process Specifics, Common Issues Encountered, Deployment Checks Skill, Deployment Readiness Sign-Off, Fixing Hook Usage, Fixing Import Issues, Fixing TypeScript Parameter Types (+13 more)
+### Community 21 - "Cache Warmup & Hotness Cache"
+Cohesion: 0.16
+Nodes (19): GET(), CACHE_KEYS, checkCachePrimed(), getGameFromCache(), mergePendingLikes(), setCachePrimed(), setGameInCache(), warmUpCache() (+11 more)
 
-### Community 41 - "Learning Gotchas"
-Cohesion: 0.09
-Nodes (21): ~~10. Retry Logic~~ ✅, 1. JWT (JSON Web Tokens) - Structure Deep Dive, 2. Clerk JWT Templates - How They Work, 3. Supabase JWT Validation - Shared Secrets vs Public Keys, 4. RLS (Row Level Security) - ❌ IDK, 5. AbortController - ❌ IDK, ~~5. Middleware~~ ✅, 6. HS256 vs RS256 - Signing Algorithms (+13 more)
+### Community 22 - "Sidebar & Profile Menu"
+Cohesion: 0.14
+Nodes (12): AuthStatus(), UnauthenticatedOverlay(), Sidebar(), SidebarItem, SidebarProps, ProfileCard(), LikeButton(), LikeButtonProps (+4 more)
 
-### Community 42 - "Convex Guidelines"
+### Community 23 - "Games Form Validation"
 Cohesion: 0.10
-Nodes (20): Action guidelines, Authentication guidelines, Convex guidelines, Cron guidelines, File storage guidelines, Full text search guidelines, Function calling, Function guidelines (+12 more)
+Nodes (13): createFieldValidator(), mapValidators, ValidationFn, ValidationResult, CHARACTER_VALIDATION, ITEM_VALIDATION, MAP_VALIDATION, ValidationConfig (+5 more)
 
-### Community 43 - "UI Architecture Assessment"
-Cohesion: 0.10
-Nodes (20): Accessibility, Blind Spots, Complexity Dimensions Assessment, Component Architecture, Component Count Scale, Cross-Reference with Personality (ENTP 5w4), Design System Maturity, Growth Path (+12 more)
+### Community 24 - "Form Context & Cache Queries"
+Cohesion: 0.14
+Nodes (20): lib/cacheQueries.ts (runtime queries), lib/cache-warmup.ts (startup init), GameFormContext (React Context), GameWizard Component, ImageUpload Component, JSON.stringify File Serialization, Object URL Lifecycle Management, React Query (@tanstack/react-query) (+12 more)
 
-### Community 44 - "Convex Subscription Costs"
-Cohesion: 0.10
-Nodes (20): 1. Use point-in-time reads when live updates are not valuable, 2. Batch related data into fewer queries, 3. Use skip to avoid unnecessary subscriptions, 4. Isolate frequently-updated fields into separate documents, 5. Use the aggregate component for counts and sums, 6. Narrow query read sets, 7. Remove `Date.now()` from queries, 8. Consider pagination strategy (+12 more)
-
-### Community 45 - "Issue #62 Cache Helpers"
-Cohesion: 0.10
-Nodes (19): Best Practice Pattern, Category, Code Example - Problem, Documentation, File Structure, Files Modified, Issue #62: Added route-specific helpers to cache-warmup module, lib/cache-warmup.ts (+11 more)
-
-### Community 46 - "JWT Implementation Summary"
-Cohesion: 0.10
-Nodes (19): 1. Configure Environment Variables, 1. `lib/jwt-validate.ts`, 2. Client-side: Send Token with Request, 3. API Routes: Validate Token, Documentation, Error Handling, Files Created, Files Modified (+11 more)
-
-### Community 47 - "Original README Sections"
-Cohesion: 0.21
-Nodes (15): processGamesQueue(), GamesFormDataDB, getQueueConfig(), OperationProvider, QueueConfig, QueueName, getGamesQueue(), pushGameToQueue() (+7 more)
-
-### Community 48 - "PostgreSQL Queries"
-Cohesion: 0.10
-Nodes (19): API Routes, Architecture Overview, Authentication, Components, Database, Deepslate Dungeons, Development, Environment Variables (+11 more)
-
-### Community 49 - "TypeScript Compiler Options"
+### Community 25 - "TypeScript Config"
 Cohesion: 0.10
 Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
 
-### Community 50 - "Games Form Wizard"
-Cohesion: 0.11
-Nodes (18): 10. Implemented Clerk JWT Integration for Multiple Services, 11. Implemented Idempotency with UUID v7 and AbortController, 1. Added Retry Mechanism to Supabase Operations, 2. Fixed Batch Upload Error Isolation, 3. Added Image Error Handling in UI, 4. Removed Dead Supabase Auth Code, 5. Made Supabase Bucket Name Configurable, 6. Fixed Non-null Assertion Issue (+10 more)
+### Community 26 - "Likes Batch API Routes"
+Cohesion: 0.18
+Nodes (14): GET(), insertGamesBatch(), updateGamesLikesBatch(), POST(), Likes, getQueueConfig(), OperationProvider, QueueConfig (+6 more)
 
-### Community 51 - "Task Completion Summary"
-Cohesion: 0.11
-Nodes (18): 1. Bound your reads, 2. Read smaller shapes, 3. Break large mutations into batches, 4. Move heavy work to actions, 5. Trim return values, 6. Replace `ctx.runQuery` and `ctx.runMutation` with helper functions, 7. Avoid unnecessary `runAction` calls, Common Causes (+10 more)
-
-### Community 52 - "Convex Function Budget"
-Cohesion: 0.11
-Nodes (18): 8px Grid System, Auth Pages (Centered), Card Grid, Common Patterns, Component Architecture Patterns, Component Library Selection, CSS Custom Properties (works with all libraries), Decision Framework (+10 more)
-
-### Community 53 - "UI Design Patterns"
-Cohesion: 0.11
-Nodes (17): 2a. Technical Architecture Analysis, 2b. UI Architecture Analysis, Complete Example, Full Self Assessment, Given: User is ENTP 7w8, Project is Deepslate Dungeons, How Strengths & Weaknesses are Derived, How to Use This Skill, Input (+9 more)
-
-### Community 54 - "Self-Assessment Skill"
-Cohesion: 0.11
-Nodes (17): Adding Index, Adding New Table, Adding Optional Field, Breaking Changes: The Deployment Workflow, Common Migration Patterns, Common Pitfalls, Convex Migration Helper, Don't Delete Data (+9 more)
-
-### Community 55 - "Convex Migration Patterns"
-Cohesion: 0.11
-Nodes (17): Category, Code Example - Problem, Files Modified, Finding Index Keys, Issue #59: Array index as React key in list rendering, Key Principles, Migration Checklist, Performance Impact (+9 more)
-
-### Community 56 - "Issue #59 React Keys"
-Cohesion: 0.11
-Nodes (17): Best Practice Pattern, Category, Code Example - Problem, Code Locations, Enhanced Utilities Module, File Structure, Files Modified, Issue #60: Duplicate sleep utility defined in two files (+9 more)
-
-### Community 57 - "Issue #60 Sleep Utility"
-Cohesion: 0.11
-Nodes (17): Benefits, Best Practice Decision Tree, Category, Code Example - Problem, Files Modified, Issue #64: Unnecessary Zod schema for simple query params, Migration Checklist, Performance Impact (+9 more)
-
-### Community 58 - "Issue #64 Unnecessary Zod"
-Cohesion: 0.23
-Nodes (13): sql, getGameById(), getGames(), insertGame(), insertGamesBatch(), updateGameLikes(), updateGamesLikesBatch(), getLikesQueue() (+5 more)
-
-### Community 59 - "Deepslate Full Assessment"
-Cohesion: 0.11
-Nodes (17): Blind Spots, Cross-Reference: Personality × Architecture, Deepslate Dungeons - Full Project Assessment, Executive Summary, Final Verdict, Growth Path, Immediate (Next 1-2 Weeks), Long-Term (Next Quarter) (+9 more)
-
-### Community 60 - "Architecture Scale Projection"
-Cohesion: 0.11
-Nodes (17): At 100 Concurrent Users, At 10,000 Concurrent Users, At 1,000 Concurrent Users, Complexity Classification, Complexity Dimensions, Complexity Score, Example Analysis, How to Use This Skill (+9 more)
-
-### Community 61 - "Convex Component Patterns"
-Cohesion: 0.12
-Nodes (16): Advanced Patterns, Authentication and environment access, Checklist, Choose the Shape, Client-facing API, Component Skeleton, Convex Create Component, Critical Rules (+8 more)
-
-### Community 62 - "Form Validation Rules"
-Cohesion: 0.17
-Nodes (12): FormActions, FormState, useFormState(), initialFormData, STEP_KEYS, useGamesForm(), UseGamesFormReturn, CharacterData (+4 more)
-
-### Community 63 - "Issue #55 State Management"
-Cohesion: 0.12
-Nodes (16): Architecture Pattern, Category, Code Example - Problem, Comprehensive Implementation, Files Modified, Issue #55: Inadequate state management - 100% local state, no caching, Performance Impact, Problem Description (+8 more)
-
-### Community 64 - "Issue #65 Rate Limiter"
-Cohesion: 0.12
-Nodes (16): Advanced Configuration, Best Practice Pattern, Category, Code Example - Problem, Files Modified, Issue #65: Rate limiter uses wrong Bottleneck API, Migration Checklist, Performance Metrics (+8 more)
-
-### Community 65 - "Issue #66 JWT Auth"
-Cohesion: 0.12
-Nodes (16): Architecture Pattern, Category, Code Example - Problem, Environment Variables, Files Modified, Issue #66: Wrong JWT auth approach - jsonwebtoken with Neon/MongoDB, Problem Description, Refactoring Checklist (+8 more)
-
-### Community 66 - "Development Obstacles"
-Cohesion: 0.12
-Nodes (16): 10. `UserProfile` Route Not a Catch-All, 11. Auth Overlay Was Rendering Page Content Behind It, 12. Sidebar AuthStatus Duplicating Buttons, 13. Auth-Gate Z-Index Stacking Issues, 14. Next.js App Router Learning Curve, 15. Convex Guidelines Not Followed Initially, 1. Convex Agent Skills Split Across Two Directories, 2. `npx convex ai-files install` Overwrote CLAUDE.md (+8 more)
-
-### Community 67 - "Convex Performance Audit"
-Cohesion: 0.22
-Nodes (16): authHelpers.ts — requireAuth() + requireStaff(), Issue: Convex authorization — closed, characters.ts — auth guards added, games.ts — fixed import + auth guards, items.ts — auth guards added, maps.ts — auth guards added, schema.ts — ownerId fields + staff table, staff.ts — staff table CRUD + getStaffDegree (+8 more)
-
-### Community 68 - "Image & Form Utilities"
-Cohesion: 0.12
-Nodes (15): 1. Scope the problem, 2. Trace the full read and write set, 3. Apply fixes from the relevant reference, 4. Fix sibling functions together, 5. Verify before finishing, Checklist, Convex Performance Audit, Escalate Larger Fixes (+7 more)
-
-### Community 69 - "Issue #57 Prop Drilling"
-Cohesion: 0.14
-Nodes (8): createFieldValidator(), ValidationFn, ValidationResult, SQL_INJECTION_PATTERNS, validateText(), ValidationOptions, ValidationResult, WEIRD_CHARACTER_PATTERNS
-
-### Community 70 - "Issue #58 Form Hooks"
-Cohesion: 0.12
-Nodes (15): Category, Code Example - Problem, File Structure, Files Modified, Issue #57: Excessive prop drilling in wizard form, Optimization Pattern, Performance Improvement, Problem Description (+7 more)
-
-### Community 71 - "Issue #61 Likes Count"
-Cohesion: 0.12
-Nodes (15): Category, Code Example - Problem, Consolidated Hook Pattern, File Structure, Files Modified, Issue #58: Two nearly identical form hooks - code duplication, Migration Steps, Problem Description (+7 more)
-
-### Community 72 - "Project Version History"
-Cohesion: 0.12
-Nodes (15): Before/After, Best Practice Pattern, Category, Code Example - Problem, Data Recovery, Files Modified, Issue #61: Likes count reset to 0 instead of using DB value, Problem Description (+7 more)
-
-### Community 73 - "Convex OCC Conflicts"
-Cohesion: 0.12
-Nodes (15): API Routes, Architecture Overview, Authentication, Clerk JWT Templates, Commands, Completed Tasks, Environment Variables, How It Works (+7 more)
-
-### Community 74 - "Mongoose Schemas"
-Cohesion: 0.12
-Nodes (15): 1. Reduce read set size, 2. Split hot documents, 3. Move non-critical work to scheduled functions, 4. Combine competing writes, Broad read sets causing false conflicts, Common Causes, Core Principle, Fan-out from triggers or cascading writes (+7 more)
-
-### Community 75 - "Game Creation Pipeline"
-Cohesion: 0.15
-Nodes (12): ConvertUrl API Route, ConvertGameImages API Route, Push API Route, Push Games API Route, CardsGrid Component, CardsGridWrapper Component, ProfileCard Component, CreateForm Component (+4 more)
-
-### Community 76 - "Issue #56 Memory Leak"
-Cohesion: 0.13
-Nodes (14): Category, Code Example - Problem, Files Modified, Issue #56: Object URL memory leak in ImageUpload, Memory Impact, Object URL Lifecycle Best Practices, Problem Description, Related Issues (+6 more)
-
-### Community 77 - "Issue #67 N+1 Redis"
-Cohesion: 0.13
-Nodes (14): Best Practice Pattern, Category, Code Example - Problem, Files Modified, Issue #67: N+1 Redis query in games API - individual GET per game ID, Performance Impact, Performance Improvement, Problem Description (+6 more)
-
-### Community 78 - "Issue #68 Double Read"
-Cohesion: 0.13
-Nodes (14): Best Practice, Category, Code Example, Files Modified, Issue #68: Double-read request body in /api/convertUrl, Problem Description, Refactoring Pattern, Related Issues (+6 more)
-
-### Community 79 - "Issue #69 File Loss"
-Cohesion: 0.13
-Nodes (14): Category, Code Example, Files Modified, Implementation Checklist, Issue #69: File object silently lost in JSON.stringify, Problem Description, Recommended Approach, Related Issues (+6 more)
-
-### Community 80 - "Convex Migrations Workflow"
-Cohesion: 0.13
-Nodes (14): Cancel a Running Migration, Check Migration Status, Configuration Options, Custom Batch Size, Define a Migration, Dry Run, Installation, Migrate a Subset Using an Index (+6 more)
-
-### Community 81 - "Form Step Notifications"
-Cohesion: 0.20
-Nodes (7): ApiGameResponse, ApiResponse, CardGrid, CardProps, GameCardProps, fetchGamesFromApi(), prepareGameCard()
-
-### Community 82 - "Issue #70 Data URL Round-trip"
-Cohesion: 0.14
-Nodes (13): Benefits, Category, Code Example, Files Modified, Issue #70: Wasteful data URL fetch round-trip in image pipeline, Performance Impact, Problem Description, Related Issues (+5 more)
-
-### Community 83 - "Graph Skill Authoring"
+### Community 27 - "GitHub Issues Documentation"
 Cohesion: 0.19
-Nodes (7): CardsGridProps, loadCache(), saveCache(), tryOrErrorSync(), cacheResult(), getCachedResult(), withIdempotencySafe()
+Nodes (20): Cross-Database Read/Write Inconsistency (PG + Mongo), Issue #87: Duplicate DB Retry Mechanism, Issue #88: Games Centralized Errors and Bug Fixes, Issue #89: Likes System Instant Write + Async Drain, Issue #90: Centralized Redis Queues, Issue #91: State Sync JSON Patch for In-Game Mutations, Issue #92: Remove Dead 'load' Key Signaling, Issue #93: Migrate from Redis Cloud to Upstash Redis (+12 more)
 
-### Community 84 - "Personality Framework"
+### Community 28 - "System Architecture Overview"
+Cohesion: 0.15
+Nodes (19): System Architecture Overview, Authentication System, Data Flow Documentation, UI Design System, System Architecture Layers (Frontend/Auth/API/Cache/DB), Abyss/Ember Design Tokens, CSS Modules + cn() Hybrid Styling Pattern, JWT Validation Flow (+11 more)
+
+### Community 29 - "Home Page Card Grid"
+Cohesion: 0.15
+Nodes (11): CardsGrid(), CardsGridProps, loadCache(), saveCache(), ApiGameResponse, ApiResponse, CardGrid, CardProps (+3 more)
+
+### Community 30 - "Database Layer Issues"
+Cohesion: 0.15
+Nodes (17): Batch Fetch Pipeline Race in Queue Dequeue, Cache/Database Divergence, Cache Warmup Inefficiency (no pipeline / no partial handling), Convex list Query No Server-Side Pagination Cap, Cross-DB Read/Write Inconsistency (Postgres+Mongo), MongoDB Game id Missing unique Constraint, Like Count Dual-Write Diverges from DB, Mongo Null Image vs Zod Non-Nullable String (+9 more)
+
+### Community 31 - "Upstash Redis Search"
+Cohesion: 0.20
+Nodes (17): Upstash Search Schema Builder (s), Upstash Redis Search API (redis.search), @upstash/search-ioredis adapter (ioredis TCP), @upstash/search-redis adapter (node-redis TCP), Tantivy full-text search engine, @upstash/redis SDK (Redis class), Upstash Redis JS - Data Serialization, Upstash Redis JS - Error Handling (+9 more)
+
+### Community 32 - "Documentation & DX Issues"
+Cohesion: 0.18
+Nodes (15): AGENTS.md Skills Inventory Omits 8+ Skills, babel-plugin-react-compiler in dependencies, Broken Link to architicture/architecture.md, Duplicate assessment vs assesment Skill Dirs, Env Var Non-Null Assertions Without Validation, GamePage Docs Fragmented Across 11 Files, Missing Root AGENTS.md (Broken AI Reference), NEXT_PUBLIC_CONVEX_URL Missing in .env (+7 more)
+
+### Community 33 - "UI/UX Design System Issues"
+Cohesion: 0.16
+Nodes (15): Contrast Ratio Deficiency on Link/Secondary Buttons, Inline Animation Values Bypass Design System, No 8px Baseline Grid in Layout System, No prefers-reduced-motion Guard, Orphaned CSS Module CardsLoad.module.css, UI/UX & Design System Issues, ProfileCard Button Has No Accessible Name, public/file.svg (+7 more)
+
+### Community 34 - "Performance & Scalability Issues"
+Cohesion: 0.15
+Nodes (13): Cache Stampede on Concurrent Miss, Unbounded Redis Cache Memory Growth, Monolithic API Design Does Not Scale, N+1 Query Problem in Games API, No Error Tracking Service, No Performance Metrics / Instrumentation, No Zero-Downtime Deployment, Null/Undefined Cross-Refs in MongoDB (+5 more)
+
+### Community 35 - "Observability & Monitoring Issues"
+Cohesion: 0.27
+Nodes (13): Background Worker Crashes Lose Jobs, Cache Warmup / Hotness Cache Unmonitored, Drain Pipeline Silent Failure (no alerting), Hotness Cache Full-State Transfer Amplification, Mutation Tracker Silent Save Failure, No API Response Time Instrumentation, No User Session / Auth Lifecycle Tracking, No Business / User Action Metrics (+5 more)
+
+### Community 36 - "Game Fetch Batch Pipeline"
+Cohesion: 0.19
+Nodes (11): processGamesQueue(), connectDB(), clearQueue(), FetchRequest, FullGameData, getGameWithBatchQueue(), getQueueStats(), processBatch() (+3 more)
+
+### Community 37 - "Clerk Staff Authorization"
+Cohesion: 0.31
+Nodes (9): getRoleLabel(), hasMinimumDegree(), isStaff(), ROLE_TTL, STAFF_DEGREE, StaffDegree, AuthorizationResult, StaffAssignment (+1 more)
+
+### Community 38 - "Supabase Image Upload"
 Cohesion: 0.23
 Nodes (7): uploadImage(), supabase, ImageUploadOptions, UploadOptions, UploadProgress, convertToWebp(), convertComponentImagesJSON()
 
-### Community 85 - "Issue #75 Form Styles"
-Cohesion: 0.14
-Nodes (13): Backwards Compatibility / Migration, Deliverable Checklist, Example Output (YAML snippet), Implementation Notes for Skill Authors, Inputs, Outputs, Phases, References (local) (+5 more)
-
-### Community 86 - "Issue #77 Zod Validation"
-Cohesion: 0.15
-Nodes (12): 1. MBTI Core Type (Lens 1), 2. Grip / Stress States (Lens 2), 3. Enneagram Core (Lens 3), 4. Shadow Functions (Lens 4), 5. Dark Side (Lens 5), How to Use This Skill, Output Format, Personality References Framework (+4 more)
-
-### Community 87 - "Problems Index"
-Cohesion: 0.23
-Nodes (12): CLAUDE.md — Agent Instructions, Data Structures Documentation, Documentation Index, GamePage Feature Documentation, Issue #78: DB Retry Mechanism, Issue #80: GamePage Card Click Navigation, Issue #81: Binary-Search Hotness Cache, PLAN.md — Development Plan (+4 more)
-
-### Community 88 - "Convex Auth Setup"
-Cohesion: 0.17
-Nodes (11): Button fix, Category, Files Modified, Issue #75: Form styles - button, preview, and wizard layout issues, Preview image fix, Problem Description, Solution Implemented, Status (+3 more)
-
-### Community 89 - "Migration Patterns Reference"
-Cohesion: 0.17
-Nodes (11): 1. Created `types/validation.ts` — centralized Zod schema definitions, 2. Refactored `/app/api/push/route.ts` to use shared schemas, 3. Security benefits, Category, Files Modified, Issue #77: Centralized Zod validation — security and consistency, Problem Description, Related Issues (+3 more)
-
-### Community 90 - "GamePage Documentation & Issues"
-Cohesion: 0.17
-Nodes (11): Problem 10: Form Accessibility Deficiencies, Problem 1: Inconsistent Layout System, Problem 2: Excessive Prop Drilling in Wizard Form, Problem 3: Missing Design System Maturity, Problem 4: Accessibility Gaps, Problem 5: Rendering Strategy Inefficiencies, Problem 6: Missing Performance Optimizations, Problem 7: Inadequate State Management (+3 more)
-
-### Community 91 - "Auth Provider Setup Checklist"
-Cohesion: 0.17
-Nodes (11): Checklist, Concrete Steps, Convex Auth, Expected Files and Decisions, Gotchas, Human Handoff, Production, Validation (+3 more)
-
-### Community 92 - "Dev Dependencies"
-Cohesion: 0.17
-Nodes (11): Adding a Required Field, Changing a Field Type, Cleaning Up Orphaned Documents, Deleting a Field, Dual Read, Dual Write (Preferred), Migration Patterns Reference, Small Table Shortcut (+3 more)
-
-### Community 93 - "Auth0 Setup"
+### Community 39 - "Root Layout & Convex Provider"
 Cohesion: 0.18
-Nodes (10): After Choosing a Provider, Checklist, Convex Authentication Setup, Core Pattern: Protecting Backend Functions, First Step: Choose the Auth Provider, Provider References, Reference Files, When Not to Use (+2 more)
+Nodes (5): convex, ConvexClientProvider(), cormorant, dmSans, metadata
 
-### Community 94 - "Clerk Setup"
+### Community 40 - "Games Form State Hook"
+Cohesion: 0.24
+Nodes (8): initialFormData, STEP_KEYS, UseGamesFormReturn, CharacterData, GamesFormData, GamesFormStep, ItemData, MapData
+
+### Community 41 - "Architecture & Code Quality Issues"
+Cohesion: 0.21
+Nodes (12): Dead Code: lib/supabase-auth.ts Placeholder, Dead Code: Empty hooks/useGameCache.ts, Duplicate Sidebar Wrappers (ProfileMenu == Sbar), Duplicate useGamesForm Hooks, Error Handler Imports UI Components, Import Cycle exceptions/notifications, Missing React Error Boundary, Architecture & Code Quality Issues (+4 more)
+
+### Community 42 - "Convex Performance Audit Skill"
+Cohesion: 0.33
+Nodes (11): Function Budget Reference, Hot Path Rules Reference, Convex Performance Audit Icon, OCC Conflict Resolution Reference, Convex Performance Audit Agent Config, Convex Performance Audit Skill, Subscription Cost Reference, Convex Quickstart Icon (+3 more)
+
+### Community 43 - "Dev Dependencies & Type Tooling"
 Cohesion: 0.18
 Nodes (11): devDependencies, eslint, eslint-config-next, tw-animate-css, @types/mongoose, @types/node, @types/pako, @types/react (+3 more)
 
-### Community 95 - "WorkOS AuthKit Setup"
-Cohesion: 0.18
-Nodes (10): Auth0, Checklist, Concrete Steps, Files and Env Vars To Expect, Gotchas, Key Setup Areas, Production, Validation (+2 more)
-
-### Community 96 - "Supabase Storage & Images"
-Cohesion: 0.18
-Nodes (10): Checklist, Clerk, Concrete Steps, Files and Env Vars To Expect, Gotchas, Key Setup Areas, Production, Validation (+2 more)
-
-### Community 97 - "Issue #48 Layout System"
-Cohesion: 0.18
-Nodes (10): Checklist, Concrete Steps, Files and Env Vars To Expect, Gotchas, Key Setup Areas, Production, Validation, What To Do (+2 more)
-
-### Community 98 - "Issue #49 Rendering Strategy"
-Cohesion: 0.20
-Nodes (9): 8px Grid Benefits, Category, Files Modified, Issue #48: Inconsistent layout system - no 8px grid, arbitrary spacing, Problem Description, Related Issues, Solution Implemented, Status (+1 more)
-
-### Community 99 - "Issue #50 Design System"
-Cohesion: 0.20
-Nodes (9): Benefits, Category, Files Modified, Issue #49: Rendering strategy inefficiencies - all-client components, Problem Description, Related Issues, Solution Implemented, Status (+1 more)
-
-### Community 100 - "Issue #51 Responsiveness"
-Cohesion: 0.20
-Nodes (9): Category, Design System Components, Files Created, Issue #50: Missing design system maturity - no shared primitives, Problem Description, Related Issues, Solution Implemented, Status (+1 more)
-
-### Community 101 - "Issue #52 Component Coupling"
-Cohesion: 0.20
-Nodes (9): Breakpoint Strategy, Category, Files Modified, Issue #51: Responsiveness implementation gaps - no breakpoint strategy, Problem Description, Related Issues, Solution Implemented, Status (+1 more)
-
-### Community 102 - "Issue #53 Accessibility"
-Cohesion: 0.20
-Nodes (9): Benefits, Category, Files Modified, Issue #52: Component coupling and reusability issues, Problem Description, Related Issues, Solution Implemented, Status (+1 more)
-
-### Community 103 - "Scale Projection Analysis"
-Cohesion: 0.20
-Nodes (9): Category, Files Modified, Implementation Details, Issue #53: Accessibility gaps across interactive components, Problem Description, Related Issues, Solution Implemented, Status (+1 more)
-
-### Community 104 - "Idempotency Types"
-Cohesion: 0.20
-Nodes (9): At 100 Concurrent Users, At 10,000 Concurrent Users, At 1,000 Concurrent Users, Complexity Dimensions Assessment, Evolution Path, Project Complexity Classification, Scale Projection Analysis, Technical Architecture Analysis (+1 more)
-
-### Community 105 - "Documentation Types"
+### Community 44 - "Idempotent API Client"
 Cohesion: 0.20
 Nodes (9): AbortableRequest, ApiResponse, IdempotencyError, IdempotentRequest, IdempotentResponse, PaginatedResponse, RequestManager, RequestState (+1 more)
 
-### Community 106 - "Issue #54 Form A11y"
-Cohesion: 0.22
-Nodes (8): API Documentation, Architecture Doc, Document Types, Onboarding Guide, Principles, README, Runbook, Technical Documentation
-
-### Community 107 - "Issue #71 ZodError"
-Cohesion: 0.22
-Nodes (8): Category, Files Modified, Issue #54: Form accessibility deficiencies in ImageUpload and wizard, Problem Description, Related Issues, Solution Implemented, Status, Verification Checklist
-
-### Community 108 - "Issue #72 Optional Image"
-Cohesion: 0.22
-Nodes (8): Category, Files Modified, Issue #71: ZodError uses .issues not .errors - build failure in push route, Problem Description, Root Cause, Solution Implemented, Status, Verification Checklist
-
-### Community 109 - "Issue #73 useAuth"
-Cohesion: 0.22
-Nodes (8): Category, Files Modified, Issue #72: Optional image field missing string fallback - type error, Problem Description, Root Cause, Solution Implemented, Status, Verification Checklist
-
-### Community 110 - "Issue #74 No Images"
-Cohesion: 0.22
-Nodes (8): Category, Files Modified, Issue #73: useAuth import name conflict with Clerk, Problem Description, Root Cause, Solution Implemented, Status, Verification Checklist
-
-### Community 111 - "Package.json"
-Cohesion: 0.22
-Nodes (8): Category, Files Modified, Issue #74: Request aborted when characters/maps/items have no images, Problem Description, Root Cause, Solution Implemented, Status, Verification Checklist
-
-### Community 112 - "Project Reference Skill"
+### Community 45 - "Package.json Scripts"
 Cohesion: 0.22
 Nodes (8): name, private, scripts, build, dev, lint, start, version
 
-### Community 113 - "Task Completion Summary"
-Cohesion: 0.22
-Nodes (8): Capabilities, Implementation Notes, Local Index (useful paths), Outputs, Project Reference, Start Here, Usage, When Not to Use
-
-### Community 114 - "PostHog Integration Skill"
-Cohesion: 0.25
-Nodes (7): 1. N+1 Query Problem (02-KNOWN_ISSUES.md Section 1), 2. Missing Input Validation (01-SECURITY_VULNERABILITIES.md Section 6), 3. No Rate Limiting (01-SECURITY_VULNERABILITIES.md Section 3), Files Modified, Issues Addressed from Documentation, TASK COMPLETION SUMMARY, Verification
-
-### Community 115 - "Packaged Convex Components"
-Cohesion: 0.25
-Nodes (7): Error tracking, Framework guidelines, Identifying users, Key principles, PostHog integration for Next.js App Router, Reference files, Workflow
-
-### Community 116 - "Skill References"
-Cohesion: 0.43
-Nodes (6): Likes, getGamesQueue(), pushGameToQueue(), PushLikesToQueue(), pushToQueue(), validateQueue()
-
-### Community 117 - "Idempotency Utilities"
-Cohesion: 0.25
-Nodes (7): Build Flow, Checklist, Default Approach, Package Exports, Packaged Convex Components, Testing, When to Choose This
-
-### Community 118 - "Error Page Barrel Export"
-Cohesion: 0.25
-Nodes (7): External References, Implementation Notes, Local References, Outputs, References, Usage, When Not to Use
-
-### Community 119 - "Issue #76 Doc Updates"
-Cohesion: 0.52
-Nodes (7): BadRequestErrorPage, ForbiddenErrorPage, GeneralErrorPage, errorPages barrel export, NotFoundErrorPage, ServerErrorPage, ServiceUnavailableErrorPage
-
-### Community 120 - "Convex Schema Types"
+### Community 46 - "Card UI Primitive"
 Cohesion: 0.29
-Nodes (6): Category, Description, Files Modified, Issue #76: Documentation updates and bug fixes, Related Issues, Status
+Nodes (6): Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
 
-### Community 121 - "Convex Context Types"
+### Community 47 - "Security & Auth Issues"
+Cohesion: 0.48
+Nodes (7): Convex Functions Lack Authentication Guards, GET /api/drain Performs State Change (CSRF), Idempotency Keys Not Scoped to User, Internal Drain Uses User JWT (No S2S Auth), No Authorization Layer (All Users Equal), Security & Authentication Issues, Rate Limiter Bypass (missing/spoofed x-forwarded-for)
+
+### Community 48 - "PostHog Analytics Setup"
+Cohesion: 0.52
+Nodes (7): PostHog Setup - Begin, PostHog Setup - Conclusion, PostHog Setup - Edit, PostHog Next.js Example Project, PostHog Identify Users Docs, PostHog Setup - Revise, PostHog Next.js App Router Integration Skill
+
+### Community 49 - "Convex Data Model Schema"
 Cohesion: 0.33
 Nodes (4): DataModel, Doc, Id, TableNames
 
-### Community 122 - "PostHog Wizard Report"
+### Community 50 - "Convex Server Context Types"
 Cohesion: 0.33
 Nodes (5): ActionCtx, DatabaseReader, DatabaseWriter, MutationCtx, QueryCtx
 
-### Community 123 - "Convex Components Advanced"
+### Community 51 - "API Proxy Route"
+Cohesion: 0.60
+Nodes (5): DELETE(), GET(), POST(), PUT(), relay()
+
+### Community 52 - "Convex Migration Helper Skill"
 Cohesion: 0.33
-Nodes (5): Agent skill, Changes made, Events instrumented, Next steps, PostHog post-wizard report
+Nodes (6): computedHash, skillPath, source, sourceType, skills, convex-migration-helper
 
-### Community 124 - "Hybrid Convex Components"
-Cohesion: 0.33
-Nodes (5): Advanced Component Patterns, Class-based client wrappers, Deriving validators from schema, Function Handles for callbacks, Static configuration with a globals table
-
-### Community 125 - "Local Convex Components"
-Cohesion: 0.33
-Nodes (5): Checklist, Default Advice, Hybrid Convex Components, Risks, What This Means
-
-### Community 126 - "Redis Search Commands"
-Cohesion: 0.33
-Nodes (5): Checklist, Default Layout, Local Convex Components, When to Choose This, Workflow Notes
-
-### Community 127 - "Convex AI State"
-Cohesion: 0.40
-Nodes (6): Search Adapters, Aggregations, Aliases, Index Management, Redis Search Overview, Querying and Counting
-
-### Community 128 - "Assessment Deprecation"
+### Community 53 - "Convex AI Files State"
 Cohesion: 0.40
 Nodes (4): agentSkillsSha, agentsMdSectionHash, claudeMdHash, guidelinesHash
 
-### Community 129 - "Convex Skill Router"
-Cohesion: 0.40
-Nodes (4): Assessment (deprecated), Backwards Compatibility, Notes for Maintainers, Recommended Usage
+### Community 54 - "Proxy Relay Route"
+Cohesion: 0.70
+Nodes (4): DELETE(), GET(), POST(), proxy()
 
-### Community 130 - "GamePage UI Components"
-Cohesion: 0.40
-Nodes (4): Convex, Route to the Right Skill, Start Here, When Not to Use
-
-### Community 131 - "ENTP 5w4 Profile"
-Cohesion: 0.40
-Nodes (4): Core Profile, Personality Analysis: ENTP 5w4, Strengths, Weaknesses
-
-### Community 132 - "PostHog Agent"
-Cohesion: 0.40
-Nodes (4): Agent skill, Next steps, PostHog post-wizard report, Status
-
-### Community 133 - "Skill: convex-migration-helper"
-Cohesion: 0.60
-Nodes (5): CharacterTabs, GameHeader, ItemGrid, MapList, FittedImage
-
-### Community 134 - "Skill: convex-quickstart"
-Cohesion: 0.40
-Nodes (5): computedHash, skillPath, source, sourceType, convex-migration-helper
-
-### Community 135 - "Skill: convex-setup-auth"
-Cohesion: 0.40
-Nodes (5): computedHash, skillPath, source, sourceType, convex-quickstart
-
-### Community 136 - "Skill: convex"
+### Community 55 - "Convex Setup Auth Skill"
 Cohesion: 0.40
 Nodes (5): computedHash, skillPath, source, sourceType, convex-setup-auth
 
-### Community 137 - "Skill: convex-create-component"
+### Community 56 - "Convex Core Skill"
 Cohesion: 0.40
 Nodes (5): computedHash, skillPath, source, sourceType, convex
 
-### Community 138 - "Skill: convex-performance-audit"
+### Community 57 - "Convex Create Component Skill"
 Cohesion: 0.40
 Nodes (5): computedHash, skillPath, source, sourceType, convex-create-component
 
-### Community 139 - "Skill: documentation"
+### Community 58 - "Convex Performance Audit Skill"
 Cohesion: 0.40
 Nodes (5): computedHash, skillPath, source, sourceType, convex-performance-audit
 
-### Community 140 - "Skill: neon-postgres"
+### Community 59 - "Convex Quickstart Skill"
+Cohesion: 0.40
+Nodes (5): computedHash, skillPath, source, sourceType, convex-quickstart
+
+### Community 60 - "Documentation Skill"
 Cohesion: 0.40
 Nodes (5): computedHash, skillPath, source, sourceType, documentation
 
-### Community 141 - "Skill: ui-ux-pro-max"
+### Community 61 - "Neon Postgres Skill"
 Cohesion: 0.40
 Nodes (5): computedHash, skillPath, source, sourceType, neon-postgres
 
-### Community 142 - "Skill: web-design-guidelines"
+### Community 62 - "UI UX Pro Max Skill"
 Cohesion: 0.40
 Nodes (5): ui-ux-pro-max, computedHash, skillPath, source, sourceType
 
-### Community 143 - "Game Data JSON Types"
+### Community 63 - "Web Design Guidelines Skill"
 Cohesion: 0.40
 Nodes (5): web-design-guidelines, computedHash, skillPath, source, sourceType
 
-### Community 144 - "Form Step Components (Code)"
-Cohesion: 0.40
-Nodes (4): CharacterDataJSON, GameDataJSON, ItemDataJSON, MapDataJSON
-
-### Community 145 - "Redis Performance Topics"
+### Community 64 - "Kilo & OpenCode Plugin Packages"
 Cohesion: 0.50
-Nodes (4): CharactersStep component, GamesFormWizard component, ImageUpload component, TextAreaField component
+Nodes (4): @kilocode/plugin, @opencode-ai/plugin, Kilo Code package.json, OpenCode package.json
 
-### Community 146 - "KiloCode Plugin Config"
+### Community 65 - "Bottleneck & Clerk Auth Issues"
 Cohesion: 0.50
-Nodes (4): Data Serialization and Deserialization, Error Handling, Pipeline Optimization, Global Redis Replicas
+Nodes (4): Bottleneck.Group (per-key limiting), Clerk Authentication, Issue #65: Wrong Bottleneck API, Issue #66: Wrong JWT Auth Approach
+
+### Community 66 - "Convex Authorization Guards"
+Cohesion: 0.50
+Nodes (4): Convex Authorization Guards Issue, Convex requireAuth/requireStaff guards, Convex ownerId + staff schema fields, Security Vulnerabilities & Risk Assessment
+
+### Community 67 - "Convex Migration Helper Config"
+Cohesion: 1.00
+Nodes (4): Convex Migration Helper Icon, Migration Patterns Reference, Migrations Component Reference, Convex Migration Helper Agent Config
+
+### Community 68 - "Plugin Package Dependencies"
+Cohesion: 0.50
+Nodes (3): dependencies, @kilocode/plugin, @opencode-ai/plugin
+
+### Community 69 - "Rendering Strategy Issues"
+Cohesion: 0.67
+Nodes (3): Issue 49 Rendering Strategy Inefficiencies, Issue 52 Component Coupling/Reusability, RSC Selective use client
+
+## Ambiguous Edges - Review These
+- `UI/UX & Design System Issues` → `public/file.svg`  [AMBIGUOUS]
+  documentations/problems/05-UI_UX_DESIGN_ISSUES.md · relation: conceptually_related_to
+- `UI/UX & Design System Issues` → `public/globe.svg`  [AMBIGUOUS]
+  documentations/problems/05-UI_UX_DESIGN_ISSUES.md · relation: conceptually_related_to
+- `UI/UX & Design System Issues` → `public/images/project.jpg`  [AMBIGUOUS]
+  documentations/problems/05-UI_UX_DESIGN_ISSUES.md · relation: conceptually_related_to
+- `UI/UX & Design System Issues` → `public/next.svg`  [AMBIGUOUS]
+  documentations/problems/05-UI_UX_DESIGN_ISSUES.md · relation: conceptually_related_to
+- `UI/UX & Design System Issues` → `public/vercel.svg`  [AMBIGUOUS]
+  documentations/problems/05-UI_UX_DESIGN_ISSUES.md · relation: conceptually_related_to
+- `UI/UX & Design System Issues` → `public/window.svg`  [AMBIGUOUS]
+  documentations/problems/05-UI_UX_DESIGN_ISSUES.md · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **1634 isolated node(s):** `@kilocode/plugin`, `plugin`, `editor.suggest.snippetsPreventQuickSuggestions`, `CACHE_KEYS`, `convex` (+1629 more)
+- **462 isolated node(s):** `@kilocode/plugin`, `$schema`, `plugin`, `@kilocode/plugin`, `@opencode-ai/plugin` (+457 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **29 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **27 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+
+## Suggested Questions
+_Questions this graph is uniquely positioned to answer:_
+
+- **What is the exact relationship between `UI/UX & Design System Issues` and `public/file.svg`?**
+  _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
+- **What is the exact relationship between `UI/UX & Design System Issues` and `public/globe.svg`?**
+  _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
+- **What is the exact relationship between `UI/UX & Design System Issues` and `public/images/project.jpg`?**
+  _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
+- **What is the exact relationship between `UI/UX & Design System Issues` and `public/next.svg`?**
+  _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
+- **What is the exact relationship between `UI/UX & Design System Issues` and `public/vercel.svg`?**
+  _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
+- **What is the exact relationship between `UI/UX & Design System Issues` and `public/window.svg`?**
+  _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
+- **Why does `classifyError()` connect `Neon DB Client & Migrations` to `Game Fetch & Auth Hooks`, `AI Server Client & Memory`, `Game Fetch Batch Pipeline`, `Supabase Image Upload`, `Games Form Wizard`, `Create Form & Image Upload`, `Mutation Tracker & Patch Backup`, `Service Auth & JWT Routes`, `Likes Queue & Rate Limit`, `Cache Warmup & Hotness Cache`, `Likes Batch API Routes`, `Home Page Card Grid`?**
+  _High betweenness centrality (0.069) - this node is a cross-community bridge._

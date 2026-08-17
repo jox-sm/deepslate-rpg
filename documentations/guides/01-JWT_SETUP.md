@@ -1,412 +1,340 @@
 # JWT Implementation Guide
 
-## Step 1: Setup Environment Variables
+_Last updated: 2026-08-17_
 
-Create `.env.local` in project root:
+## Overview
+
+Deepslate Dungeons authenticates API requests with **Clerk** server-side. There is
+no longer a hand-rolled JWT secret flow — the old `CLERK_JWT_SECRET` /
+`NEON_JWT_SECRET` / `MONGODB_JWT_SECRET` environment variables and the
+`validateJWT(token, template)` / `extractTokenFromHeader()` helpers are **gone**.
+
+Authentication is provided by `lib/jwt-validate.ts`, which simply wraps Clerk's
+`auth()` and exposes a single middleware: `validateJWTMiddleware(request)`.
+
+```ts
+// lib/jwt-validate.ts (current implementation)
+import { auth } from '@clerk/nextjs/server';
+
+export interface JWTPayload {
+  userId: string;
+  email?: string;
+  [key: string]: unknown;
+}
+
+export async function validateJWTMiddleware(
+  _request: NextRequest
+): Promise<{ payload: JWTPayload; error: null } | { payload: null; error: NextResponse }> {
+  const { userId } = await auth();
+  if (!userId) {
+    return { payload: null, error: NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 }) };
+  }
+  return { payload: { userId }, error: null };
+}
+```
+
+> The request argument is accepted for signature compatibility but the actual
+> identity is resolved from Clerk's session, not from a manually parsed token.
+> `validateJWTMiddleware` takes **only** `request` — there is no `template`
+> parameter.
+
+## Step 1: Environment Variables
+
+Clerk is configured via its standard environment variables (set in `.env.local`
+or your host's secret store). You no longer need any `*_JWT_SECRET` variables.
 
 ```env
-# Clerk JWT Secret (Required)
-CLERK_JWT_SECRET=your_clerk_secret_key_here
+# Clerk (provided by the Clerk dashboard)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxx
+CLERK_SECRET_KEY=sk_test_xxx
 
-# Optional: Neon JWT Secret
-NEON_JWT_SECRET=your_neon_secret_key_here
+# Clerk JWT template name used by the app (default: "supabase")
+NEXT_PUBLIC_CLERK_SUPABASE_JWT_TEMPLATE=supabase
 
-# Optional: MongoDB JWT Secret
-MONGODB_JWT_SECRET=your_mongodb_secret_key_here
+# Convex (for server-to-server auth from Convex functions)
+NEXT_PUBLIC_CLERK_DOMAIN=https://your-subdomain.clerk.accounts.dev
+
+# Supabase (used by the Supabase server client in lib/auth.ts)
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=eyJxxx
+SUPABASE_SERVICE_ROLE_KEY=eyJxxx
+
+# Upstash Redis (idempotency + cache + queue)
+UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
+UPSTASH_REDIS_REST_TOKEN=xxx
+
+# Optional: public app URL used for internal drain triggers
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-## Step 2: Understanding JWT Validation
+## Step 2: Protecting a Route
 
-The `lib/jwt-validate.ts` file provides three main functions:
+Import and call `validateJWTMiddleware`. It returns `{ payload, error }`. When
+`error` is set it is already a `NextResponse` with status `401` — return it
+directly.
 
-### Extract Token
 ```typescript
-import { extractTokenFromHeader } from '@/lib/jwt-validate';
-
-// Gets token from "Authorization: Bearer <token>"
-const token = extractTokenFromHeader(request);
-if (!token) {
-  return NextResponse.json({ error: 'Missing token' }, { status: 401 });
-}
-```
-
-### Validate Token
-```typescript
-import { validateJWT } from '@/lib/jwt-validate';
-
-// Option 1: Validate with specific template (recommended)
-const payload = validateJWT(token, 'clerk');
-
-// Option 2: Try all templates
-const payload = validateJWT(token);
-```
-
-### Use in Middleware
-```typescript
+import { NextRequest, NextResponse } from 'next/server';
 import { validateJWTMiddleware } from '@/lib/jwt-validate';
 
 export async function GET(request: NextRequest) {
-  // Returns { payload, error }
-  const { payload, error } = await validateJWTMiddleware(request, 'clerk');
-  
-  if (error) return error;  // Returns 401 response
-  
-  // payload is now available
+  // Resolve the Clerk user. No token parsing, no template needed.
+  const { payload, error } = await validateJWTMiddleware(request);
+  if (error) return error; // 401 NextResponse
+
+  // payload.userId is now available
   console.log(payload.userId);
-  console.log(payload.email);
-}
-```
 
-## Step 3: Add JWT to Existing Route
-
-### Before (No Auth)
-```typescript
-export async function GET(request: NextRequest) {
   try {
-    const data = await fetchData();
-    return NextResponse.json({ success: true, data });
+    // ... business logic
+    return NextResponse.json({ success: true, data: {} });
   } catch (error) {
+    // Use tryApiRoute in real routes — see the API Implementation guide.
     return NextResponse.json({ error: 'Failed' }, { status: 500 });
   }
 }
 ```
 
-### After (With JWT)
-```typescript
-import { validateJWTMiddleware } from '@/lib/jwt-validate';
+## Step 3: Clerk Middleware (proxy.ts)
 
-export async function GET(request: NextRequest) {
-  // Add this at the top
-  const { payload, error } = await validateJWTMiddleware(request, 'clerk');
-  if (error) return error;
-  
-  try {
-    const data = await fetchData();
-    return NextResponse.json({ success: true, data });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed' }, { status: 500 });
+Route-level checks are a second line of defence. The app-wide guard lives in
+`proxy.ts`, which uses `clerkMiddleware` and protects every non-public route:
+
+```typescript
+// proxy.ts
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+
+const isPublicRoute = createRouteMatcher([
+  '/',
+  '/api/test-supabase-auth(.*)',
+  '/api/test-neon-auth(.*)',
+  '/api/test-mongodb-auth(.*)',
+]);
+
+export default clerkMiddleware(async (auth, request) => {
+  if (!isPublicRoute(request)) {
+    await auth.protect();
   }
-}
+});
 ```
 
-## Step 4: Making Authenticated Requests from Frontend
+Unless a route is listed as public, `auth.protect()` rejects unauthenticated
+requests before they reach the handler.
 
-### Using Clerk getToken()
+## Step 4: Getting a Supabase Token from the Frontend
+
+The frontend uses Clerk's `getToken({ template })` to mint a Supabase JWT, which
+it then passes in the `Authorization` header. The backend does **not** re-validate
+this token manually — the `Authorization` header is only used to derive the
+Supabase client (see Step 5).
+
 ```typescript
 import { useAuth } from '@clerk/nextjs';
 
 export function MyComponent() {
   const { getToken } = useAuth();
-  
+
   async function fetchGames() {
     const token = await getToken({ template: 'supabase' });
-    
+    if (!token) throw new Error('Not authenticated');
+
     const response = await fetch('/api/games', {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     });
-    
-    const data = await response.json();
-    return data;
-  }
-  
-  return (
-    <button onClick={fetchGames}>
-      Load Games
-    </button>
-  );
-}
-```
 
-### Error Handling
-```typescript
-async function fetchGames() {
-  try {
-    const token = await getToken({ template: 'supabase' });
-    
-    if (!token) {
-      throw new Error('Not authenticated');
-    }
-    
-    const response = await fetch('/api/games', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-    
     if (response.status === 401) {
-      // Token expired or invalid
-      // Clear stored token and redirect to login
       window.location.href = '/sign-in';
       return;
     }
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Failed to fetch games:', error);
-    // Show error to user
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    return response.json();
   }
+
+  return <button onClick={fetchGames}>Load Games</button>;
 }
 ```
 
-## Step 5: Testing JWT Implementation
+Clerk refreshes the token automatically; pass `skipCache: true` to `getToken`
+only if you explicitly need a fresh token.
 
-### Test 1: Valid Token Request
-```bash
-# Get token from your frontend first
-TOKEN=$(node -e "console.log('get token from browser console')")
+## Step 5: Server-Side Supabase Client
 
-# Make request with token
-curl -H "Authorization: Bearer $TOKEN" \
-  http://localhost:3000/api/games
-```
+To call Supabase from a Server Component or Route Handler, use `lib/auth.ts`
+(not the deprecated `lib/supabase-auth.ts` stub, which is now a one-line
+placeholder). `createAuthenticatedSupabaseClient` injects the Clerk-minted
+Supabase JWT into the client's `Authorization` header.
 
-### Test 2: Missing Token
-```bash
-# This should return 401
-curl http://localhost:3000/api/games
-```
-
-### Test 3: Invalid Token
-```bash
-# This should return 401
-curl -H "Authorization: Bearer invalid.token.here" \
-  http://localhost:3000/api/games
-```
-
-### Test 4: Token Without Bearer Prefix
-```bash
-# This should return 401 (missing Bearer prefix)
-curl -H "Authorization: $TOKEN" \
-  http://localhost:3000/api/games
-```
-
-## Step 6: Switching Between Auth Templates
-
-### Single Template (Recommended for Production)
 ```typescript
-// Specify template in all routes for consistency
-const { payload, error } = await validateJWTMiddleware(request, 'neon');
+import { useAuth } from '@clerk/nextjs';
+import { createAuthenticatedSupabaseClient, getServiceToken } from '@/lib/auth';
+
+export default async function Page() {
+  const { getToken } = useAuth();
+
+  // Mint a Supabase JWT from the Clerk template and build an authenticated client.
+  const token = await getServiceToken(getToken, 'supabase'); // throws if unauthenticated
+  const supabase = await createAuthenticatedSupabaseClient(getToken);
+
+  const { data } = await supabase.from('games').select('*').limit(10);
+  return <pre>{JSON.stringify(data)}</pre>;
+}
 ```
 
-### Multiple Templates (Development/Testing)
+`lib/auth.ts` exports:
+- `getServiceToken(getToken, 'supabase')` → string JWT
+- `createAuthenticatedSupabaseClient(getToken)` → `SupabaseClient`
+- `ServiceName` type (currently only `'supabase'`)
+
+## Step 6: Convex Authentication
+
+Convex functions authenticate via Clerk's JWT issuer, configured in
+`convex/auth.config.ts`:
+
 ```typescript
-// Try templates in order: Clerk → Neon → MongoDB
-const { payload, error } = await validateJWTMiddleware(request);
+export default {
+  providers: [
+    {
+      domain: 'https://your-subdomain.clerk.accounts.dev',
+      applicationID: 'convex',
+    },
+  ],
+};
 ```
 
-### Dynamic Template Selection
+Inside Convex functions, use the helpers in `convex/authHelpers.ts` rather than
+parsing tokens yourself:
+
 ```typescript
-// Get template from query parameter or env variable
-const template = process.env.JWT_TEMPLATE || 'clerk';
-const { payload, error } = await validateJWTMiddleware(request, template as any);
+import { requireAuth, requireStaff, STAFF_DEGREE } from './authHelpers';
+
+export const myQuery = query(async (ctx) => {
+  const identity = await requireAuth(ctx); // throws "Unauthenticated" if no user
+  const clerkUserId = identity.subject;
+  // ...
+});
+
+export const adminOnly = mutation(async (ctx) => {
+  // Superadmin (degree 4) bypasses; others need the minimum degree.
+  const { identity, degree } = await requireStaff(ctx, STAFF_DEGREE.admin);
+  // ...
+});
 ```
 
-## Step 7: Token Payload Usage
+## Step 7: Accessing the User Identity
 
-### Access User Information
+`validateJWTMiddleware` returns `{ userId }`. There is no `email`/`role`/`iat`/
+`exp` populated from a manual token — if you need profile data, fetch it from
+Clerk or your database using `payload.userId`.
+
 ```typescript
 const { payload, error } = await validateJWTMiddleware(request);
 if (error) return error;
 
 const userId = payload.userId;
-const email = payload.email;
-const issuedAt = new Date(payload.iat * 1000);
-const expiresAt = new Date(payload.exp * 1000);
+console.log(`User ${userId} accessed ${request.nextUrl.pathname}`);
 
-console.log(`User ${userId} (${email}) token expires at ${expiresAt}`);
+// For analytics / audit logging:
+analytics.track('api_access', { userId, endpoint: request.nextUrl.pathname });
 ```
 
-### Log User Actions
-```typescript
-const { payload } = await validateJWTMiddleware(request);
+To gate admin features, check against your own user/role table using `userId`
+rather than decoding custom JWT claims.
 
-console.log(`User ${payload.userId} accessed /api/games`);
+## Step 8: A Reusable Auth Wrapper
 
-// In production, send to analytics
-analytics.track('api_access', {
-  userId: payload.userId,
-  endpoint: '/api/games',
-  timestamp: new Date(),
-});
-```
-
-### Store in Database
-```typescript
-const { payload } = await validateJWTMiddleware(request);
-
-// Create or update user session in database
-await db.query(
-  'INSERT INTO user_sessions (user_id, token, accessed_at) VALUES ($1, $2, now())',
-  [payload.userId, request.headers.get('authorization')]
-);
-```
-
-## Step 8: Advanced: Custom Claims
-
-### Add Claims to Token
-If using custom JWT generation:
+Because `validateJWTMiddleware` only needs `request`, you can wrap handlers
+cleanly:
 
 ```typescript
-const token = jwt.sign(
-  {
-    userId: user.id,
-    email: user.email,
-    role: 'admin',              // Custom claim
-    permissions: ['read', 'write'],  // Custom claim
-    customData: { /* ... */ },   // Custom claim
-  },
-  process.env.JWT_SECRET,
-  { expiresIn: '7d' }
-);
-```
+import { NextRequest, NextResponse } from 'next/server';
+import { validateJWTMiddleware, JWTPayload } from '@/lib/jwt-validate';
 
-### Use Custom Claims
-```typescript
-const { payload } = await validateJWTMiddleware(request);
-
-if (payload.role === 'admin') {
-  // Allow admin operations
-}
-
-if (payload.permissions.includes('write')) {
-  // Allow write operations
-}
-```
-
-## Step 9: Token Refresh Strategy
-
-### Automatic Refresh with Clerk
-```typescript
-// Clerk handles automatic refresh
-const token = await getToken({ 
-  template: 'supabase',
-  skipCache: false  // Use cached token if valid
-});
-```
-
-### Manual Refresh
-```typescript
-// Force refresh without cache
-const token = await getToken({ 
-  template: 'supabase',
-  skipCache: true  // Always get fresh token
-});
-```
-
-### Refresh on Demand
-```typescript
-async function getValidToken() {
-  const token = await getToken({ template: 'supabase' });
-  
-  // Decode token to check expiration
-  const decoded = jwt_decode(token);
-  const expiresIn = decoded.exp * 1000 - Date.now();
-  
-  // If expires in less than 1 minute, refresh
-  if (expiresIn < 60000) {
-    return await getToken({ 
-      template: 'supabase',
-      skipCache: true  // Force refresh
-    });
-  }
-  
-  return token;
-}
-```
-
-## Step 10: Monitoring & Debugging
-
-### Log JWT Validation
-```typescript
-export async function GET(request: NextRequest) {
-  const { payload, error } = await validateJWTMiddleware(request);
-  
-  if (error) {
-    console.warn('[JWT] Validation failed:', {
-      path: request.nextUrl.pathname,
-      method: request.method,
-      timestamp: new Date(),
-    });
-    return error;
-  }
-  
-  console.log('[JWT] Valid token', {
-    userId: payload.userId,
-    email: payload.email,
-  });
-  
-  // Continue...
-}
-```
-
-### Create JWT Middleware Wrapper
-```typescript
-export async function withJWTAuth(
+export function withJWTAuth(
   handler: (req: NextRequest, payload: JWTPayload) => Promise<NextResponse>
 ) {
   return async (request: NextRequest) => {
     const { payload, error } = await validateJWTMiddleware(request);
     if (error) return error;
-    
     return handler(request, payload);
   };
 }
 
-// Use it
+// Usage
 export const GET = withJWTAuth(async (request, payload) => {
-  // Handler code with automatic JWT validation
   const data = await fetchData(payload.userId);
   return NextResponse.json({ success: true, data });
 });
 ```
 
+> In real routes prefer `tryApiRoute` (see the API Implementation guide) which
+> also standardises success/error shapes and classification.
+
+## Step 9: Testing Authentication
+
+### Valid request (token comes from the signed-in browser session)
+```bash
+# Get a token from your frontend first, then:
+TOKEN=$(node -e "console.log('get token from browser console')")
+curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/games
+```
+
+### Missing token → 401
+```bash
+curl http://localhost:3000/api/games
+```
+
+### Invalid token → 401
+```bash
+curl -H "Authorization: Bearer invalid.token.here" http://localhost:3000/api/games
+```
+
+### Missing Bearer prefix → 401 (Clerk cannot resolve a session)
+```bash
+curl -H "Authorization: $TOKEN" http://localhost:3000/api/games
+```
+
 ## Troubleshooting
 
 ### Issue: Always getting 401
-**Solution:**
-1. Check `.env.local` has correct secret
-2. Verify token format: three parts separated by dots
-3. Check token not expired: decode and check `exp` claim
-4. Verify Authorization header format: `Bearer <token>`
+1. Confirm `proxy.ts` `isPublicRoute` does **not** include your route (otherwise
+   `auth.protect()` rejects it).
+2. Verify the request carries a valid Clerk session cookie / `Authorization`
+   header.
+3. Check Clerk env vars (`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`,
+   `CLERK_SECRET_KEY`) are set and match the same Clerk instance.
+4. For Supabase calls, confirm `NEXT_PUBLIC_CLERK_SUPABASE_JWT_TEMPLATE` matches
+   the template name configured in Clerk.
 
 ### Issue: Different users seeing 401
-**Solution:**
-1. Check Clerk configuration for user
-2. Verify getToken() returns a value
-3. Check browser console for Clerk errors
-4. Clear browser cookies and retry
+1. Verify `getToken({ template: 'supabase' })` returns a value.
+2. Check the browser console for Clerk errors.
+3. Clear browser cookies and re-authenticate.
 
 ### Issue: Token works in some routes but not others
-**Solution:**
-1. Check all routes use same template (or all support multiple)
-2. Verify JWT_SECRET is same across environment
-3. Check middleware order: JWT validation must be first
-4. Verify request headers preserved in middleware chain
+1. The `Authorization` header is **not** what drives `validateJWTMiddleware` —
+   identity comes from Clerk's session. Ensure the request is actually
+   authenticated (signed-in).
+2. Confirm `proxy.ts` matcher covers `/api(.*)`.
+3. Keep `validateJWTMiddleware(request)` as the first call in every handler.
 
-### Issue: Performance degradation with JWT validation
-**Solution:**
-1. Cache token validation if possible
-2. Use specific template instead of trying all
-3. Implement token caching at frontend
-4. Use skipCache: false to use cached tokens
+### Issue: Performance with auth
+1. Clerk's `auth()` is fast and cached per request; no extra caching needed.
+2. Prefer `skipCache: false` on `getToken` to reuse a valid Supabase token.
 
 ## Best Practices
 
-1. ✅ Always use specific template (not fallback)
-2. ✅ Validate JWT at start of route handler
-3. ✅ Return 401 on validation failure
-4. ✅ Never expose JWT secret in logs
-5. ✅ Use HTTPS only in production
-6. ✅ Implement token refresh strategy
-7. ✅ Log failed authentication attempts
-8. ✅ Clear stored tokens on logout
-9. ✅ Test with expired tokens
-10. ✅ Monitor JWT validation errors
+1. ✅ Call `validateJWTMiddleware(request)` first in every protected handler.
+2. ✅ Return the `error` response as-is on failure (already a `401`).
+3. ✅ Gate admin features via your own user/role table keyed on `userId`.
+4. ✅ Use `lib/auth.ts` for Supabase clients (never the deprecated
+   `lib/supabase-auth.ts`).
+5. ✅ Use `tryApiRoute` for consistent response/error shapes (see API guide).
+6. ✅ Never log Clerk secrets or the user's raw token.
+7. ✅ Use HTTPS only in production.
+8. ✅ Test with unauthenticated, invalid, and expired sessions.
+9. ✅ For Convex, use `requireAuth` / `requireStaff` instead of parsing tokens.

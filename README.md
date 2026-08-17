@@ -15,7 +15,7 @@
 [![PostHog](https://img.shields.io/badge/PostHog-analytics-1d4aff)](https://posthog.com)
 [![Zod](https://img.shields.io/badge/Zod-4-3e67b1)](https://zod.dev)
 
-> **45 GitHub issues · 41 closed · 4 open · dependency-mapped · knowledge-graphed · fully documented in [`documentations/issues/`](documentations/issues/)**
+> **45 GitHub issues (#48–#95) · dependency-mapped · knowledge-graphed · fully documented in [`documentations/issues/`](documentations/issues/)**
 
 ---
 
@@ -45,12 +45,12 @@
 
 | Step | What you build | Where it lives |
 |------|----------------|----------------|
-| **Game** | Name, description, tags, cover image | Neon PostgreSQL (catalog) + Redis (hot cache) |
+| **Game** | Name, description, tags, cover image | Neon PostgreSQL (catalog) + Upstash Redis (hot cache) |
 | **Characters** | Portraits, names, lore, stats | MongoDB (flexible nested docs) |
 | **Maps** | Images, place sizes, POI markers | MongoDB + Supabase Storage (WebP) |
 | **Items** | Weapons, relics, consumables | MongoDB (variable-shape) |
 
-Hit publish and the data flows through a Redis-backed background worker into the right storage tier — relational catalog in Postgres, flexible nested docs in MongoDB, hot caches in Upstash Redis, blobs in Supabase Storage — then surfaces instantly through a dark-fantasy UI built on the abyss-purple + ember-glow design system.
+Hit publish and the data flows through an Upstash-Redis-backed queue into the right storage tier — relational catalog in Postgres, flexible nested docs in MongoDB, hot caches in Upstash Redis, blobs in Supabase Storage — then surfaces instantly through a dark-fantasy UI built on the **Stone/Slate + Torchlight** design system.
 
 ### Who it's for
 
@@ -60,7 +60,7 @@ Hit publish and the data flows through a Redis-backed background worker into the
 
 ### Current status
 
-The app ships a working create-flow (wizard → API → worker → DB), a home page with a paginated cards grid, Clerk-powered authentication, and roughly 80% of the backend infrastructure. The two biggest gaps are the **GamePage detail view** (`/game/[uuid]`) and the **likes/state pipeline** — both are fully designed and documented but not yet wired up in code.
+The app ships a working create-flow (wizard → API → worker → DB), a home page with a paginated cards grid, the **GamePage detail view** (`/game/[uuid]`), the **Play screen** (`/play`), a client **likes store** with optimistic updates, the **hotness cache**, and an **AI server integration** that relays to a FastAPI backend. Clerk powers authentication and Convex is an opt-in realtime scaffold (not on the primary write path). The largest remaining gaps are production hardening items — audit logging, WAF + request signing, monitoring/alerting, and transactional guarantees across Postgres + MongoDB.
 
 ---
 
@@ -73,12 +73,12 @@ Every storage backend excels at something different. This architecture assigns e
 | **Neon PostgreSQL** | Relational catalog | `games` table with indexing, joins over tags/likes, connection pooling built for serverless |
 | **MongoDB + Mongoose** | Document store | Variable-shape nested arrays (characters, maps, items) — no per-campaign schema migrations |
 | **Upstash Redis** | Cache + queue | Sub-millisecond reads for hot games; background job queue powering the write pipeline |
-| **Supabase Storage** | Image CDN | WebP-encoded images via sharp, public bucket `deepslate-rpg`, quality 85 |
+| **Supabase Storage** | Image CDN | WebP-encoded images via sharp, public bucket `deepslate-rpg`, quality 80 |
 | **Convex** | Realtime (opt-in) | Scaffolded schema + functions for future real-time subscriptions |
 
 This layered design keeps everything runnable on free tiers while deferring the cost center (realtime) to Convex only when needed.
 
-> **Migration note:** Originally used `ioredis` with Redis Cloud. Migrated to Upstash Redis in [#93](documentations/issues/93-MIGRATE-TO-UPSTASH-REDIS.md). The `ioredis` package and legacy code still linger — see [#94](documentations/issues/94-REMOVE-IORedis.md) for cleanup.
+> **Migration note:** Originally used `ioredis` with Redis Cloud. Migrated to Upstash Redis in [#93](documentations/issues/93-MIGRATE-TO-UPSTASH-REDIS.md) and the legacy `ioredis` dependency was fully removed in [#94](documentations/issues/94-REMOVE-IORedis.md). `lib/queue.ts` now exports a single Upstash `Redis` client; only a commented-out legacy block remains.
 
 ---
 
@@ -87,25 +87,26 @@ This layered design keeps everything runnable on free tiers while deferring the 
 | Layer | Tech | Version | Purpose |
 |-------|------|---------|---------|
 | **Framework** | Next.js (App Router) | 16.2.4 | Server components, streaming, serverless API routes |
-| **Language** | TypeScript | 5.x (strict) | Full-stack type safety |
+| **Language** | TypeScript | ^5 (strict) | Full-stack type safety |
 | **UI Library** | React | 19.2.4 | Server + client components |
-| **Styling** | Tailwind CSS + CSS Modules + `cn()` | v4.2.4 | Hybrid utility-class + scoped-CSS pattern |
-| **Component primitives** | Radix UI + shadcn/ui | latest | Headless accessible components |
-| **WebGL** | OGL | 1.0.11 | 3D visuals (future) |
-| **Auth** | Clerk (`@clerk/nextjs`) | ^7.4.1 | OAuth, JWT templates, `auth()` server-side |
+| **Styling** | Tailwind CSS v4 + CSS Modules + `cn()` | tailwindcss ^4.2.4, @tailwindcss/postcss ^4.2.4 | Hybrid utility-class + scoped-CSS pattern |
+| **Component primitives** | Radix UI + shadcn/ui | radix-ui ^1.4.3, shadcn ^4.7.0 | Headless accessible components |
+| **Class utilities** | clsx + tailwind-merge + cva | clsx ^2.1.1, tailwind-merge ^3.5.0, class-variance-authority ^0.7.1 | `cn()` helper in `lib/utils.ts` |
+| **WebGL** | OGL | ^1.0.11 | 3D visuals (future) |
+| **Auth** | Clerk (`@clerk/nextjs`) | ^7.4.1 | OAuth, `auth()` server-side |
 | **Relational DB** | Neon (`@neondatabase/serverless`) | ^1.1.0 | PostgreSQL for games catalog |
-| **Document DB** | MongoDB Atlas (Mongoose) | ^9.6.2 | Characters, maps, items |
+| **Connection pool** | `pg` | ^8.20.0 | Node Postgres driver under Neon |
+| **Document DB** | MongoDB Atlas (mongodb + Mongoose) | mongodb ^7.2.0, mongoose ^9.6.2 | Characters, maps, items |
 | **Cache + queue** | Upstash Redis (`@upstash/redis`) | ^1.38.0 | Hot reads + job queue |
-| **Object storage** | Supabase (`@supabase/ssr` + `supabase-js`) | latest | WebP image CDN |
+| **Object storage** | Supabase (`@supabase/ssr` + `supabase-js`) | @supabase/ssr ^0.10.3, supabase-js ^2.105.4 | WebP image CDN |
 | **Realtime** | Convex | ^1.39.1 | Subscriptions (opt-in, scaffolded) |
 | **Analytics** | PostHog (`posthog-js`) | ^1.372.10 | Events, session replay |
 | **Validation** | Zod | ^4.4.3 | Centralized schemas in `types/validation.ts` |
 | **Rate limiting** | Bottleneck | ^2.19.5 | Per-IP limiter via `Bottleneck.Group` |
-| **State management** | Zustand | ^5.0.14 | Likes store (designed, not yet active) |
+| **State management** | Zustand | ^5.0.14 | Client likes store (persisted) |
 | **ID generation** | UUID | ^14.0.0 | UUID v7 for idempotency keys |
-| **Image processing** | sharp | ^0.34.5 | WebP quality-85 conversion |
-| **Resilience** | Custom retry (`lib/retry.ts`) | — | 2-3 retries, 500ms backoff for all DB calls |
-| **WebSockets compression** | pako | ^2.1.0 | Binary compression |
+| **Image processing** | sharp | ^0.34.5 | WebP quality-80 conversion |
+| **Compression** | pako | ^2.1.0 | Gzip for hotness-cache payloads |
 
 Full dependency list: [`package.json`](package.json).
 
@@ -122,41 +123,48 @@ Full dependency list: [`package.json`](package.json).
 │  │ + useFormState   │  │ + FittedImage  │  │ + ProfileMenu            │  │
 │  │ + ImageUpload    │  │ + ProfileCard  │  └──────────────────────────┘  │
 │  │ + step validation│  │ + LikeButton   │                                │
-│  └────────┬─────────┘  └──────┬─────────┘                                │
-│           │                   │                                          │
-│           └───────────────────┼──── sessionStorage preload (#80)         │
+│  └────────┬─────────┘  └──────┬─────────┘  ┌──────────────────────────┐  │
+│           │                   │            │ GamePage /game/[uuid]    │  │
+│           │                   │            │ game-detail.tsx + tabs   │  │
+│           │                   │            │ Play /play → PlayScreen   │  │
+│           └───────────────────┴────────────┴──────────────────────────┘  │
 └───────────────────────────────┼──────────────────────────────────────────┘
-                                │ JWT (Clerk auth())
-                                ▼
+                                 │ Clerk auth() (server) / useAuth (client)
+                                 ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                        API ROUTES (Next.js App Router)                   │
 │  ┌─────────────────┐  ┌────────────────┐  ┌──────────────────────────┐  │
 │  │ POST /api/push  │  │ GET /api/games │  │ POST /api/convertUrl     │  │
 │  │ POST .../pushGames│ │ GET .../[id]  │  │ POST .../ConvertGameImages│  │
-│  │ (Redis queue)   │  │ (read path)    │  │ (image upload + WebP)     │  │
+│  │ (Redis queue)   │  │ (read path)    │  │ (image upload + WebP 80) │  │
 │  │ + idempotency   │  │ + pagination   │  │ + AbortController         │  │
-│  │ + retry()       │  │ + redis.mget   │  │ + binary conversion       │  │
+│  │ + retry()       │  │ + redis.mget   │  │ + binary conversion      │  │
 │  │ + JWT validation │  │ + cache warmup │  │ + progress tracking       │  │
 │  └────────┬────────┘  └──────┬─────────┘  └───────────┬──────────────┘  │
 │           │                  │                         │                 │
-│           └──────────────────┴─────────────────────────┘                 │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ POST/GET/PUT/DELETE /api/ai-server/[...path]  → relays to FastAPI   │ │
+│  │ POST /api/games/[sid]/memory                 → AI memory restore    │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
 │                                   │                                      │
-│    validateJWTMiddleware() — all routes protected via auth()              │
+│    validateJWTMiddleware() — routes gated via Clerk auth()               │
 │    tryApiRoute() — unified error boundary with classifyError()           │
 └───────────────────────────────────┼──────────────────────────────────────┘
-                                    │
-                                    ▼
+                                     │
+                                     ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                          BACKEND SERVICES                                 │
 │                                                                           │
 │  ┌────────────────────────────────────────────────────────────────────┐  │
 │  │                     Background Worker                              │  │
+│  │  utilities/pull.ts — drainLikes / drainGames                       │  │
 │  │  lib/GamesInsert.ts — processGamesQueue()                          │  │
-│  │  → Dequeues jobs from Redis → insertGame() to Neon PostgreSQL      │  │
-│  │  → Creates MongoDB docs (characters/maps/items)                    │  │
+│  │  → Dequeues jobs from Upstash Redis                                │  │
+│  │  → insertGame() to Neon PostgreSQL (catalog)                       │  │
+│  │  → Game.insertMany() to MongoDB (characters/maps/items)            │  │
 │  │  → warmUpCache() → ensures cache is primed                         │  │
 │  │  → classifyError() → unified error classification                  │  │
-│  │  → retry() wrapper on ALL DB operations (#78)                      │  │
+│  │  → retry() wrapper on ALL DB operations                            │  │
 │  └────────────────────────────────────────────────────────────────────┘  │
 │                                                                           │
 │  ┌──────────────────┐  ┌──────────────────┐  ┌────────────────────────┐  │
@@ -164,7 +172,7 @@ Full dependency list: [`package.json`](package.json).
 │  │   ┌────────────┐ │  │  ┌─────────────┐ │  │  ┌──────────────────┐ │  │
 │  │   │ Hot cache  │ │  │  │ games table │ │  │  │ GameData (nested)│ │  │
 │  │   │ Job queue  │ │  │  │ (catalog)   │ │  │  │ characters[]     │ │  │
-│  │   │ Queue cfg  │ │  │  │ pagination  │ │  │  │ maps[]           │ │  │
+│  │   │ Idempotency│ │  │  │ pagination  │ │  │  │ maps[]           │ │  │
 │  │   │ Likes queue│ │  │  │ likes count │ │  │  │ items[]          │ │  │
 │  │   └────────────┘ │  │  └─────────────┘ │  │  └──────────────────┘ │  │
 │  └──────────────────┘  └──────────────────┘  └────────────────────────┘  │
@@ -188,10 +196,12 @@ Full dependency list: [`package.json`](package.json).
 
 **Core abstractions** (most-connected nodes per knowledge graph):
 
-- `classifyError()` — 54 edges (unified error classification across all modules)
+- `classifyError()` — 62 edges (unified error classification across all modules)
+- `cn()` — 31 edges (class-merge helper used everywhere)
+- `retry()` — 30 edges (DB/Redis resilience wrapper)
 - `tryApiRoute()` — 22 edges (request boundary wrapper)
-- `Upstash Redis SDK` — 22 edges (cache + queue)
 - `validateJWTMiddleware()` — 20 edges (auth gate)
+- `@upstash/redis SDK` — 15 edges (cache + queue)
 
 ---
 
@@ -201,10 +211,10 @@ Full dependency list: [`package.json`](package.json).
 
 ```
 CreateForm wizard
-  → POST /api/push (validate, generate UUID v7, push to Redis queue)
-  → Background worker (lib/GamesInsert.ts: processGamesQueue)
+  → POST /api/push (validate, generate UUID v7, push to Redis queue, withIdempotency)
+  → Background worker (utilities/pull.ts → lib/GamesInsert.ts: processGamesQueue)
     → insertGame() to Neon PostgreSQL (catalog: name, desc, tags, likes)
-    → insertGameData() to MongoDB (nested: characters, maps, items)
+    → Game.insertMany() to MongoDB (nested: characters, maps, items)
     → warmUpCache() backfills Redis
   → Client polls or redirects to home page
 ```
@@ -212,24 +222,44 @@ CreateForm wizard
 ### Game read pipeline
 
 ```
-GET /api/games[?cursor=&limit=]
-  → 1. checkCachePrimed() — ensures warmup ran
-  → 2. getCachedGameIds() — sorted set from Redis
-  → 3. getGameFromCache() — mget from Redis hash
-  → 4. MISS: getGameById() from PostgreSQL + merge MongoDB data
-  → 5. backfillCache() — set result in Redis
+GET /api/games[?page=&limit=]
+  → ensureCachePrimed() — cacheInitialized flips true ONLY after a successful warmUpCache()
+  → getCachedGameIds() — sorted set from Redis
+  → getGameFromCache() — mget from Redis hash
+  → MISS: getGamesPaginated() from PostgreSQL + mergePendingLikesBatch()
+  → backfillCache() — set result in Redis
+  → If warmUpCache() failed, list reads fall back to PostgreSQL directly
 ```
 
-### Planned: GamePage detail flow (#80, #81, #82)
+### GamePage detail flow (`/game/[uuid]`)
 
 ```
-ProfileCard click → sessionStorage.setItem()
-  → router.push(/game/[uuid])
-  → game-detail.tsx mounts, reads sessionStorage for instant hero render
-  → GET /api/games/[uuid] for full data (characters, maps, items)
-    → Hotness cache check (binary-search sorted array, #81)
-    → MISS: Redis batch queue → batch MongoDB fetch (#82)
-    → Response with FullGameResponse type (#84)
+ProfileCard click → localStorage/router navigation
+  → app/game/[uuid]/page.tsx (server) loads basic info + generateMetadata
+  → game-detail.tsx (client) mounts, reads useGamePreload() for instant hero render
+  → GET /api/games/[id] for full data (characters, maps, items)
+    → Hotness cache check (binary-search sorted array, pako-gzip)
+    → cacheHit() / cacheMiss() promotion via utilities/hotnessCache.ts
+    → Response with FullGameResponse type
+```
+
+### Play / AI server flow (`/play`, `/play/[sid]`)
+
+```
+ScenarioEntry → /play/[sid] → PlayGate (auth + scenario load)
+  → lib/playClient.ts issues requests to /api/ai-server/[...path]
+  → app/api/ai-server/[...path]/route.ts relays to FastAPI (AI_SERVER_URL, default 127.0.0.1:8000)
+  → lib/ai-server-client.ts types the queue/state/memory/counter endpoints
+```
+
+### Likes flow
+
+```
+LikeButton → stores/likes-store.ts (zustand + persist)
+  → optimistic update of likedGameIds / likeCounts
+  → POST /api/push { type: "like", data: { id, likesDelta } } (UUID v7 idempotency key)
+  → worker drains likes queue → PostgreSQL updateGameLikes()
+  → on failure, _revert() rolls back the optimistic state
 ```
 
 ---
@@ -240,60 +270,77 @@ ProfileCard click → sessionStorage.setItem()
 deepslate dungeons/
 │
 ├── app/                          # Next.js 16 App Router
-│   ├── layout.tsx                # Root layout — fonts (Cormorant + DM Sans), ConvexProvider
+│   ├── layout.tsx                # Root layout — fonts (Cormorant + DM Sans), ConvexClientProvider
 │   ├── page.tsx                  # Home page — CardsGrid + CardsGridWrapper
-│   ├── globals.css               # Design tokens (@theme) + glass/glow utilities
+│   ├── globals.css               # Design tokens (@theme) + glass/glow/gradient utilities
 │   ├── auth-gate.tsx             # Auth overlay for unauthenticated users
 │   ├── convex-client-provider.tsx
-│   ├── game/                     # [uuid]/page.tsx — NOT YET IMPLEMENTED
+│   ├── game/                     # [uuid]/page.tsx + game-detail.tsx (IMPLEMENTED)
+│   ├── play/                     # page.tsx (ScenarioEntry) + [sid]/page.tsx (PlayGate)
 │   ├── inventory/                # User inventory page
 │   ├── profile/                  # Profile page
 │   ├── settings/                 # Settings page
 │   └── api/
-│       ├── games/                # GET (list), GET [id] (detail)
+│       ├── games/                # GET (list), GET [id] (detail), [id]/patches, [sid]/memory
 │       ├── push/                 # POST (create game), POST pushGames
 │       ├── convertUrl/           # POST (image upload), POST ConvertGameImages
-│       ├── drain/                # POST (queue drain)
-│       ├── patches/              # PATCH (game patches)
+│       ├── ai-server/            # [...path] relay to FastAPI
+│       ├── drain/                # GET (queue drain)
 │       └── test/                 # Test supabase auth
 │
 ├── components/
 │   ├── adventures/               # CreateForm wizard, CardsGrid, ProfileCard
 │   ├── authentication/           # Login/signup UI
 │   ├── background/               # Sidebar, ProfileMenu, layout shells
-│   ├── game/                     # GamePage components — NOT YET IMPLEMENTED
+│   ├── game/                     # GamePage + Play: GameHeader, CharacterTabs, MapList,
+│   │                             #   ItemGrid, PlayScreen, PlayGate, ScenarioEntry
 │   └── shared/                   # FittedImage (next/image wrapper)
 │
 ├── convex/                       # Convex schema + functions (opt-in realtime)
 │   ├── schema.ts                 # games, characters, maps, items tables
 │   ├── auth.config.ts            # Clerk auth integration
-│   ├── authHelpers.ts            # requireAuth(), requireStaff()
+│   ├── authHelpers.ts            # requireAuth(), requireStaff() + staff RBAC
 │   ├── games.ts                  # CRUD + auth guards
 │   ├── characters.ts, maps.ts, items.ts, staff.ts
 │   └── _generated/               # Auto-generated Convex types
 │
 ├── lib/                          # Server utilities
-│   ├── db.ts                     # 7 PostgreSQL functions wrapped in retry()
-│   ├── queue.ts                  # Upstash Redis client (legacy ioredis commented out)
+│   ├── db.ts                     # PostgreSQL functions wrapped in retry()
+│   ├── queue.ts                  # Upstash Redis client (single export)
 │   ├── retry.ts                  # Exponential-backoff retry helper
 │   ├── cache-warmup.ts           # ensureCachePrimed(), warmUpCache()
-│   ├── jwt-validate.ts           # Clerk auth() wrapper
+│   ├── jwt-validate.ts           # Clerk auth() wrapper (validateJWTMiddleware)
 │   ├── storage.ts                # Supabase upload helper
 │   ├── auth.ts                   # createAuthenticatedSupabaseClient()
 │   ├── patch-applier.ts          # applyGamePatches()
 │   ├── GamesInsert.ts            # Background worker: processGamesQueue()
-│   ├── pull.ts                   # Worker entry point
+│   ├── ai-server-client.ts       # Typed FastAPI client
 │   └── middleware/
 │       └── rate-limit.ts         # Bottleneck.Group per-IP
 │
+├── stores/
+│   └── likes-store.ts            # Zustand + persist likes store (optimistic + revert)
+│
+├── utilities/
+│   ├── clientUtilities/          # Browser-only helpers (useGameCache, useGamePreload)
+│   ├── imagesUtils.ts            # WebP conversion (quality 80), base64, upload controller
+│   ├── hotnessCache.ts           # Binary-search hotness cache + pako-gzip
+│   ├── hotnessCacheWithRetry.ts  # redisWithExponentialRetry()
+│   ├── idempotency.ts            # withIdempotency() (idempotency:<key>, TTL 300s)
+│   ├── gameFetchPipeline.ts      # Batch fetch pipeline to Redis queue
+│   ├── errorHandler.ts           # classifyError() + mapToComponent()
+│   ├── apiErrorHandler.ts        # tryApiRoute()
+│   ├── sleep.ts                  # Shared sleep()
+│   └── validation.ts             # Zod schemas for form steps
+│
 ├── hooks/
-│   ├── useFormState.ts           # Shared form state (#58)
-│   ├── useAuth.ts                # Client auth hook (#73 — name conflict resolved)
+│   ├── useFormState.ts           # Shared form state
+│   ├── useAuth.ts                # Client auth hook
 │   ├── useIdempotentRequest.ts   # UUID v7 + AbortController
 │   ├── useMutationTracker.ts     # Track mutation progress
-│   ├── useGameCache.ts           # Cache preload helpers
-│   ├── useGamePreload.ts         # + Zustand store
-│   └── useGameForm.ts            # Form hook for wizard
+│   ├── useGameCache.ts            # Cache preload helpers
+│   ├── useGamePreload.ts          # + Zustand store
+│   └── useGameForm.ts             # Form hook for wizard
 │
 ├── ui/
 │   ├── primitives/               # Button, Card, Input, Textarea, Label, ErrorPageShell
@@ -302,31 +349,21 @@ deepslate dungeons/
 ├── exceptions/                   # Importable error pages
 │   ├── errorPages/               # NotFound (404), ServerError (500), Forbidden (403),
 │   │                             # ServiceUnavailable (503), BadRequest (400), General
-│   └── notifications/            # Toast notifications, SuccessToast, Toaster
+│   └── notifications/           # Toast notifications, SuccessToast, Toaster
 │
 ├── styles/                       # CSS Modules
-│   ├── pages/                    # home, inventory
-│   ├── layout/                   # root layout
-│   ├── cards/                    # CardsGrid, CardsLoad, cards
-│   ├── forms/                    # form, wizard
-│   ├── sidebar/                  # sidebar
-│   ├── authentication/           # unauthenticated
-│   ├── auth/                     # signup, auth-status
-│   └── shared/                   # fitted-image
+│   ├── pages/  layout/  cards/  forms/  sidebar/
+│   ├── authentication/  auth/  shared/
 │
 ├── types/                        # Shared TypeScript types
 │   ├── validation.ts             # Zod-inferred types (single source of truth)
 │   ├── cards.ts                  # CardProps, GameCardProps
-│   └── db.ts                     # DB row types
+│   ├── db.ts                     # DB row types
+│   ├── ai-server.ts              # AI server response types
+│   └── gamePage.ts               # GamePage props
 │
 ├── models/
-│   └── games/mongodb/            # Mongoose GameData schema
-│
-├── utilities/
-│   ├── clientUtilities/          # Browser-only helpers
-│   ├── imagesUtils.ts            # WebP conversion, base64 encode/decode
-│   ├── sleep.ts                  # Shared sleep() (#60 — deduplicated)
-│   └── validation.ts             # Zod schemas for form steps (#77)
+│   └── games/mongodb/            # Mongoose GameData schema + client
 │
 ├── documentations/               # Full project documentation
 │   ├── documentations/           # System docs (architecture, auth, data flow, UI)
@@ -334,18 +371,17 @@ deepslate dungeons/
 │   ├── problems/                 # Security audit + known performance issues
 │   ├── features/                 # Feature specs (GamePage, DataStructures)
 │   ├── discussions/              # Security discussions (CSRF, idempotency, etc.)
-│   └── issues/                   # 45 documented GitHub issues
+│   └── issues/                   # 45 documented GitHub issues (#48–#95)
 │
 ├── graphify-out/                 # Auto-extracted knowledge graph
-│   ├── GRAPH_REPORT.md           # Full audit (2,608 nodes, 3,143 edges, 188 communities)
+│   ├── GRAPH_REPORT.md           # Full audit (1,297 nodes, 2,238 edges, 108 communities)
 │   ├── graph.html                # Interactive browser graph
 │   ├── graph.json                # Raw graph data
 │   └── .graphify_labels.json     # Human-readable community labels
 │
-├── .agents/skills/               # Project-local agent skills (16 skills)
-│
+├── .agents/skills/               # Project-local agent skills
 ├── proxy.ts                      # Clerk middleware (route protection)
-├── next.config.ts                # Supabase hostname, image quality 85
+├── next.config.ts                # Supabase hostname, next/image qualities [75, 85]
 ├── instrumentation-client.ts     # PostHog client init
 ├── package.json
 └── README.md                     # ← you are here
@@ -355,18 +391,22 @@ deepslate dungeons/
 
 ## UI design system
 
-Defined in [`app/globals.css`](app/globals.css) via Tailwind v4 `@theme`. Hybrid pattern: **CSS Modules for structure + Tailwind utilities for variants**.
+Defined in [`app/globals.css`](app/globals.css) via Tailwind v4 `@theme`. Hybrid pattern: **CSS Modules for structure + Tailwind utilities for variants**, composed through `cn()` from `lib/utils.ts`.
 
 ### Theme tokens
 
 | Category | Tokens | Values |
 |----------|--------|--------|
-| **Abyss palette** | `--color-abyss-950` → `--color-abyss-100` | Deepest bg (`#05020d`) → subtle accent (`#e3ddf2`) |
-| **Ember glow** | `--color-ember-600` → `--color-ember-100` | Dark ember (`#7c2d12`) → light glow (`#ffedd5`) |
-| **Semantic** | `bg-base`, `bg-surface`, `text-primary`, `accent` | Mapped from palette |
-| **Glass** | `.bg-glass` | Frosted backdrop with blur |
-| **Glow** | `.glow-accent`, `.glow-accent-sm` | Ember box-shadow glow |
-| **Gradient text** | `.text-gradient`, `.text-gradient-accent` | CSS gradient fill |
+| **Charcoal base** | `--color-charcoal-950` → `--color-charcoal-850` | Deepest bg (`#1a1510`) → elevated surface (`#2e2820`) |
+| **Slate / Stone** | `--color-slate-800` → `--color-slate-500`, `--color-stone-dust-400/300/200` | Structural borders, muted stone tones |
+| **Torchlight accent** | `--color-torch-600` → `--color-torch-200` | Dark ember (`#a67c52`) → bright torch (`#f0cba8`); `--color-accent` = `--color-torch-400` |
+| **Gold (legendary)** | `--color-gold-600` → `--color-gold-300` | `#9a7f3f` → `#ddb968` |
+| **Blood (danger)** | `--color-blood-600` → `--color-blood-400` | `#6b1f14` → `#ab3d2a` |
+| **Runic-silver text** | `--color-text-primary/-secondary/-muted` | `#e8e6e0` / `#c0bbb2` / `#8a8278` |
+| **Semantic** | `bg-base`, `bg-surface`, `bg-elevated`, `accent`, `border` | Mapped from palette |
+| **Glass** | `.bg-glass`, `.bg-glass-torch` | Frosted backdrop with blur |
+| **Glow** | `.glow-accent`, `.glow-torch`, `.glow-gold`, `.glow-blood` | Torch box-shadow glows |
+| **Gradient text** | `.text-gradient`, `.text-gradient-accent`, `.text-gradient-gold`, `.text-gradient-blood` | CSS gradient fill |
 
 ### Pattern
 
@@ -388,9 +428,7 @@ Full design system: [`documentations/documentations/04-UI_DESIGN_SYSTEM.md`](doc
 
 ## Issue landscape
 
-**45 documented issues · 41 closed · 4 open · 11 dependency chains · 10 impact areas**
-
-Every issue is documented in [`documentations/issues/`](documentations/issues/) with: problem description, root cause, solution, code examples, dependency tracking, and verification checklists.
+**45 documented issues (#48–#95) · dependency-mapped · knowledge-graphed · fully documented in [`documentations/issues/`](documentations/issues/)** with: problem description, root cause, solution, code examples, dependency tracking, and verification checklists. These docs are kept as the historical record of how each problem was analyzed and resolved — they are **not** modified when the code catches up.
 
 ### Dependency graph
 
@@ -399,25 +437,27 @@ Every issue is documented in [`documentations/issues/`](documentations/issues/) 
 #71 ─── #77 ← #64             Validation (ZodError → centralization)
 #67 ─── #78 ← #62             Backend reliability (N+1 → retry → cache helpers)
 #56 ─── #70 ─┬─ #69           Image pipeline (memory leak → data URL → file loss)
-             ├─ #74 ── #76    (abort crash → docs)
+              ├─ #74 ── #76    (abort crash → docs)
 #57 ─── #58 ─── #54 ── #75   Form layer (prop drill → hooks → a11y → styles)
 #48 ─── #50 ─── #51           Design system (layout → tokens → responsive)
 #49 ─── #52                    Architecture (rendering → coupling)
 #90 ─┬─ #89 ── #95            Likes pipeline (queues → instant write → Zustand)
-     ├─ #91                    State sync (JSON Patch)
-     ├─ #92                    Dead code (remove load key)
-     └─ #93 ── #94            Redis migration (Upstash → remove ioredis)
+      ├─ #91                    State sync (JSON Patch)
+      ├─ #92                    Dead code (remove load key)
+      └─ #93 ── #94            Redis migration (Upstash → remove ioredis)
 #80 ─┬─ #81 ── #82 ── #84 ── #85  GamePage suite (nav → cache → batch → UI → a11y)
 ```
 
-### Open issues (4)
+### Implemented in code (formerly-open issues now closed)
 
-| # | Issue | Status | Blocks | Area |
-|---|-------|--------|--------|------|
-| **81** | Binary-search hotness cache | 🔄 OPEN | #82 | GamePage (Performance) |
-| **82** | Batch MongoDB fetch via Redis queue | 🔄 OPEN | #84 | GamePage (Performance) |
-| **94** | Remove ioredis dependency | 🔄 OPEN | — | Cleanup |
-| **95** | Zustand Likes Store | 🔄 OPEN | — | Likes/State |
+| # | Issue | Status |
+|---|-------|--------|
+| **80** | GamePage navigation | ✅ `app/game/[uuid]/page.tsx` + `game-detail.tsx` |
+| **81** | Binary-search hotness cache | ✅ `utilities/hotnessCache.ts` (pako-gzip, parallel arrays) |
+| **82** | Batch MongoDB fetch via Redis queue | ✅ `utilities/gameFetchPipeline.ts` |
+| **84** | GamePage UI | ✅ `components/game/*` (GameHeader, CharacterTabs, MapList, ItemGrid) |
+| **89/95** | Likes instant write + Zustand store | ✅ `stores/likes-store.ts` |
+| **93/94** | Upstash migration + remove ioredis | ✅ `lib/queue.ts` (single Upstash client) |
 
 ### Closed by impact area
 
@@ -431,40 +471,32 @@ Every issue is documented in [`documentations/issues/`](documentations/issues/) 
 | **Build Fixes** | #71, #72, #73, #76 | ✅ All closed |
 | **Accessibility** | #53, #54, #85 | ✅ All closed |
 | **Backend Reliability** | #67, #78, #62 | ✅ All closed |
-| **Likes (partially)** | #90, #89, #91, #92, #93 | ✅ All closed (except #94, #95) |
-| **GamePage (partially)** | #80, #84, #85 | ✅ Closed (except #81, #82) |
+| **Likes** | #89, #90, #91, #92, #93, #94, #95 | ✅ All closed |
+| **GamePage** | #80, #81, #82, #84, #85 | ✅ All closed |
+
+### Currently open (not implemented in code — see "What's unfinished")
+
+- Audit logging (failed-auth, data mods, unusual access)
+- WAF + request signing
+- Penetration test
+- Transactional guarantees across Postgres + MongoDB
+- MongoDB schema-migration framework
+- Monitoring / alerting
 
 ---
 
 ## What's unfinished
 
-Honest accounting of what's NOT done yet. Updated 2026-06-10.
+Honest accounting of what's NOT done yet. Updated 2026-08-17.
 
-### 🟥 Open issues (4)
+### 🟩 Now implemented (no longer open)
 
-#### Issue #81: Binary-search hotness cache
-- **Problem:** Redis cache uses unconditional `SET` with static TTL — every requested game gets cached regardless of popularity, wasting memory on long-tail games
-- **Designed solution:** In-memory hashmap + parallel arrays + binary search for O(log n) insertion
-- **Files to create:** `lib/hotness-cache.ts`
-- **Blocks:** #82
+- **GamePage detail route** (`/game/[uuid]`) — server `page.tsx` (with `generateMetadata`) + client `game-detail.tsx`, tabs for characters/maps/items, instant preload via `useGamePreload()`.
+- **Play screen** (`/play`, `/play/[sid]`) — `PlayScreen`, `PlayGate`, `ScenarioEntry` + scenario components.
+- **AI server integration** — `lib/ai-server-client.ts`, `lib/playClient.ts`, `app/api/ai-server/[...path]/route.ts` relay to FastAPI (`AI_SERVER_URL`).
+- **Likes store** — `stores/likes-store.ts` (zustand + persist, optimistic + revert) and **hotness cache** — `utilities/hotnessCache.ts` (binary-search sorted array, pako-gzip, promotion threshold).
 
-#### Issue #82: Batch MongoDB fetch via Redis queue
-- **Problem:** Each `GET /api/games/[id]` does a direct `Game.findOne()` — connection pool saturates under 100+ concurrent requests
-- **Designed solution:** Redis-backed batch pipeline (LPUSH → worker → `Game.find({ id: { $in } })` → fan out via HSET + PUBLISH)
-- **Files to create:** `utilities/batchFetchWorker.ts`
-- **Depends on:** #80, #81
-
-#### Issue #94: Remove ioredis dependency
-- **Problem:** `ioredis` package (v5.10.1) and its commented-out legacy code remain in `lib/queue.ts` and `package.json`
-- **Actionable:** Uninstall `ioredis`, delete commented block, remove `redisqueue` env var
-- **Depends on:** #93 (Upstash migration — done ✅)
-
-#### Issue #95: Zustand Likes Store
-- **Problem:** Likes system needs a client-side store for optimistic updates and fire-and-forget writes
-- **Status:** Designed, not implemented
-- **Depends on:** #89 (Likes instant write — done ✅)
-
-### 🟧 Production checklist (3 incomplete)
+### 🟧 Production checklist (incomplete)
 
 | # | Item | Status |
 |---|------|--------|
@@ -474,47 +506,35 @@ Honest accounting of what's NOT done yet. Updated 2026-06-10.
 
 Items 1-7 are completed (CORS allow-list, size limits, security headers, rate limiting, JWT migration, etc.).
 
-### 🟨 Known performance issues (not yet addressed in code)
+### 🟨 Known performance / data-integrity issues (not yet addressed in code)
 
-From [`documentations/problems/02-KNOWN_ISSUES.md`](documentations/problems/02-KNOWN_ISSUES.md):
+From [`documentations/problems/`](documentations/problems/):
 
 | Issue | Risk | Status |
 |-------|------|--------|
 | Cache stampede (multiple requests on miss) | High | Designed (locking), not implemented |
-| N+1 MongoDB queries in loops | High | Mitigated by retry, batch queuing in #82 |
-| Memory exhaustion from unbounded cache | Medium | Addressed by #81's barrier-to-entry eviction |
-| Dual-DB sync race (PostgreSQL vs MongoDB) | High | Saga pattern designed, not in worker |
+| N+1 MongoDB queries in loops | High | Mitigated by retry + batch pipeline |
+| Memory exhaustion from unbounded cache | Medium | Hotness cache evicts via barrier, but general guard missing |
+| Dual-DB sync race (PostgreSQL vs MongoDB) | High | No saga/transaction across the two stores |
 | Cache/DB divergence on partial writes | Medium | TTL-based eventual consistency |
 | No performance metrics / alerting | Medium | No monitoring implemented |
+| Transactional guarantees across Postgres + MongoDB | High | Manual saga cleanup only |
+| MongoDB schema-migration framework | Medium | Manual migration scripts required |
+| No zero-downtime deployment strategy | Medium | Not implemented |
+
+### 🟨 Security gaps not yet addressed
+
+From [`documentations/problems/01-SECURITY_VULNERABILITIES.md`](documentations/problems/01-SECURITY_VULNERABILITIES.md) and the knowledge-graph audit:
+
+- **No authorization layer** — all authenticated users treated equally; staff checks exist in Convex (`requireStaff`) but not consistently enforced on REST routes.
+- **`GET /api/drain` performs a state change** (CSRF-prone) and the internal drain relies on a header flag rather than S2S auth.
+- **Idempotency keys not scoped to user** — a key is global in `idempotency:<key>`.
+- **Rate limiter bypass** — depends on `x-forwarded-for`, which can be spoofed.
+- **No audit logging** of auth failures or data mutations.
 
 ### 🟨 Knowledge graph blind spots
 
-The auto-extracted graph ([`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md)) flagged **1,634 isolated nodes** with one or fewer connections. These are files, types, and utilities that may lack documentation or integration tracking. See the full report for the isolated node list.
-
-### 🟨 GamePage detail route (`/game/[uuid]`)
-
-The full GamePage (detail view for a single adventure) is **designed but not implemented**. The feature spec at [`documentations/features/GamePage/GamePage.md`](documentations/features/GamePage/GamePage.md) (614 lines) covers:
-- Server component shell + SEO metadata generation
-- Client component with sessionStorage preload from ProfileCard
-- Three-tier cache check (client → hotness → Redis → batch MongoDB)
-- FullGameResponse type + 4 UI component cards (GameHeader, CharacterCard, MapCard, ItemCard)
-- Responsive layout + accessibility verification (#85)
-
-**Files that don't exist yet:**
-- `app/game/[uuid]/page.tsx` (server component)
-- `app/game/[uuid]/game-detail.tsx` (client component)
-- `components/game/GameHeader.tsx`
-- `components/game/CharacterCard.tsx`
-- `components/game/MapCard.tsx`
-- `components/game/ItemCard.tsx`
-- `lib/hotness-cache.ts` (#81)
-- `utilities/batchFetchWorker.ts` (#82)
-
-### 🟨 Data integrity gaps
-
-- **No zero-downtime deployment** strategy implemented
-- **No transactional guarantees** across PostgreSQL + MongoDB writes (manual saga cleanup only)
-- **No schema migration framework** for MongoDB (Mongoose schema changes require manual migration scripts)
+The auto-extracted graph ([`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md)) flagged **462 isolated nodes** with one or fewer connections (e.g. `.svg` assets, plugin package metadata). These are files, types, and utilities that may lack documentation or integration tracking. See the full report for the isolated node list.
 
 ---
 
@@ -522,7 +542,7 @@ The full GamePage (detail view for a single adventure) is **designed but not imp
 
 ### Security audit summary
 
-From [`documentations/problems/01-SECURITY_VULNERABILITIES.md`](documentations/problems/01-SECURITY_VULNERABILITIES.md) (653 lines):
+From [`documentations/problems/01-SECURITY_VULNERABILITIES.md`](documentations/problems/01-SECURITY_VULNERABILITIES.md):
 
 | Severity | Count | Examples | Status |
 |----------|-------|----------|--------|
@@ -531,13 +551,20 @@ From [`documentations/problems/01-SECURITY_VULNERABILITIES.md`](documentations/p
 | 🟡 Medium | 4 | Information disclosure, no audit logging, no API versioning | 🔲 Audit log open |
 | 🟢 Low | 2 | Verbose error messages, no HTTPS enforcement (Vercel handles) | ✅ Acceptable risk |
 
+### Auth model (current)
+
+- **Server:** Clerk `auth()` in `lib/jwt-validate.ts` → `validateJWTMiddleware(request)` returns `{ userId }` or a 401 `NextResponse`. No `CLERK_JWT_SECRET` or JWT-template validation is performed.
+- **API boundary:** every route is wrapped in `tryApiRoute()` with `classifyError()` for unified error classification.
+- **Convex:** `requireAuth()` / `requireStaff()` in `convex/authHelpers.ts` provide staff RBAC for realtime functions.
+- **No `*_JWT_SECRET` env vars** are required or referenced.
+
 ### Known performance issues
 
-From [`documentations/problems/02-KNOWN_ISSUES.md`](documentations/problems/02-KNOWN_ISSUES.md) (518 lines):
+From [`documentations/problems/02-KNOWN_ISSUES.md`](documentations/problems/02-KNOWN_ISSUES.md):
 
 1. **N+1 Redis queries** — individual `GET` per game ID in list endpoint (mitigated by `redis.mget`)
 2. **Cache stampede** — multiple requests hit DB on cache miss (solution designed, not implemented)
-3. **Memory exhaustion** — unbounded cache growth (planned fix in #81)
+3. **Memory exhaustion** — unbounded cache growth (hotness cache has a barrier; general guard missing)
 4. **Slow MongoDB queries** — no indexes on `id` field (documented)
 5. **PostgreSQL connection exhaustion** — pool size configured but no monitoring
 6. **Dual-DB sync** — PostgreSQL + MongoDB can diverge on partial failure
@@ -551,39 +578,41 @@ The codebase is auto-extracted into a navigable knowledge graph via [graphify](h
 
 | Metric | Value |
 |--------|-------|
-| Nodes | 2,608 |
-| Edges | 3,143 |
-| Communities | 188 (159 shown, 29 thin omitted) |
-| Extraction confidence | 99% extracted, 1% inferred |
-| Import cycles | 1 (notifications barrel export) |
+| Nodes | 1,297 |
+| Edges | 2,238 |
+| Communities | 108 (81 shown, 27 thin omitted) |
+| Extraction confidence | 94% extracted, 6% inferred |
+| Import cycles | None detected |
 
 ### God nodes (most-connected abstractions)
 
 | Node | Connections | What |
 |------|-------------|------|
-| `classifyError()` | 54 | Unified error classification across all lib modules |
+| `classifyError()` | 62 | Unified error classification across all lib/utilities modules |
+| `cn()` | 31 | Class-merge helper used throughout the UI |
+| `retry()` | 30 | DB/Redis resilience wrapper |
 | `tryApiRoute()` | 22 | Request boundary wrapper for API routes |
-| `Upstash Redis SDK` | 22 | Cache + queue client |
 | `validateJWTMiddleware()` | 20 | Auth gate for API routes |
-| `Deepslate Dungeons — Architecture Document` | 20 | Central reference doc |
-| `PostHog Next.js app router example` | 19 | Analytics integration pattern |
+| `Known Issues & Performance Problems` | 17 | Central problems doc reference |
 | `compilerOptions` | 16 | TypeScript config |
-| `Neon Serverless Postgres` | 16 | Database adapter |
+| `UI/UX & Design System Issues` | 16 | Central design-system issues doc |
+| `redisWithExponentialRetry()` | 15 | Redis retry wrapper |
+| `@upstash/redis SDK` | 15 | Cache + queue client |
 
-### Surprising connections (auto-discovered)
+### Community hubs (auto-discovered, top cohesion)
 
-- `useMutationTracker` (hooks) → `applyGamePatches` (lib/patch-applier.ts) — `[INFERRED, semantically similar]`
-- `useAuth` (hooks) → `validateJWTMiddleware` (lib/jwt-validate.ts) — `[INFERRED, semantically similar]`
-
-### Top communities (by cohesion)
-
-| Community | Cohesion | Nodes | Theme |
-|-----------|----------|-------|-------|
-| Game Creation Pipeline | 0.15 | 12 | Wizard → API → Worker → DB |
-| Games API Cache & Drain | 0.17 | 20 | Redis cache + queue drain |
-| MongoDB Game Queue | 0.18 | 15 | Worker → MongoDB |
-| Game Fetch Pipeline | 0.13 | 30 | Client read path |
-| Auth & Error Classification | 0.13 | 26 | JWT + error handling |
+| Community | Cohesion | Theme |
+|-----------|----------|-------|
+| Convex Migration Helper Config | 1.00 | Migration helper skill config |
+| Proxy Relay Route | 0.70 | `/api/ai-server` relay to FastAPI |
+| API Proxy Route | 0.60 | AI-server proxy verbs |
+| Security & Auth Issues | 0.48 | Auth gaps, CSRF, idempotency scoping |
+| PostHog Analytics Setup | 0.52 | PostHog integration |
+| Clerk Staff Authorization | 0.31 | `requireStaff()` RBAC |
+| Cache Warmup & Hotness Cache | 0.16 | `cache-warmup.ts` + `hotnessCache.ts` |
+| Play Screen & Scenarios | 0.14 | `PlayScreen`, `ScenarioEntry` |
+| Game Detail Page Components | 0.11 | `GameHeader`, `CharacterTabs`, `MapList`, `ItemGrid` |
+| Game Fetch & Auth Hooks | 0.06 | Read path hooks + auth |
 
 Open [`graphify-out/graph.html`](graphify-out/graph.html) in a browser for interactive exploration, or read [`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md) for the full audit.
 
@@ -605,11 +634,12 @@ documentations/
 │
 ├── problems/                    # Security & known issues
 │   ├── 01-SECURITY_VULNERABILITIES.md  # 4 critical, 5 high, 4 medium, 2 low
-│   └── 02-KNOWN_ISSUES.md             # N+1, cache stampede, dual-DB sync, race conditions
+│   ├── 02-KNOWN_ISSUES.md             # N+1, cache stampede, dual-DB sync, race conditions
+│   └── 05-UI_UX_DESIGN_ISSUES.md      # Design-system gaps
 │
 ├── features/                    # Feature specs
 │   ├── GamePage/
-│   │   ├── GamePage.md          # Full spec (614 lines)
+│   │   ├── GamePage.md          # Full spec
 │   │   ├── GamePage_Integration_Guide.md
 │   │   ├── GAMEPAGE_QUICKSTART.md
 │   │   ├── GAMEPAGE_README.md
@@ -619,9 +649,9 @@ documentations/
 ├── discussions/                 # Security discussions
 │   └── security/                # CSRF, idempotency, JWT, authorization, rate limiting
 │
-└── issues/                      # 45 documented GitHub issues (see section above)
+└── issues/                      # 45 documented GitHub issues (#48–#95)
     ├── README.md                # Full index with dependency graph + status tracker
-    └── *.md                     # Individual issues (48-95)
+    └── *.md                     # Individual issues
 ```
 
 ---
@@ -629,7 +659,7 @@ documentations/
 ## Environment variables
 
 ```env
-# Convex
+# Convex (opt-in realtime — not on primary write path)
 NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud
 
 # Clerk
@@ -648,19 +678,22 @@ DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
 # MongoDB
 MONGODB_URI=mongodb+srv://user:pass@cluster/?appName=...
 
-# Redis (legacy ioredis — being removed in #94)
-redisqueue=redis://default:pass@host:port
-
-# Upstash Redis
+# Upstash Redis (cache + queue + idempotency)
 UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
 UPSTASH_REDIS_REST_TOKEN=...
+
+# AI server (FastAPI relay target for /api/ai-server)
+AI_SERVER_URL=http://127.0.0.1:8000
+
+# App URL (used for internal drain self-calls)
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 # Analytics
 NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=phc_...
 NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 ```
 
-> ⚠️ **Never commit `.env` or `.env.local`.** Copy `.env.example` to `.env.local` and keep secrets in a managed store (Vercel Env / GitHub Secrets).
+> ⚠️ **Never commit `.env` or `.env.local`.** Keep secrets in a managed store (Vercel Env / GitHub Secrets). No `*_JWT_SECRET` variables are required — Clerk issues the JWTs.
 
 ---
 
@@ -672,7 +705,7 @@ npm run build        # Production build with type-checking
 npm run start        # Run production server
 npm run lint         # ESLint across all source files
 
-# Convex (requires separate terminal)
+# Convex (optional, requires separate terminal)
 npx convex dev       # Local Convex deployment with hot reload
 npx convex dashboard # Open Convex web dashboard
 npx convex deploy    # Deploy Convex functions to production
@@ -682,13 +715,12 @@ npx convex deploy    # Deploy Convex functions to production
 
 ```bash
 npm install
-cp .env.example .env.local
-# Edit .env.local with your credentials
-npx convex dev       # Terminal 1
+# Create .env.local with the variables above
+npx convex dev       # Terminal 1 (optional realtime)
 npm run dev          # Terminal 2
 ```
 
-Open http://localhost:3000. Clerk handles sign-in, the wizard walks you through creating your first game, and PostHog records the visit.
+Open http://localhost:3000. Clerk handles sign-in, the wizard walks you through creating your first game, the GamePage and Play screens are live, and PostHog records the visit.
 
 ---
 
@@ -721,19 +753,18 @@ Open http://localhost:3000. Clerk handles sign-in, the wizard walks you through 
 | File | What |
 |------|------|
 | [`CLAUDE.md`](CLAUDE.md) | Agent instructions with anchored project summary |
-| [`JWT_IMPLEMENTATION_SUMMARY.md`](JWT_IMPLEMENTATION_SUMMARY.md) | Quick JWT changes summary |
-| [`JWT_VALIDATION_GUIDE.md`](JWT_VALIDATION_GUIDE.md) | Detailed JWT validation |
-| [`posthog-setup-report.md`](posthog-setup-report.md) | PostHog setup report |
-| [`architicture/architecture.md`](architicture/architecture.md) | Architecture overview |
+| [`posthog-setup-report.md`](legacy-documentations/posthog-setup-report.md) | PostHog setup report (legacy) |
+| [`AiServerArchitecture.md`](legacy-documentations/AiServerArchitecture.md) | AI server architecture notes (legacy) |
+| [`LOOPS.md`](legacy-documentations/LOOPS.md) | Development loop notes (legacy) |
 | [`convex/_generated/ai/guidelines.md`](convex/_generated/ai/guidelines.md) | **Always read first** for Convex code |
 
 ### Knowledge graph
 
 | File | What |
 |------|------|
-| [`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md) | Full audit (2,608 nodes, 188 communities) |
+| [`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md) | Full audit (1,297 nodes, 108 communities) |
 | [`graphify-out/graph.html`](graphify-out/graph.html) | Interactive graph in browser |
-| [`graphify-out/graph.json`](graphify-out/graph.json) | Raw graph data (3,143 edges) |
+| [`graphify-out/graph.json`](graphify-out/graph.json) | Raw graph data (2,238 edges) |
 
 ### Authoritative external docs
 

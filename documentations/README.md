@@ -18,19 +18,19 @@ How everything is connected and works together.
   - Scalability Considerations
 
 - **02-AUTHENTICATION.md** - JWT validation and Clerk integration
-  - JWT Validation Flow
+  - JWT Validation Flow (Clerk `auth()` + `validateJWTMiddleware(request)`)
   - Middleware Integration
   - Token Payload Structure
   - Protected Routes List
   - Clerk Integration Details
-  - Multi-Template Support
-  - Error Response Examples
+  - Convex `requireAuth()`/`requireStaff()` RBAC
+  - Error Response Examples (`tryApiRoute` + `classifyError`)
   - Testing Authentication
   - Troubleshooting Guide
 
 - **03-DATA_FLOW.md** - Complete request/response flows
 - **04-UI_DESIGN_SYSTEM.md** - Dark fantasy design system, tokens, styling architecture
-  - Design Tokens (abyss/ember palette, typography, effects)
+  - Design Tokens (Stone/Slate + Torchlight palette, typography, effects)
   - CSS Modules + cn() hybrid pattern
   - Component architecture (cards grid, sidebar, primitives)
   - Gradient usage patterns and file locations
@@ -48,13 +48,11 @@ Step-by-step implementation guides and how-to documentation.
 - **01-JWT_SETUP.md** - Setting up JWT validation
   - Step-by-step setup guide
   - Environment variable configuration
-  - JWT validation implementation
+  - JWT validation implementation (`validateJWTMiddleware`)
   - Making authenticated requests from frontend
   - Testing JWT implementation
-  - Switching between auth templates
   - Token payload usage
   - Custom claims handling
-  - Token refresh strategies
   - Monitoring and debugging
 
 - **02-API_IMPLEMENTATION.md** - Creating and maintaining API routes
@@ -72,25 +70,18 @@ Step-by-step implementation guides and how-to documentation.
 ---
 
 ### 🔒 Problems/
-Security vulnerabilities and known issues.
+Security vulnerabilities, performance, and architecture/code-quality known issues (10 reports, `01`–`10`). Status fields reflect the current codebase (2026-08-17) and are refreshed periodically.
 
-- **01-SECURITY_VULNERABILITIES.md** - Security assessment
-  - Critical Issues (JWT secret exposure, token validation, rate limiting)
-  - High Priority Issues (Input validation, cache poisoning, size limits, CORS, privilege escalation)
-  - Medium Priority Issues (Error disclosure, audit logging)
-  - Low Priority Issues (HTTPS enforcement, security headers, API versioning)
-  - Risk Summary Matrix
-  - Action Items (Immediate, Short Term, Long Term)
-
-- **02-KNOWN_ISSUES.md** - Performance and data integrity issues
-  - Performance Issues (N+1 queries, cache stampede, memory exhaustion, slow queries)
-  - Data Consistency Issues (Dual database sync, cache divergence)
-  - Concurrency Issues (Race conditions, worker crashes)
-  - Data Integrity Issues (Orphaned records, null references)
-  - Monitoring & Observability Issues
-  - Deployment Issues
-  - Scalability Issues
-  - Recommended Fixes Priority Matrix
+- **01-SECURITY_VULNERABILITIES.md** - Security assessment (critical/high/medium/low matrix, risk summary, action items)
+- **02-KNOWN_ISSUES.md** - Performance + data-integrity issues (N+1, cache stampede, dual-DB sync, race conditions)
+- **03-SECURITY_AUTH_ISSUES.md** - Auth-layer security gaps
+- **04-PERFORMANCE_SCALABILITY_ISSUES.md** - Scalability limits + benchmarks
+- **05-UI_UX_DESIGN_ISSUES.md** - UI/UX gaps
+- **06-DATA_LAYER_DATABASE_ISSUES.md** - Data-layer/DB issues
+- **07-ARCHITECTURE_CODE_QUALITY_ISSUES.md** - Architecture + code-quality issues
+- **08-INFRASTRUCTURE_DEPLOYMENT_ISSUES.md** - Infra/deployment issues
+- **09-MONITORING_OBSERVABILITY_ISSUES.md** - Monitoring/observability gaps
+- **10-DEVELOPER_EXPERIENCE_DOCS_ISSUES.md** - DX + docs issues
 
 ---
 
@@ -220,11 +211,12 @@ documentations/
 
 ## Related Files in Project Root
 
-- **JWT_IMPLEMENTATION_SUMMARY.md** - Quick summary of JWT changes
-- **JWT_VALIDATION_GUIDE.md** - Detailed JWT validation documentation
-- **PLAN.md** - Development plan
-- **architicture/architecture.md** - Architecture overview
+- **README.md** - Top-level project readme (fresh knowledge-graph metrics, architecture, data flow)
 - **CLAUDE.md** - Agent instructions with anchored project summary
+- **posthog-setup-report.md** - PostHog analytics setup report (legacy)
+- **AiServerArchitecture.md** - AI server architecture notes (legacy)
+- **LOOPS.md** - Development loop notes (legacy)
+- **graphify-out/GRAPH_REPORT.md** - Auto-extracted knowledge graph (1,297 nodes / 2,238 edges / 108 communities, 2026-08-17)
 - **.agents/skills/project-reference/Skill.md** - Project reference index (this file)
 
 ---
@@ -232,7 +224,7 @@ documentations/
 ## Last Updated
 
 Created: 2026-05-30
-Last Review: 2026-06-04
+Last Review: 2026-08-17
 
 ---
 

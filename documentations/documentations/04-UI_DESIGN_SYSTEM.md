@@ -2,231 +2,324 @@
 
 ## Overview
 
-Dark fantasy RPG-themed design system with an abyss-purple + ember-glow palette. Styling uses a hybrid approach: **CSS Modules for structural/layout styles** + **Tailwind v4 utility classes via `cn()` for variants and overrides**.
+Deepslate Dungeons has a mature, live design system built around a dark-fantasy
+**Stone/Slate + Torchlight** aesthetic (the earlier abyss-purple + ember concept was
+retired — see `app/globals.css`). Styling follows a strict **hybrid pattern**: **CSS
+Modules own structural/layout styles**, while **Tailwind v4 utility classes — applied
+through the `cn()` helper from `lib/utils.ts` — handle variants, one-off utilities,
+responsiveness, and state**.
+
+> **Rule of thumb:** never use *pure* CSS Modules without Tailwind, and never use
+> *pure* Tailwind without a CSS Module for structural work. The convention is always
+> `cn(styles.structuralClass, "tailwind-utility", condition && styles.variantClass)`.
 
 ---
 
 ## Design Tokens
 
-Defined in `app/globals.css` via Tailwind v4 `@theme` block. Custom CSS properties accessible both from Tailwind classes (`bg-bg-surface`, `text-text-primary`) and CSS modules (`var(--color-bg-surface)`).
+Defined in `app/globals.css` via the Tailwind v4 `@theme` block (`app/globals.css:3`).
+Every token becomes a CSS variable (`var(--color-*)`) usable from CSS Modules and a
+Tailwind class (e.g. `bg-bg-surface`, `text-text-primary`, `border-border`).
 
-### Color Palette
+### Base / Surface Colors (Stone & Slate)
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--color-abyss-950` | `#050308` | Deepest bg |
-| `--color-abyss-900` | `#0a0714` | Surface bg |
-| `--color-abyss-850` | `#0f0b1e` | Elevated bg |
-| `--color-abyss-800` | `#161128` | Hover state |
-| `--color-abyss-700` | `#201a36` | Borders |
-| `--color-abyss-600` | `#2d2550` | Light borders |
-| `--color-abyss-500` | `#3f3470` | Subtle accents |
-| `--color-ember-600` | `#cc3f00` | Dark accent |
-| `--color-ember-500` | `#e85510` | Muted accent |
-| `--color-ember-400` | `#ff6b24` | Primary accent |
-| `--color-ember-300` | `#ff8c4a` | Accent hover |
-| `--color-ember-200` | `#ffad78` | Light accent |
+| Token | Value | Semantic alias | Usage |
+|-------|-------|----------------|-------|
+| `--color-charcoal-950` | `#1a1510` | `--color-bg-base` | Deepest page background |
+| `--color-charcoal-900` | `#24201a` | `--color-bg-surface` | Card / panel surface |
+| `--color-charcoal-850` | `#2e2820` | `--color-bg-elevated` | Elevated surface |
+| `--color-slate-800` | `#3a3428` | `--color-bg-hover` | Hover / glass base |
+| `--color-slate-700` | `#4a4438` | `--color-border-light` | Light borders |
+| `--color-slate-600` | `#5a5248` | `--color-border` | Default borders |
+| `--color-slate-500` | `#6a6258` | — | Subtle divider |
+| `--color-stone-dust-400/300/200` | `#8a8278`/`#9a9288`/`#aaa298` | — | Runic-silver text tints |
 
-### Semantic Aliases
+### Accent Colors (Torchlight & Gold)
+
+| Token | Value | Semantic alias | Usage |
+|-------|-------|----------------|-------|
+| `--color-torch-600` | `#a67c52` | — | Dark torch accent |
+| `--color-torch-500` | `#c9985a` | `--color-accent-muted` | Muted accent |
+| `--color-torch-400` | `#d4a574` | `--color-accent` | **Primary accent** |
+| `--color-torch-300` | `#e8b896` | `--color-accent-hover` | Accent hover |
+| `--color-torch-200` | `#f0cba8` | — | Light accent |
+| `--color-gold-600/500/400/300` | `#9a7f3f`/`#b39956`/`#c9a961`/`#ddb968` | — | Legendary / gold glow |
+
+### Status Colors
+
+| Token | Value | Semantic alias | Usage |
+|-------|-------|----------------|-------|
+| `--color-blood-600/500/400` | `#6b1f14`/`#8b2e1f`/`#ab3d2a` | `--color-destructive` (`-hover`) | Danger / destructive |
+| `--color-success` | `#4a8b6f` | — | Success toast/state |
+| `--color-warning` | `#c9a961` | — | Warning toast/state |
+| `--color-info` | `#6b8f9a` | — | Info state |
+
+### Text Colors (Runic Silver)
 
 ```
---color-bg-base       → abyss-950
---color-bg-surface    → abyss-900
---color-bg-elevated   → abyss-850
---color-bg-hover      → abyss-700
---color-text-primary  → #f0ecf4
---color-text-secondary → #c8c0dc
---color-text-muted    → #7a7090
---color-border        → abyss-700
---color-border-light  → abyss-600
---color-accent        → ember-400
---color-accent-hover  → ember-300
---color-accent-muted  → ember-500
+--color-text-primary   → #e8e6e0
+--color-text-secondary → #c0bbb2
+--color-text-muted     → #8a8278
 ```
 
 ### Typography
 
-| Font | Variable | Weight Range | Usage |
-|------|----------|-------------|-------|
-| Cormorant Garamond | `--font-display` | 400-700 | Headings, hero text |
-| DM Sans | `--font-sans` | 300-600 | Body text, UI |
+Configured in `app/layout.tsx:9` via `next/font/google` and exposed as CSS variables
+in the `@theme` block (`app/globals.css:59`).
 
-### Effects
+| Font | Variable | Weights | Usage |
+|------|----------|---------|-------|
+| Cormorant Garamond | `--font-display` | 400–700 (normal + italic) | Headings, hero text, card titles |
+| DM Sans | `--font-sans` | 300–600 | Body text, UI, labels |
 
-- **Glass:** `background: var(--glass-bg); backdrop-filter: blur(12px)` — sidebar, auth buttons
-- **Glow:** `box-shadow: var(--glow-accent)` — 20px + 60px ember glow
-- **Glow sm:** `box-shadow: var(--glow-accent-sm)` — 12px ember glow
-- **Gradient text:** `.text-gradient` — ember-300/400/200 linear gradient
-- **Gradient accent text:** `.text-gradient-accent` — lighter ember variant
+`h1`–`h4` automatically use `--font-display` with a torch-tinted text shadow
+(`app/globals.css:102`).
 
-### Utilities
+### Motion
 
-Classes in `@layer utilities` in `app/globals.css`:
-- `.container-page` — max-width 1440px + responsive padding
-- `.text-gradient` / `.text-gradient-accent` — gradient text fills
-- `.glow-accent` / `.glow-accent-sm` — ember glow box-shadows
-- `.glow-accent-text` — ember text shadow
-- `.bg-glass` — frosted glass effect
-- `.bg-grid` — grid pattern overlay
-- `.bg-gradient-radial-accent` — radial ember gradient
+`--ease-ember: cubic-bezier(0.22, 1, 0.36, 1)` (`app/globals.css:64`) — used by the
+`transition-all duration-200 ease-ember` pattern repeated across components.
+
+---
+
+## Effects & Utilities
+
+Declared in `@layer utilities` in `app/globals.css`. Key classes:
+
+**Glow (torch-inspired, `app/globals.css:178`):**
+- `.glow-accent` — `--glow-accent` (24px + 48px torch halo)
+- `.glow-accent-sm` — `--glow-accent-sm` (16px torch halo)
+- `.glow-torch` — `--glow-torch` (stronger torch halo)
+- `.glow-gold` / `.glow-blood` — gold / blood-red halos
+- `.glow-accent-text` — ember text-shadow
+
+**Glass / Parchment (`app/globals.css:203`):**
+- `.bg-glass` — `--glass-bg` (slate-800 @ 75% + `backdrop-filter: blur(12px)`)
+- `.bg-glass-torch` — glass with inset torch glow
+- `.bg-parchment` — warm gradient fill
+
+**Gradient Text (`app/globals.css:150`):**
+- `.text-gradient` — torch-300 → torch-400 → gold-400
+- `.text-gradient-accent` — gold-400 → torch-400 → torch-300
+- `.text-gradient-gold` — gold-400 → gold-300 → torch-300
+- `.text-gradient-blood` — blood-600 → blood-500 → blood-400
+
+**Stone / Carved / Border:**
+- `.stone-carved` / `.stone-embossed` — carved text shadows
+- `.border-gradient` / `.border-torch` / `.border-gold` — accent borders
+- `.dungeon-card` — reusable elevated card surface (slate border, torch inset glow)
+- `.ornate-corners` / `.vignette` / `.texture-stone` — decorative dungeon flourishes
+
+**Layout / Background:**
+- `.container-page` — `max-width: 1440px`, responsive clamp padding (`app/globals.css:136`)
+- `.bg-grid` — 40px grid pattern
+- `.bg-gradient-radial-accent` / `.bg-gradient-torch` — radial torch glows
+
+**Animations:** `fade-in`, `slide-up`, `pulse-glow`, `torch-flicker`, `shimmer`,
+`runic-glow`, `stone-dust`, plus `.animate-torch-flicker` / `.animate-runic-glow`.
+
+The `body` background uses layered radial gradients (torch + slate) over
+`--color-bg-base` (`app/globals.css:87`).
 
 ---
 
 ## Styling Architecture
 
-### CSS Modules + cn() Pattern
+### The Hybrid `cn()` Pattern
 
-All component files follow this pattern:
+Every component imports its CSS Module for structure and composes Tailwind utilities
+via `cn()` (clsx + tailwind-merge, `lib/utils.ts:4`). Examples grounded in the
+codebase:
 
 ```tsx
-import { cn } from "@/lib/utils";
-import styles from "@/styles/xxx/xxx.module.css";
+// components/adventures/cards/cards.tsx:38
+<div className={cn(styles.card)} role="button" ...>
 
-<div className={cn(styles.structuralClass, "tailwind-utility", condition && styles.variantClass)}>
+// components/game/CharacterTabs.tsx:24
+<div className={cn(
+  "group overflow-hidden rounded-lg border border-border bg-bg-surface",
+  "transition-all duration-200 ease-ember hover:border-accent/30",
+  "hover:shadow-md hover:shadow-accent/5"
+)}>
+
+// components/game/GameHeader.tsx:60
+<button className="rounded-lg border border-border bg-glass px-6 py-3 ...">
 ```
 
-- **CSS Modules** (`styles/`) own the structural layout, semantic colors via `var(--color-*)`, and animations
-- **Tailwind** handles one-off utilities, responsive variants, hover/focus states
-- **`cn()`** (clsx + tailwind-merge) resolves conflicts correctly
+- **CSS Modules** (`styles/`) own structural layout, the `var(--color-*)` palette,
+  animations, and component-scoped geometry.
+- **Tailwind** handles responsive variants, hover/focus/active states, spacing, and
+  one-off overrides.
+- **`cn()`** de-duplicates conflicting classes (e.g. a Tailwind `bg-*` beats a
+  module background).
 
-### Module Structure
+### Module Structure (actual files)
 
 ```
 styles/
-├── pages/
-│   ├── home.module.css          — Home page layout
-│   └── inventory.module.css     — Inventory page layout
-├── layout/
-│   └── layout.module.css        — Root layout backgrounds
+├── pages/            — home, inventory page layouts
+├── layout/           — root layout backgrounds
 ├── cards/
-│   ├── cards.module.css         — Card gradient bg, image layout, tags gradient
-│   ├── CardsGrid.module.css     — Column layout (CSS columns), loader, exhausted
-│   └── CardsLoad.module.css     — Skeleton shimmer, error state
-├── forms/
-│   ├── form.module.css          — Game creation form wrapper, inputs, tags
-│   └── wizard.module.css        — Multi-step wizard step indicator
+│   ├── cards.module.css        — card gradient bg, image container, tag pills
+│   ├── CardsGrid.module.css    — CSS-columns masonry layout, loader, exhausted
+│   └── CardsLoad.module.css    — skeleton shimmer, error state
+├── forms/            — game creation form + wizard step indicators
 ├── sidebar/
-│   └── sidebar.module.css       — Sticky sidebar, glass bg, collapse states
-├── authentication/
-│   └── unauthenticated.module.css — Auth overlay, gradient buttons
-├── auth/
-│   ├── signup.module.css        — Gradient sign-up button
-│   └── auth-status.module.css   — Auth status loading/unauthenticated
+│   └── sidebar.module.css      — sticky sidebar, collapse states
+├── authentication/    — unauthenticated overlay, gradient buttons
+├── auth/             — signup / auth-status
 └── shared/
-    └── fitted-image.module.css  — Image wrapper, fit modes, gradient overlay
+    └── fitted-image.module.css — image wrapper, fit modes, gradient overlay
 ```
 
-### UI Primitives (`ui/primitives/`)
+---
 
-Direct Tailwind + cn() components (no CSS modules) — reusable building blocks:
+## UI Primitives (`ui/primitives/`)
+
+Reusable building blocks. Most are Tailwind + `cn()` (no CSS Modules) so they can be
+dropped anywhere; `Card*` leans on the `.dungeon-card` and gradient-text utilities.
 
 | File | Purpose |
 |------|---------|
-| `button.tsx` | Gradient and glass button variants with glow shadows |
-| `card.tsx` | Card container, title with `text-gradient-accent` |
-| `input.tsx` | Styled input with `focus-visible:shadow-glow-accent-sm` |
-| `textarea.tsx` | Same treatment as input |
-| `label.tsx` | Label with text-secondary |
-| `toast.tsx` | Radix Toast with 4 variants (default, success, error, warning) |
-| `error-page-shell.tsx` | Shared error page layout with role="alert" |
+| `button.tsx` | `Button` via `cva`. Variants: `default`, `destructive`, `outline`, `secondary`, `ghost`, `link`, **`gradient`** (torch gradient + glow), **`glass`** (`.bg-glass`), **`torch`**, **`gold`**, **`blood`**. Sizes: `default`/`sm`/`lg`/`icon`. |
+| `card.tsx` | `Card` (`.dungeon-card`), `CardHeader`, `CardTitle` (`.font-display .text-gradient-gold .stone-embossed`), `CardDescription`, `CardContent`, `CardFooter`. |
+| `input.tsx` | Styled input: slate border/bg, `focus-visible:border-torch-400` + `.glow-torch`. |
+| `textarea.tsx` | Same treatment as `input`. |
+| `label.tsx` | `text-text-secondary` label. |
+| `toast.tsx` | Radix Toast primitives (`ToastProvider`, `ToastViewport`, `Toast`, `ToastTitle`, `ToastDescription`, `ToastClose`, `ToastAction`) with 4 variants: `default`, `success`, `error`, `warning`. |
+| `error-page-shell.tsx` | Shared error layout, `role="alert"`, radial accent backdrop, title/message + primary (`gradient`) / secondary (`glass`) actions. |
 
 ---
 
 ## Component Architecture
 
-### Layout
-```
-Root (flex)
-├── Sidebar (sticky, glass, collapsed by default)
-└── Main Content (flex-1, overflow-x-hidden)
-    ├── Container Page (max-w-1440px, responsive padding)
-    └── Children
-```
+### Root Layout
 
-### Cards Grid
-Uses CSS **Columns** (not CSS Grid) for masonry layout:
-- `column-count: 4` (lg), `2` (md), `1` (sm)
-- Each card wrapped in `break-inside: avoid`
+`app/layout.tsx:27` mounts the fonts, `ClerkProvider`, `ConvexClientProvider`,
+`AuthGate`, then a flex shell: sticky `Sbar` (sidebar) + `<main className="flex-1
+overflow-x-hidden">`. Pages wrap content in `.container-page` (see `app/page.tsx:5`).
 
-Card structure:
+### Sidebar (sticky, collapsible, glass)
+
+- `components/background/slidebar.tsx` — the real implementation. Sticky
+  `<aside class="flex h-screen flex-col">` with `styles.sidebar`, collapses to an
+  icon rail by default (`useState(true)`), renders nav `Link`s from `usePathname`,
+  active state via `styles.active`, and a Clerk `UserButton` footer.
+- Two thin wrappers feed it items: `components/background/sidebar/sidebar.tsx`
+  (`Sbar`, logo **"Hollow Depths"**, Home/Inventory/Settings/Profile) and
+  `components/background/profilemenu.tsx` (`ProfileMenu`, identical items).
+- Glass + collapse animation come from `styles/sidebar/sidebar.module.css`; the
+  "glass" look is reinforced by `.bg-glass` utilities elsewhere.
+
+### Cards Grid (CSS Columns masonry)
+
+`components/adventures/cards/` — `cards-grid-wrapper.tsx` → `cards-grid.tsx`
+(infinite scroll, `sessionStorage` cache, loader/exhausted states) → `cards.tsx`
+(`ProfileCard`). Uses **CSS Columns, not CSS Grid** (`styles/cards/CardsGrid.module.css:2`):
+`column-count: 3` (lg) → `2` (≤1024px) → `1` (≤640px), with
+`break-inside: avoid` + `margin-bottom` per `cardWrapper`.
+
+Card structure (`cards.tsx`):
 ```
-[Card - gradient bg, rounded, border]
-├── [Image - aspect-3/2, FittedImage component]
-├── [Name - 1 line, font-display, gradient on hover]
-└── [Tags - gradient bg separator, accent pill tags]
+[Card .card — gradient bg, rounded, border]
+├── [Image — aspect 3/2, FittedImage, showOverlay]
+├── [Name — h3 .name, line-clamp-1]  + LikeButton
+└── [Tags — .tagsSection, .tagPill "#tag" pills]
 ```
+`LikeButton` (`components/adventures/cards/like-button.tsx`) toggles via
+`useLikesStore` and stops click propagation.
+
+### Game Page Components (live UI)
+
+All confirmed present in `components/game/` and rendered by the game route:
+
+| Component | Role |
+|-----------|------|
+| `GameHeader.tsx` | Hero: `FittedImage` (1/1) + `.text-gradient` title, `LikeButton`, tag pills, glass "Share" button. |
+| `CharacterTabs.tsx` | Responsive grid of characters (2/3 cols), each with `FittedImage`. |
+| `ItemGrid.tsx` | Grid of items (2/4/5 cols) with `FittedImage`. |
+| `MapList.tsx` | Stacked map cards (16/9 `FittedImage`, size/locations meta, "Explore Map" CTA). |
+| `PlayScreen.tsx` | RPG chat client: message log, input form, autosave/restore, exit modal. |
+| `ScenarioEntry.tsx` | Scenario picker entry. |
+| `PlayGate.tsx` | Gate/guard for the play experience. |
+
+These reuse the same primitives (`FittedImage`, `bg-glass`, `border-border`,
+`ease-ember` transitions, `accent` tokens).
 
 ### Image Handling
-`components/shared/FittedImage.tsx` wraps `next/image` with:
-- Configurable `aspectRatio` (default "4/3")
-- Fit modes: cover, contain, fill
-- Gradient overlay via `showOverlay` prop
-- Fixed-size container via CSS module
+
+`components/shared/FittedImage.tsx:17` wraps `next/image` (`fill`) with:
+- `aspectRatio` (default `"4/3"`), applied via inline style.
+- `fit`: `"cover" | "contain" | "fill"` → module classes (`styles.cover`/`.contain`/`.fill`).
+- `showOverlay` → `styles.overlay` gradient overlay.
+- `priority` / `quality` (default 85) passed through.
 
 ### Error & Notification System
+
 ```
 exceptions/
-├── errorPages/              — Importable error components
-│   ├── not-found.tsx (404)
-│   ├── server-error.tsx (500)
-│   ├── forbidden.tsx (403)
+├── errorPages/              — Importable, theme-aware error components (all use ErrorPageShell)
+│   ├── not-found.tsx        (404)
+│   ├── server-error.tsx     (500)
+│   ├── forbidden.tsx        (403)
 │   ├── service-unavailable.tsx (503)
-│   ├── bad-request.tsx (400)
-│   └── general-error.tsx
-└── notifications/
-    └── success.tsx          — Toast + inline success modes
+│   ├── bad-request.tsx      (400)
+│   ├── general-error.tsx
+│   └── redis-hotness-cache.tsx  (Redis cache degraded state)
+└── (notifications live under ui/notifications/, see below)
 ```
 
-### Toast System
-Built on `@radix-ui/react-toast`:
-- `ui/primitives/toast.tsx` — Provider, Viewport, Toast (4 variants)
-- `ui/notifications/use-toast.ts` — Hook + `toast()`, `successToast()`, `errorToast()`, `warningToast()` helpers
-- `ui/notifications/toaster.tsx` — `<Toaster />` drop-in component
+### Toast System (Radix)
+
+- `ui/primitives/toast.tsx` — Radix primitives + 4 variants.
+- `ui/notifications/use-toast.ts` — `useToast()` hook, `toast()`, `successToast()`,
+  `errorToast()`, `warningToast()`; auto-dismiss 5s, `TOAST_LIMIT = 5`.
+- `ui/notifications/toaster.tsx` — drop-in `<Toaster />`.
+- `ui/notifications/index.ts` — barrel re-export.
+
+> Note: the `exceptions/notifications/success.tsx` file referenced in older docs no
+> longer exists — success/notification helpers are consolidated in `ui/notifications/`.
 
 ---
 
-## Gradient Usage Patterns
+## Gradient Usage Patterns (current tokens)
 
 ### Card Background Gradients
 ```css
 background:
-  linear-gradient(160deg, var(--color-abyss-900), var(--color-abyss-850), var(--color-abyss-800));
+  linear-gradient(160deg, var(--color-charcoal-900), var(--color-charcoal-850), var(--color-charcoal-800));
 ```
 
-### Tags Section Gradients
+### Tags Section / Pill Gradients
 ```css
-background:
-  linear-gradient(135deg,
-    color-mix(in srgb, var(--color-accent) 8%, var(--color-abyss-800)),
-    color-mix(in srgb, var(--color-accent) 3%, var(--color-abyss-900)));
+/* tag pill — cards.module.css */
+background: color-mix(in srgb, var(--color-torch-400) 10%, var(--color-charcoal-900));
 ```
 
-### Auth Button Gradients
+### Auth / CTA Button Gradients
 ```css
-/* Sign In */
-background: linear-gradient(135deg, var(--color-ember-500), var(--color-accent));
-
-/* Sign Up */
-background: var(--glass-bg);
-backdrop-filter: blur(12px);
+/* gradient button — button.tsx */
+background: linear-gradient(to right, var(--color-torch-500), var(--color-torch-400));
+/* glass button — .bg-glass */
+background: var(--glass-bg); backdrop-filter: blur(12px);
 ```
 
 ### Text Gradients
 ```css
-/* Hero / Logo */
-background: linear-gradient(135deg, var(--color-ember-300), var(--color-accent), var(--color-ember-200));
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
+/* Hero / logo — .text-gradient */
+background: linear-gradient(135deg, var(--color-torch-300), var(--color-torch-400), var(--color-gold-400));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent;
 
-/* Card name on hover */
-background: linear-gradient(135deg, var(--color-ember-200), var(--color-accent), var(--color-ember-400));
+/* Card title — .text-gradient-gold */
+background: linear-gradient(135deg, var(--color-gold-400), var(--color-gold-300), var(--color-torch-300));
 ```
 
 ### Body Background
 ```css
+/* app/globals.css:90 */
 background-image:
-  radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--color-abyss-600) 30%, transparent) 0%, transparent 100%),
-  radial-gradient(ellipse 60% 40% at 80% 100%, color-mix(in srgb, var(--color-abyss-500) 15%, transparent) 0%, transparent 100%);
+  radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--color-torch-400) 8%, transparent) 0%, transparent 100%),
+  radial-gradient(ellipse 60% 40% at 80% 100%, color-mix(in srgb, var(--color-slate-700) 8%, transparent) 0%, transparent 100%);
 ```
 
 ---
@@ -235,12 +328,16 @@ background-image:
 
 | Path | Description |
 |------|-------------|
-| `app/globals.css` | Design tokens, utilities, animations |
-| `app/layout.tsx` | Font config, root layout |
-| `styles/*.module.css` | CSS module files |
-| `ui/primitives/` | Base UI components |
-| `ui/notifications/` | Toast system |
-| `exceptions/` | Error pages, notifications |
-| `components/` | Feature components |
-| `components/shared/FittedImage.tsx` | Image component |
-| `lib/utils.ts` | `cn()` utility |
+| `app/globals.css` | Design tokens, utilities, animations (Stone/Slate + Torchlight theme) |
+| `app/layout.tsx` | Font config (Cormorant Garamond + DM Sans), root layout |
+| `lib/utils.ts` | `cn()` (clsx + tailwind-merge) |
+| `styles/*.module.css` | CSS module files (structural styles) |
+| `ui/primitives/` | Button, Card, Input, Textarea, Label, Toast, ErrorPageShell |
+| `ui/notifications/` | Toast system (`use-toast`, `toaster`, `index`) |
+| `exceptions/errorPages/` | 404/500/403/503/400/general/redis error components |
+| `components/background/slidebar.tsx` | Sticky collapsible glass sidebar |
+| `components/background/sidebar/sidebar.tsx`, `components/background/profilemenu.tsx` | Sidebar item wrappers |
+| `components/adventures/cards/` | Cards grid + `ProfileCard` + `LikeButton` |
+| `components/game/` | GameHeader, CharacterTabs, ItemGrid, MapList, PlayScreen, ScenarioEntry, PlayGate |
+| `components/shared/FittedImage.tsx` | `next/image` wrapper |
+| `types/cards.ts`, `types/gamePage.ts` | Card / game-page type definitions |
