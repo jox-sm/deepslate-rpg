@@ -13,7 +13,7 @@ export function useGameForm(initialState: GameFormState) {
     reset();
     setResetCounter((c) => c + 1);
     setShowWizard(false);
-  }, []);
+  }, [reset]);
 
   return {
     form,

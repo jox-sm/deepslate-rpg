@@ -8,8 +8,8 @@ Complete documentation of all GitHub issues for the Deepslate RPG project. Each 
 - Testing strategies and verification checklists
 - Dependencies on other issues
 
-**Last updated:** 2026-06-07  
-**Total issues:** 45 unique (42 closed, 3 open)
+**Last updated:** 2026-10-21  
+**Total issues:** 45 unique (45 closed, 0 open)
 
 ---
 
@@ -60,7 +60,7 @@ Centralized Redis → Instant write → Optimistic UI
 | 89 | [Likes instant write + async drain](./89-LIKES-SYSTEM-INSTANT-WRITE.md) | ✅ | #90 | #95 |
 | 91 | [State sync with JSON Patch](./91-STATE-SYNC-JSON-PATCH.md) | ✅ | #90 | — |
 | 92 | [Remove dead 'load' key](./92-REMOVE-DEAD-LOAD-KEY.md) | ✅ | #90 | — |
-| 95 | [Zustand Likes Store](./95-ZUSTAND-LIKES-STORE.md) | 🔄 | #89, #90 | — |
+| 95 | [Zustand Likes Store](./95-ZUSTAND-LIKES-STORE.md) | ✅ | #89, #90 | — |
 
 ### Chain 2: Redis Migration
 Cloud → Upstash → Remove ioredis
@@ -68,7 +68,7 @@ Cloud → Upstash → Remove ioredis
 | # | Issue | Status | Depends On | Blocks |
 |---|-------|--------|------------|--------|
 | 93 | [Migrate to Upstash Redis](./93-MIGRATE-TO-UPSTASH-REDIS.md) | ✅ | #90 | #94 |
-| 94 | [Remove ioredis dependency](./94-REMOVE-IORedis.md) | 🔄 | #93 | — |
+| 94 | [Remove ioredis dependency](./94-REMOVE-IORedis.md) | ✅ | #93 | — |
 
 ### Chain 3: Image Pipeline
 Memory leak → Data URL fix → File handling → No-images crash
@@ -107,8 +107,8 @@ Card click → Hotness cache → Batch fetch → UI components → A11y
 | # | Issue | Status | Depends On | Blocks |
 |---|-------|--------|------------|--------|
 | 80 | [Card click navigation](./80-GAMEPAGE-CARD-CLICK-NAVIGATION.md) | ✅ | — | #81, #82, #84 |
-| 81 | [Binary-search hotness cache](./81-GAMEPAGE-BINARY-SEARCH-HOTNESS-CACHE.md) | 🔄 | #80 | #82 |
-| 82 | [Batch MongoDB fetch](./82-GAMEPAGE-BATCH-MONGODB-FETCH.md) | 🔄 | #80, #81 | #84 |
+| 81 | [Binary-search hotness cache](./81-GAMEPAGE-BINARY-SEARCH-HOTNESS-CACHE.md) | ✅ | #80 | #82 |
+| 82 | [Batch MongoDB fetch](./82-GAMEPAGE-BATCH-MONGODB-FETCH.md) | ✅ | #80, #81 | #84 |
 | 84 | [FullGameResponse type + UI](./84-GAMEPAGE-FULLGAMERESPONSE-TYPE-UI.md) | ✅ | #80, #82 | #85 |
 | 85 | [Responsive + accessibility](./85-GAMEPAGE-RESPONSIVE-ACCESSIBILITY.md) | ✅ | #84 | — |
 | 83 | [Duplicate of #84](./83-GAMEPAGE-FULLGAMERESPONSE-TYPE-UI.md) | ✅ | — | — |
@@ -174,8 +174,8 @@ No dependencies
 | # | Issue | Status | Impact | Depends On |
 |---|-------|--------|--------|------------|
 | 80 | [Card click navigation](./80-GAMEPAGE-CARD-CLICK-NAVIGATION.md) | ✅ | UI/UX | — |
-| 81 | [Binary-search hotness cache](./81-GAMEPAGE-BINARY-SEARCH-HOTNESS-CACHE.md) | 🔄 | Performance | #80 |
-| 82 | [Batch MongoDB fetch](./82-GAMEPAGE-BATCH-MONGODB-FETCH.md) | 🔄 | Performance | #80, #81 |
+| 81 | [Binary-search hotness cache](./81-GAMEPAGE-BINARY-SEARCH-HOTNESS-CACHE.md) | ✅ | Performance | #80 |
+| 82 | [Batch MongoDB fetch](./82-GAMEPAGE-BATCH-MONGODB-FETCH.md) | ✅ | Performance | #80, #81 |
 | 84 | [FullGameResponse type + UI](./84-GAMEPAGE-FULLGAMERESPONSE-TYPE-UI.md) | ✅ | Feature | #80, #82 |
 | 85 | [Responsive + accessibility](./85-GAMEPAGE-RESPONSIVE-ACCESSIBILITY.md) | ✅ | UX/A11y | #84 |
 
@@ -188,8 +188,8 @@ No dependencies
 | 91 | [State sync with JSON Patch](./91-STATE-SYNC-JSON-PATCH.md) | ✅ | Feature | #90 |
 | 92 | [Remove dead 'load' key](./92-REMOVE-DEAD-LOAD-KEY.md) | ✅ | Refactor | #90 |
 | 93 | [Migrate to Upstash Redis](./93-MIGRATE-TO-UPSTASH-REDIS.md) | ✅ | Infrastructure | #90 |
-| 94 | [Remove ioredis dependency](./94-REMOVE-IORedis.md) | 🔄 | Cleanup | #93 |
-| 95 | [Zustand Likes Store](./95-ZUSTAND-LIKES-STORE.md) | 🔄 | Feature | #89 |
+| 94 | [Remove ioredis dependency](./94-REMOVE-IORedis.md) | ✅ | Cleanup | #93 |
+| 95 | [Zustand Likes Store](./95-ZUSTAND-LIKES-STORE.md) | ✅ | Feature | #89 |
 
 ### Backend / Reliability
 
@@ -258,12 +258,14 @@ No dependencies
 
 ## Open Issues
 
-| # | Issue | Status | Blocks |
-|---|-------|--------|--------|
-| 81 | [Binary-search hotness cache](./81-GAMEPAGE-BINARY-SEARCH-HOTNESS-CACHE.md) | 🔄 | #82 |
-| 82 | [Batch MongoDB fetch](./82-GAMEPAGE-BATCH-MONGODB-FETCH.md) | 🔄 | #84 |
-| 94 | [Remove ioredis dependency](./94-REMOVE-IORedis.md) | 🔄 | — |
-| 95 | [Zustand Likes Store](./95-ZUSTAND-LIKES-STORE.md) | 🔄 | — |
+None. All 45 documented issues are closed.
+
+> **Outstanding external blocker:** the MongoDB Atlas cluster referenced by
+> `MONGODB_URI` (`games.aidaubb.mongodb.net`) does not resolve in DNS, so the nested
+> game data (characters / maps / items) cannot be read. The application now degrades
+> gracefully - it serves the Neon row with empty nested data instead of failing the
+> request - but the underlying data is unreachable until the correct Atlas hostname is
+> configured. See [Issue #82](82-GAMEPAGE-BATCH-MONGODB-FETCH.md).
 
 ---
 
@@ -345,7 +347,7 @@ No dependencies
 - #67 — N+1 Redis query
 - #70 — Data URL fetch round-trip
 - #56 — Object URL memory leak
-- #81, #82 — GamePage optimizations (OPEN)
+- #81, #82 — GamePage optimizations
 
 **Memory:**
 - #56 — Object URL memory leak
@@ -416,4 +418,4 @@ Bug/Feature/Refactor/Performance/Security/UI-UX/Accessibility
 
 ---
 
-*45 unique issues documented. 3 currently OPEN: #81 (hotness cache), #82 (batch MongoDB fetch), #94 (remove ioredis), #95 (Zustand likes store).*
+*45 unique issues documented. All closed as of 2026-10-21.*

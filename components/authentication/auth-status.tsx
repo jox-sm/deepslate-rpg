@@ -3,37 +3,30 @@
 import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import styles from "@/styles/auth/auth-status.module.css";
+import { Button } from "@/ui/primitives/button";
 
 export default function AuthStatus() {
   return (
-    <div className={cn(styles.wrapper, "flex items-center gap-2 border-0")}>
+    <div className="flex items-center gap-2">
       <AuthLoading>
-        <div className={styles.loadingContainer}>
-          <Loader2 size={18} className={cn(styles.loadingIcon, "animate-spin")} />
+        <div className="flex items-center justify-center p-1">
+          <Loader2 size={18} className="animate-spin text-text-muted" />
         </div>
       </AuthLoading>
 
       <Unauthenticated>
-        <div className={styles.unauthenticatedContainer}>
+        <div className="flex items-center gap-2">
           <SignInButton>
-            <button className={cn(styles.signInButton, "rounded-lg")}>
-              Sign In
-            </button>
+            <Button size="sm">Sign in</Button>
           </SignInButton>
           <SignUpButton>
-            <button className={cn(styles.signUpButton, "rounded-lg")}>
-              Sign Up
-            </button>
+            <Button size="sm" variant="outline">Sign up</Button>
           </SignUpButton>
         </div>
       </Unauthenticated>
 
       <Authenticated>
-        <div className={styles.authenticatedContainer}>
-          <UserButton />
-        </div>
+        <UserButton />
       </Authenticated>
     </div>
   );

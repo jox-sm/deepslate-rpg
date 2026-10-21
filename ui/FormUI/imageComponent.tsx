@@ -1,10 +1,8 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useId } from "react";
 
 import { ImageUploadProps } from "@/types/form";
-
-let imageInputIdCounter = 0;
 
 export default function ImageUpload({
   label,
@@ -15,9 +13,10 @@ export default function ImageUpload({
   resetKey,
 }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const inputIdRef = useRef(`image-upload-${++imageInputIdCounter}`);
+  const inputId = useId();
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [resetSeen, setResetSeen] = useState(resetKey);
   const prevPreviewRef = useRef<string | null>(null);
 
   const revokePreview = useCallback(() => {
@@ -27,11 +26,17 @@ export default function ImageUpload({
     }
   }, []);
 
-  useEffect(() => {
-    revokePreview();
+  // Render-time reset adjustment (React-endorsed alternative to syncing
+  // state inside an effect). The object-URL release stays in an effect below.
+  if (resetSeen !== resetKey) {
+    setResetSeen(resetKey);
     setPreview(null);
     setError("");
-  }, [resetKey, revokePreview]);
+  }
+
+  useEffect(() => {
+    revokePreview();
+  }, [resetSeen, revokePreview]);
 
   useEffect(() => {
     return () => revokePreview();
@@ -61,19 +66,19 @@ export default function ImageUpload({
 
   return (
     <div className="flex flex-col gap-3">
-      <label htmlFor={inputIdRef.current} className="text-sm font-medium text-text-secondary">{label}</label>
+      <label htmlFor={inputId} className="text-sm font-medium text-text-secondary">{label}</label>
 
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="flex h-24 w-full items-center justify-center rounded-lg border-2 border-dashed border-border bg-bg-elevated text-sm text-text-muted transition-all duration-200 hover:border-accent/50 hover:text-accent"
+        className="flex h-24 w-full items-center justify-center rounded-[10px] border-2 border-dashed border-border bg-bg-elevated text-sm text-text-muted transition-colors hover:border-accent/50 hover:text-accent"
         aria-label={`Upload ${label}`}
       >
         {preview ? (
           <img
             src={preview}
             alt="Preview"
-            className="h-full w-full rounded-lg object-cover"
+            className="h-full w-full rounded-[10px] object-cover"
           />
         ) : (
           <span>Upload Image</span>
@@ -82,7 +87,7 @@ export default function ImageUpload({
 
       <input
         ref={inputRef}
-        id={inputIdRef.current}
+        id={inputId}
         type="file"
         accept={accept}
         className="sr-only"

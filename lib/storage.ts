@@ -2,6 +2,7 @@
 import { supabase } from '@/lib/supabase';
 import { convertToWebp } from '@/utilities/imagesUtils';
 import { retry } from '@/lib/retry';
+import { createServiceRoleSupabaseClient } from '@/lib/auth';
 import type { ImageUploadOptions } from '@/types/images';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
@@ -16,8 +17,11 @@ export async function uploadImage(
   const webpBuffer = await convertToWebp(file);
   const cacheControl = options?.cacheControl || 'public, max-age=31536000'; // Default: 1 year
   
-  // Use authenticated client if provided, otherwise fall back to default
-  const client = authenticatedClient || supabase;
+  // Prefer the service-role client for uploads (bypasses RLS, server-only).
+  // Falls back to the authenticated/anon client when no service role key is set.
+  const client = process.env.SUPABASE_SERVICE_ROLE_KEY
+    ? createServiceRoleSupabaseClient()
+    : (authenticatedClient || supabase);
   
   const uploadOperation = () => 
     client.storage

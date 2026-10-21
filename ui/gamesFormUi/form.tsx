@@ -12,7 +12,7 @@ interface GamesFormWizardProps {
 }
 
 export default function GamesFormWizard({ onComplete, loading }: GamesFormWizardProps) {
-  const hook = useGamesForm(onComplete);
+  const hook = useGamesForm();
 
   const renderStep = () => {
     switch (hook.stepKey) {

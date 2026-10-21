@@ -31,7 +31,14 @@ export async function GET(
 
     const [pgGame, mongoGame] = await Promise.all([
       retry(() => getGameById(id), 3, 500),
-      retry(() => connectDB().then(() => Game.findOne({ id }).lean()), 3, 500),
+      // MongoDB only holds the nested data (characters/maps/items). If it is
+      // unreachable, serve the Neon row with empty nested data rather than
+      // failing the whole request.
+      retry(() => connectDB().then(() => Game.findOne({ id }).lean()), 2, 500).catch((err) => {
+        const classified = classifyError(err, `route-games.mongo.${id}`);
+        console.error('[API /games/[id]] MongoDB unavailable, serving without nested data:', classified.message);
+        return null;
+      }),
     ]);
 
     if (!pgGame) {

@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { tryApiRoute } from "@/utilities/apiErrorHandler";
+import { retry } from "@/lib/retry";
+import { tryOrErrorSync } from "@/utilities/errorHandler";
 
 // Server-only proxy to the AI server's /memory/* endpoints (Upstash Search).
 // The web app never talks to Upstash directly — creds stay on the AI server.
@@ -24,12 +27,20 @@ async function proxy(request: NextRequest, sid: string, method: string) {
     init.body = JSON.stringify({ namespace: sid, chunks: body.chunks });
   }
 
-  const res = await fetch(`${AI_SERVER_URL}${path}`, init);
+  const res = await retry(() => fetch(`${AI_SERVER_URL}${path}`, init), 3, 500);
   const text = await res.text();
   if (!res.ok) {
-    return NextResponse.json({ error: text }, { status: 502 });
+    throw new Error(text || `AI server returned ${res.status}`);
   }
-  return NextResponse.json(text ? JSON.parse(text) : { ok: true });
+  const parsed = tryOrErrorSync(() => (text ? JSON.parse(text) : { ok: true }), {
+    context: "games.memory.proxy.parse",
+    suppressToast: true,
+    suppressComponent: true,
+  });
+  if (!parsed.ok) {
+    throw new Error(parsed.error?.message || "Invalid response from AI server");
+  }
+  return NextResponse.json(parsed.data);
 }
 
 export async function GET(
@@ -37,12 +48,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const { id } = await params;
-  try {
-    return await proxy(_req, id, "GET");
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Export failed";
-    return NextResponse.json({ error: message }, { status: 502 });
-  }
+  return (await tryApiRoute(() => proxy(_req, id, "GET"), "games.memory.GET")) as NextResponse;
 }
 
 export async function POST(
@@ -50,12 +56,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const { id } = await params;
-  try {
-    return await proxy(req, id, "POST");
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Restore failed";
-    return NextResponse.json({ error: message }, { status: 502 });
-  }
+  return (await tryApiRoute(() => proxy(req, id, "POST"), "games.memory.POST")) as NextResponse;
 }
 
 export async function DELETE(
@@ -63,10 +64,5 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const { id } = await params;
-  try {
-    return await proxy(_req, id, "DELETE");
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Clear failed";
-    return NextResponse.json({ error: message }, { status: 502 });
-  }
+  return (await tryApiRoute(() => proxy(_req, id, "DELETE"), "games.memory.DELETE")) as NextResponse;
 }

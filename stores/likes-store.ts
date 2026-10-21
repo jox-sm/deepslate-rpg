@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { v7 as uuidv7 } from "uuid";
 import { successToast, errorToast } from "@/ui/notifications";
+import { classifyError, tryOrErrorSync } from "@/utilities/errorHandler";
 
 interface LikesStore {
   likedGameIds: Set<string>;
@@ -110,9 +111,11 @@ export const useLikesStore = create<LikesStore>()(
           throw new Error("Server error");
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        const classified = classifyError(error, "likes-store.toggleLike");
+        console.error('[LikesStore] toggleLike failed:', classified.message);
         get()._revert(gameId, previousLiked, previousCount);
-        errorToast("Like failed", "Could not register your like. Please try again.");
+        errorToast("Like failed", classified.message || "Could not register your like. Please try again.");
       });
   },
   }),
@@ -120,25 +123,45 @@ export const useLikesStore = create<LikesStore>()(
       name: "likes-store",
       storage: {
         getItem: (name) => {
-          const raw = localStorage.getItem(name);
-          if (!raw) return null;
-          const parsed = JSON.parse(raw);
-          if (parsed?.state) {
-            if (Array.isArray(parsed.state.likedGameIds)) parsed.state.likedGameIds = new Set(parsed.state.likedGameIds);
-            if (Array.isArray(parsed.state.pendingLikes)) parsed.state.pendingLikes = new Set(parsed.state.pendingLikes);
+          const result = tryOrErrorSync(
+            () => {
+              const raw = localStorage.getItem(name);
+              if (!raw) return null;
+              const parsed = JSON.parse(raw);
+              if (parsed?.state) {
+                if (Array.isArray(parsed.state.likedGameIds)) parsed.state.likedGameIds = new Set(parsed.state.likedGameIds);
+                if (Array.isArray(parsed.state.pendingLikes)) parsed.state.pendingLikes = new Set(parsed.state.pendingLikes);
+              }
+              return parsed;
+            },
+            { context: "likes-store.getItem", suppressToast: true, suppressComponent: true }
+          );
+          if (!result.ok) {
+            const classified = classifyError(result.error, "likes-store.getItem");
+            console.error('[LikesStore] persisted read failed:', classified.message);
+            return null;
           }
-          return parsed;
+          return result.data;
         },
         setItem: (name, value) => {
-          const serializable = {
-            ...value,
-            state: {
-              ...value.state,
-              likedGameIds: [...(value.state.likedGameIds as Set<string>)],
-              pendingLikes: [...(value.state.pendingLikes as Set<string>)],
+          const result = tryOrErrorSync(
+            () => {
+              const serializable = {
+                ...value,
+                state: {
+                  ...value.state,
+                  likedGameIds: [...(value.state.likedGameIds as Set<string>)],
+                  pendingLikes: [...(value.state.pendingLikes as Set<string>)],
+                },
+              };
+              localStorage.setItem(name, JSON.stringify(serializable));
             },
-          };
-          localStorage.setItem(name, JSON.stringify(serializable));
+            { context: "likes-store.setItem", suppressToast: true, suppressComponent: true }
+          );
+          if (!result.ok) {
+            const classified = classifyError(result.error, "likes-store.setItem");
+            console.error('[LikesStore] persisted write failed:', classified.message);
+          }
         },
         removeItem: (name) => localStorage.removeItem(name),
       },

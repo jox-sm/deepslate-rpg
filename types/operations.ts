@@ -13,7 +13,10 @@ export const queueConfig: Record<OperationProvider, Record<QueueName, QueueConfi
   },
   mongodb: {
     games: { redisKey: "InsertGamesmongodb" },
-    likes: { redisKey: "InsertLikes" },
+    // Must not share a key with neon.likes - both queues are drained by
+    // different workers and a shared key means one worker eats the other's
+    // payloads.
+    likes: { redisKey: "InsertLikesmongodb" },
   },
 };
 

@@ -39,7 +39,7 @@ export default function ItemsStep({
         const nameErrorId = `item-${item.id}-name-error`;
 
         return (
-          <div key={item.id} className="rounded-lg border border-border bg-bg-surface p-4 space-y-3" role="group" aria-label={`Item ${index + 1}`}>
+          <div key={item.id} className="dungeon-card space-y-3 p-4" role="group" aria-label={`Item ${index + 1}`}>
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs text-text-muted">#{index + 1}</span>
               <Button

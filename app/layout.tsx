@@ -31,9 +31,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <body className="min-h-screen bg-bg-base text-text-primary antialiased">
           <ConvexClientProvider>
             <AuthGate>
-              <div className="flex min-h-screen">
+              <div className="flex min-h-screen bg-bg-base text-text-primary">
                 <Sbar />
-                <main className="flex-1 overflow-x-hidden">
+                <main className="min-w-0 flex-1">
                   {children}
                 </main>
               </div>

@@ -1,6 +1,8 @@
 import { v7 as uuidV7 } from 'uuid';
 import { CardProps, GameCardProps } from '@/types/cards';
-import {ApiGameResponse , ApiResponse} from '@/types/cards';
+import { ApiResponse } from '@/types/cards';
+import { tryOrError } from '@/utilities/errorHandler';
+import { retry } from '@/lib/retry';
 export function prepareGameCard(props: CardProps): GameCardProps {
   const uuid = uuidV7();
   
@@ -22,24 +24,32 @@ export async function fetchGamesFromApi(offset: number): Promise<CardProps[]> {
   const limit = 6;
   const page = Math.floor(offset / limit) + 1;
 
-  const res = await fetch(`/api/games?page=${page}&limit=${limit}`);
+  const result = await tryOrError(async () => {
+    const res = await retry(() => fetch(`/api/games?page=${page}&limit=${limit}`), 3, 500);
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch games');
+    if (!res.ok) {
+      throw new Error('Failed to fetch games');
+    }
+
+    const json: ApiResponse = await res.json();
+
+    if (!json.success || !json.data) {
+      return [];
+    }
+
+    return json.data.map((game) => ({
+      id: game.id,
+      name: game.name || 'Untitled',
+      description: game.description || '',
+      likes_count: game.likes_count ?? 0,
+      tags: game.tags || [],
+      image: game.image || '/images/project.jpg',
+    }));
+  }, { context: "utils.fetchGamesFromApi" });
+
+  if (!result.ok || !result.data) {
+    throw new Error(result.error?.message || 'Failed to fetch games');
   }
 
-  const json: ApiResponse = await res.json();
-
-  if (!json.success || !json.data) {
-    return [];
-  }
-
-return json.data.map((game) => ({
-  id: game.id,
-  name: game.name || 'Untitled',
-  description: game.description || '',
-  likes_count: game.likes_count ?? 0,
-  tags: game.tags || [],
-  image: game.image || '/images/project.jpg',
-}));
+  return result.data;
 }

@@ -77,74 +77,98 @@ export async function updateGameLikes(id: string) {
 }
 
 export async function updateGamesLikesBatch(likesMap: Map<string, number>) {
-  const ids = Array.from(likesMap.keys());
-  const likesCounts = Array.from(likesMap.values());
+  try {
+    const ids = Array.from(likesMap.keys());
+    const likesCounts = Array.from(likesMap.values());
 
-  const result = await retry(async () => {
-    const rows = await sql`
-      UPDATE games
-      SET
-        likes_count = games.likes_count + updates.likes_delta,
-        updated_at = NOW()
-      FROM UNNEST(
-        ${ids}::uuid[],
-        ${likesCounts}::int[]
-      ) AS updates(id, likes_delta)
-      WHERE games.id = updates.id
-      RETURNING id, likes_count;
-    `;
-    return rows;
-  }, 2, 500);
+    const result = await retry(async () => {
+      const rows = await sql`
+        UPDATE games
+        SET
+          likes_count = games.likes_count + updates.likes_delta,
+          updated_at = NOW()
+        FROM UNNEST(
+          ${ids}::uuid[],
+          ${likesCounts}::int[]
+        ) AS updates(id, likes_delta)
+        WHERE games.id = updates.id
+        RETURNING games.id, games.likes_count;
+      `;
+      return rows;
+    }, 2, 500);
 
-  return result;
+    return result;
+  } catch (error) {
+    const classified = classifyError(error, "db.updateGamesLikesBatch");
+    console.error("Error in updateGamesLikesBatch:", classified.message);
+    throw error;
+  }
 }
 
 
 export async function getGames(minimumLikes: number, idx: number) {
-  const games = await retry(async () => {
-    const rows = await sql`
-      SELECT * FROM games
-      WHERE likes_count >= ${minimumLikes}
-      ORDER BY likes_count DESC
-      LIMIT 6 OFFSET ${idx};
-    `;
-    return rows as GameCardProps[];
-  }, 3, 500);
+  try {
+    const games = await retry(async () => {
+      const rows = await sql`
+        SELECT * FROM games
+        WHERE likes_count >= ${minimumLikes}
+        ORDER BY likes_count DESC
+        LIMIT 6 OFFSET ${idx};
+      `;
+      return rows as GameCardProps[];
+    }, 3, 500);
 
-  return {
-    games,
-    nextIdx: idx + 6
-  };
+    return {
+      games,
+      nextIdx: idx + 6
+    };
+  } catch (error) {
+    const classified = classifyError(error, "db.getGames");
+    console.error("Error in getGames:", classified.message);
+    throw error;
+  }
 }
 
 export async function getGamesPaginated(limit: number, offset: number) {
-  const games = await retry(async () => {
-    const rows = await sql`
-      SELECT * FROM games
-      ORDER BY created_at DESC
-      LIMIT ${limit} OFFSET ${offset};
-    `;
-    return rows as GameCardProps[];
-  }, 3, 500);
+  try {
+    const games = await retry(async () => {
+      const rows = await sql`
+        SELECT * FROM games
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset};
+      `;
+      return rows as GameCardProps[];
+    }, 3, 500);
 
-  const countResult = await retry(async () => {
-    const rows = await sql`SELECT COUNT(*) as total FROM games`;
-    return rows;
-  }, 3, 500);
-  const total = Number(countResult[0]?.total || 0);
+    const countResult = await retry(async () => {
+      const rows = await sql`SELECT COUNT(*) as total FROM games`;
+      return rows;
+    }, 3, 500);
+    const total = Number(countResult[0]?.total || 0);
 
-  return { games, total };
+    return { games, total };
+  } catch (error) {
+    const classified = classifyError(error, "db.getGamesPaginated");
+    console.error("Error in getGamesPaginated:", classified.message);
+    throw error;
+  }
 }
 
 export async function getGameById(id: string) {
-  const games = await retry(async () => {
-    const rows = await sql`
-      SELECT * FROM games
-      WHERE id = ${id}
-      LIMIT 1;
-    `;
-    return rows as GameCardProps[];
-  }, 3, 500);
+  try {
+    const games = await retry(async () => {
+      const rows = await sql`
+        SELECT * FROM games
+        WHERE id = ${id}
+        LIMIT 1;
+      `;
+      return rows as GameCardProps[];
+    }, 3, 500);
 
-  return games[0] || null;
+    return games[0] || null;
+  } catch (error) {
+    const classified = classifyError(error, "db.getGameById");
+    console.error("Error in getGameById:", classified.message);
+    throw error;
+  }
 }

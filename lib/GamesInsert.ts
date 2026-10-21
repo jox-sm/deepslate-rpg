@@ -1,4 +1,4 @@
-import { drain } from "@/utilities/queue";
+import { drain, enqueue } from "@/utilities/queue";
 import connectDB from "@/models/games/mongodb/client";
 import Game from "@/models/games/mongodb/schema";
 import { classifyError } from "@/utilities/errorHandler";
@@ -12,7 +12,16 @@ export async function processGamesQueue(): Promise<{ processed: number }> {
       return { processed: 0 };
     }
     console.log("\n\n\n Processing games queue, number of games to insert:", gamesQueue.length);
-    await Game.insertMany(gamesQueue, { ordered: false });
+    try {
+      await Game.insertMany(gamesQueue, { ordered: false });
+    } catch (error) {
+      // drain() already consumed the queue, so a failed insert would drop
+      // these games on the floor. Put them back before rethrowing.
+      await Promise.all(
+        gamesQueue.map((game) => enqueue("mongodb", "games", game).catch(() => undefined))
+      );
+      throw error;
+    }
     console.log("Finished processing games queue");
     return { processed: gamesQueue.length };
   } catch (error) {

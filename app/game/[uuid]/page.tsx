@@ -56,26 +56,27 @@ export default async function GamePage({ params }: GamePageProps) {
     notFound();
   }
 
+  let gameBasicInfo;
   try {
-    const gameBasicInfo = await getGameById(uuid);
-
-    if (!gameBasicInfo) {
-      notFound();
-    }
-
-    return (
-      <main className="min-h-screen bg-background">
-        <GameDetailClient
-          uuid={uuid}
-          initialName={gameBasicInfo.name}
-          initialDescription={gameBasicInfo.description}
-          initialImage={gameBasicInfo.image}
-        />
-      </main>
-    );
+    gameBasicInfo = await getGameById(uuid);
   } catch (error) {
     const classified = classifyError(error, "GamePage");
     console.error('[GamePage] Error rendering page:', classified.message);
     notFound();
   }
+
+  if (!gameBasicInfo) {
+    notFound();
+  }
+
+  return (
+    <main className="min-h-screen bg-bg-base">
+      <GameDetailClient
+        uuid={uuid}
+        initialName={gameBasicInfo.name}
+        initialDescription={gameBasicInfo.description}
+        initialImage={gameBasicInfo.image}
+      />
+    </main>
+  );
 }

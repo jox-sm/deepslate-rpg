@@ -141,8 +141,30 @@ export const useLikesStore = create<LikesStore>((set, get) => ({
 ## Blocks
 - [#95](95-ZUSTAND-LIKES-STORE.md)
 
-## Related Issues
+## Resolution
 
+The instant-write + async-drain *design* was in place, but the drain never
+actually applied anything. Two bugs made every like vanish:
+
+1. **The queue silently discarded every item.** The Upstash SDK auto-deserializes JSON on
+   `LRANGE`, so `drain()` received already-parsed objects and `JSON.parse(object)`
+   threw `"[object Object]" is not valid JSON` - the item was dropped as "unparseable".
+2. **The Neon UPDATE always failed.** `RETURNING id, likes_count` was ambiguous between
+   `games` and the `updates` CTE (`SQLSTATE 42702 column reference "id" is ambiguous`).
+
+**Fixes:** `automaticDeserialization: false` on the Redis client plus a
+`parseRedisJson()` helper; `RETURNING games.id, games.likes_count`; non-lossy drain
+(re-enqueues on DB failure); the pending Redis delta is now *decremented* by the applied
+amount instead of being deleted, so likes that arrive mid-drain are no longer wiped.
+
+**Verified end to end through the real worker:**
+```
+initial    redis pending=0  queue=0  neon likes_count=1
+pushed     redis pending=1  queue=1  neon likes_count=1
+drained    redis pending=0  queue=0  neon likes_count=2
+```
+Server log shows `[Workers:neonLikes] processed 1`.
+## Related Issues
 - #90: Centralized Redis Queues (enables the `enqueue` utility)
 - #92: Zustand Likes Store (optimistic UI pattern)
 - #93: Migrate to Upstash Redis (Redis instant write)

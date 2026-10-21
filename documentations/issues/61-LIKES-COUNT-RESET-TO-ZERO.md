@@ -250,7 +250,22 @@ WHERE likes_count = 0;
 - [x] Likes count preserved
 - [x] No more data loss
 
-## Related Issues
+## Resolution
 
+The original `utilities/utils.ts` hardcoded `likes_count: 0` - fixed.
+
+**A second reset path remained open**, though, and was the one actually being hit: pending
+likes lived only in Redis, the drain never applied them to Neon, and the pending flag was
+never cleared. The DB stayed at 0 while the UI showed a higher number, so any read that
+went straight to Neon (or any cache expiry / server restart) showed the count back at 0.
+
+**Fixes:** the drain now applies the delta to Neon with `UPDATE games SET likes_count =
+games.likes_count + updates.likes_delta` (unambiguous `RETURNING`), and the pending
+Redis delta is decremented by exactly the applied amount. The read path
+(`mergePendingLikes` / `mergePendingLikesBatch`) adds the still-pending delta on top.
+
+**Verified:** Neon `likes_count` went 0 -> 1 -> 3 across three likes, pending delta
+returned to 0, and the read path reported the same value the DB held.
+## Related Issues
 - #39: Likes count reset to 0 instead of using DB value (duplicate)
 - #12: Likes count reset to 0 instead of using DB value (duplicate)

@@ -24,52 +24,49 @@ export function useIdempotentRequest() {
     }
   ): Promise<T> => {
     const key = options?.idempotencyKey || uuidv7();
-    const timeout = options?.timeout || REQUEST_TIMEOUT_MS;
-    const retryOnAbort = options?.retryOnAbort ?? true;
+    const timeoutMs = options?.timeout || REQUEST_TIMEOUT_MS;
 
-    // Create abort controller
-    const controller = new AbortController();
-    
-    // Set timeout
-    const timeoutId = setTimeout(() => {
-      controller.abort();
-    }, timeout);
+    const attempt = async (retryOnAbort: boolean): Promise<T> => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      requestRef.current.set(key, { controller, timeout: timeoutId });
 
-    // Store request
-    requestRef.current.set(key, { controller, timeout: timeoutId });
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idempotencyKey: key, ...data as object }),
+          signal: controller.signal,
+        });
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idempotencyKey: key, ...data as object }),
-        signal: controller.signal,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP error ${response.status}`);
-      }
-
-      return response.json();
-    } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
-        const classified = classifyError(error, `useIdempotentRequest.abort-${key}`);
-        console.log(`Request aborted for key: ${key}`, classified.message);
-        
-        if (retryOnAbort) {
-          console.log(`Retrying with same idempotency key: ${key}`);
-          return sendRequest(url, data, { ...options, idempotencyKey: key, retryOnAbort: false });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || `HTTP error ${response.status}`);
         }
-        
-        throw new Error('Request aborted');
+
+        return response.json();
+      } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+          const classified = classifyError(error, `useIdempotentRequest.abort-${key}`);
+          console.log(`Request aborted for key: ${key}`, classified.message);
+
+          if (retryOnAbort) {
+            console.log(`Retrying with same idempotency key: ${key}`);
+            return attempt(false);
+          }
+
+          throw new Error('Request aborted');
+        }
+        const classified = classifyError(error, `useIdempotentRequest.send-${key}`);
+        console.error(`[useIdempotentRequest] request failed for key: ${key}`, classified.message);
+        throw new Error(classified.message);
+      } finally {
+        clearTimeout(timeoutId);
+        requestRef.current.delete(key);
       }
-      throw error;
-    } finally {
-      // Cleanup
-      clearTimeout(timeoutId);
-      requestRef.current.delete(key);
-    }
+    };
+
+    return attempt(options?.retryOnAbort ?? true);
   }, []);
 
   const abortRequest = useCallback((key: string): boolean => {
@@ -84,7 +81,7 @@ export function useIdempotentRequest() {
   }, []);
 
   const abortAll = useCallback(() => {
-    requestRef.current.forEach((request, key) => {
+    requestRef.current.forEach((request) => {
       request.controller.abort();
       clearTimeout(request.timeout);
     });

@@ -1,4 +1,6 @@
 import { TextAreaFieldProps, TagsComponentProps } from '@/types/form';
+import { Textarea } from '@/ui/primitives/textarea';
+import { Label } from '@/ui/primitives/label';
 import { cn } from '@/lib/utils';
 
 export default function TextAreaField({
@@ -6,7 +8,6 @@ export default function TextAreaField({
   value,
   onChange,
   placeholder,
-  isValid,
   minLength = 150,
   maxLength = 1400,
   errorMessage,
@@ -38,14 +39,13 @@ export default function TextAreaField({
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium text-text-secondary">
+      <Label>
         {label}
-      </label>
-      <textarea
+      </Label>
+      <Textarea
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="flex min-h-[80px] w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-sm text-text-primary placeholder:text-text-muted transition-all duration-200 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
       />
       <div className="flex justify-between text-sm">
         <span className={displayColor}>
@@ -72,9 +72,9 @@ export function tagsComponent({
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium text-text-secondary">
+      <Label>
         {label}
-      </label>
+      </Label>
       <div className="flex flex-wrap gap-2">
         {availableTags.map((tag) => (
           <button
@@ -82,7 +82,7 @@ export function tagsComponent({
             type="button"
             onClick={() => toggleTag(tag)}
             className={cn(
-              "rounded-full border px-3 py-1 text-sm font-medium transition-all duration-200",
+              "rounded-full border px-3 py-1 text-sm font-medium transition-colors",
               selectedTags.includes(tag)
                 ? "border-accent bg-accent/10 text-accent"
                 : "border-border text-text-muted hover:border-text-muted hover:text-text-secondary"

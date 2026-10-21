@@ -3,9 +3,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import ProfileCard from '@/components/adventures/cards/cards';
 import { CardProps } from '@/types/cards';
-import { cn } from '@/lib/utils';
-import gridStyles from "@/styles/cards/CardsGrid.module.css";
 import { RevealItem } from '@/ui/primitives/motion';
+import { Button } from '@/ui/primitives/button';
 import { tryOrErrorSync, classifyError } from '@/utilities/errorHandler';
 
 type CardsGridProps = {
@@ -30,18 +29,31 @@ function loadCache(): { cards: CardProps[]; offset: number; exhausted: boolean }
   return result.ok ? result.data : null;
 }
 
+function CardSkeleton() {
+  return (
+    <div className="dungeon-card overflow-hidden" aria-hidden>
+      <div className="aspect-[16/10] animate-pulse bg-bg-surface" />
+      <div className="space-y-2 p-4">
+        <div className="h-5 w-2/3 animate-pulse rounded bg-bg-surface" />
+        <div className="h-4 w-full animate-pulse rounded bg-bg-surface" />
+        <div className="h-4 w-4/5 animate-pulse rounded bg-bg-surface" />
+      </div>
+    </div>
+  );
+}
+
 export default function CardsGrid({
   fetchCards,
   batchSize = 6,
 }: CardsGridProps) {
-  const [cards, setCards] = useState<CardProps[]>([]);
+  const [cached] = useState(loadCache);
+  const [cards, setCards] = useState<CardProps[]>(cached?.cards ?? []);
   const [isLoading, setIsLoading] = useState(false);
-  const [isExhausted, setIsExhausted] = useState(false);
+  const [isExhausted, setIsExhausted] = useState(cached?.exhausted ?? false);
   const [error, setError] = useState<string | null>(null);
-  const offsetRef = useRef(0);
+  const offsetRef = useRef(cached?.offset ?? 0);
   const isLoadingRef = useRef(false);
-  const isExhaustedRef = useRef(false);
-  const initialLoaded = useRef(false);
+  const isExhaustedRef = useRef(cached?.exhausted ?? false);
 
   const loadMore = useCallback(async () => {
     if (isLoadingRef.current || isExhaustedRef.current) return;
@@ -63,32 +75,27 @@ export default function CardsGrid({
       });
       offsetRef.current += result.length;
     } catch (err) {
-      setError('Failed to load cards. Please try again.');
+      setError('The codex could not be reached. Check your path and try again.');
       const classified = classifyError(err, "CardsGrid.fetch");
       console.error('[CardsGrid] fetch error:', classified.message);
     } finally {
       isLoadingRef.current = false;
       setIsLoading(false);
     }
-  }, [batchSize]);
+  }, [fetchCards, batchSize]);
 
   const loadMoreRef = useRef(loadMore);
-  loadMoreRef.current = loadMore;
 
   useEffect(() => {
-    if (initialLoaded.current) return;
-    initialLoaded.current = true;
-    const cached = loadCache();
-    if (cached) {
-      setCards(cached.cards);
-      offsetRef.current = cached.offset;
-      if (cached.exhausted) {
-        isExhaustedRef.current = true;
-        setIsExhausted(true);
-      }
-    } else {
+    loadMoreRef.current = loadMore;
+  }, [loadMore]);
+
+  // Fetch-on-mount when there is no session cache.
+  useEffect(() => {
+    if (!cached) {
       loadMoreRef.current();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -103,39 +110,64 @@ export default function CardsGrid({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return (
-    <div className={gridStyles.grid}>
-      {cards.map((card, i) => (
-        <RevealItem key={`${card.name}-${i}`} className={gridStyles.cardWrapper}>
-          <ProfileCard
-            id={card.id}
-            likes_count={card.likes_count}
-            image={card.image}
-            name={card.name}
-            description={card.description}
-            tags={card.tags}
-          />
-        </RevealItem>
-      ))}
+  if (!isLoading && cards.length === 0 && error) {
+    return (
+      <div className="dungeon-card mx-auto max-w-lg p-8 text-center">
+        <h3 className="font-display text-xl font-semibold">No path found</h3>
+        <p className="mx-auto mt-2 text-sm text-text-muted">{error}</p>
+        <Button className="mt-5" onClick={() => loadMoreRef.current()}>
+          Try again
+        </Button>
+      </div>
+    );
+  }
 
-      {isLoading && (
-        <div className={cn(gridStyles.loader, "")} aria-label="Loading more cards">
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              className={cn(gridStyles.loaderDot, "bg-accent/50")}
-              style={{ animationDelay: `${i * 150}ms` }}
+  if (!isLoading && cards.length === 0 && !error) {
+    return (
+      <div className="dungeon-card mx-auto max-w-lg p-8 text-center">
+        <h3 className="font-display text-xl font-semibold">The codex is empty</h3>
+        <p className="mx-auto mt-2 text-sm text-text-muted">
+          No delves yet. Forge the first world and it will appear here.
+        </p>
+        <Button className="mt-5" asChild>
+          <a href="/inventory">Forge a world</a>
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {cards.map((card, i) => (
+          <RevealItem key={`${card.id}-${i}`}>
+            <ProfileCard
+              id={card.id}
+              likes_count={card.likes_count}
+              image={card.image}
+              name={card.name}
+              description={card.description}
+              tags={card.tags}
             />
-          ))}
+          </RevealItem>
+        ))}
+        {isLoading &&
+          [0, 1, 2].map((i) => <CardSkeleton key={`skeleton-${i}`} />)}
+      </div>
+
+      {error && cards.length > 0 && (
+        <div className="mt-6 flex items-center justify-center gap-3">
+          <p className="text-sm text-text-muted">{error}</p>
+          <Button variant="outline" size="sm" onClick={() => loadMoreRef.current()}>
+            Retry
+          </Button>
         </div>
       )}
 
-      {error && (
-        <p className={cn(gridStyles.loader, "text-destructive")}>{error}</p>
-      )}
-
-      {isExhausted && (
-        <p className={gridStyles.exhausted}>You&apos;ve reached the end.</p>
+      {isExhausted && cards.length > 0 && (
+        <p className="mt-8 text-center text-sm text-text-muted">
+          You have mapped every known delve.
+        </p>
       )}
     </div>
   );

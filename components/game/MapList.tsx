@@ -21,7 +21,7 @@ export function MapList({ maps }: MapListProps) {
       {maps.map((map) => (
         <div
           key={map.id}
-          className="overflow-hidden rounded-lg border border-border bg-bg-surface transition-all duration-200 ease-ember hover:border-accent/30 hover:shadow-md hover:shadow-accent/5"
+          className="dungeon-card overflow-hidden transition-colors"
         >
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <FittedImage
@@ -44,7 +44,7 @@ export function MapList({ maps }: MapListProps) {
                   </div>
                 </div>
               </div>
-              <button className="mt-4 w-full rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-all duration-200 ease-ember hover:bg-accent-hover active:scale-[0.97]">
+              <button className="mt-4 w-full rounded-[10px] bg-accent px-4 py-2 text-sm font-semibold text-charcoal-950 transition-colors hover:bg-accent-hover">
                 Explore Map
               </button>
             </div>

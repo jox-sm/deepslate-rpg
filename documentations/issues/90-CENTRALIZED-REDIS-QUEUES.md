@@ -157,8 +157,24 @@ export async function queueSize(provider: OperationProvider, queue: QueueName): 
 - [#92](92-REMOVE-DEAD-LOAD-KEY.md)
 - [#93](93-MIGRATE-TO-UPSTASH-REDIS.md)
 
-## Related Issues
+## Resolution
 
+The queue utilities were centralized, but the shared `drain()` had a defect
+and the provider keys could collide.
+
+**Fixes**
+
+| Problem | Fix |
+|---------|-----|
+| `drain()` discarded every item (SDK auto-deserialization + `JSON.parse`) | `automaticDeserialization: false` + `parseRedisJson()` (`lib/queue.ts`, `utilities/queue.ts`) |
+| `mongodb.likes` and `neon.likes` shared the `InsertLikes` key - two different workers draining one list | `mongodb.likes` now uses `InsertLikesmongodb` (`types/operations.ts`) |
+| A failed DB write lost the whole drained batch (the queue was already consumed) | Drains re-enqueue their payload on failure (`utilities/pull.ts`, `lib/GamesInsert.ts`) |
+| `DEL likes:<id>` wiped likes that arrived while the drain was in flight | The pending delta is decremented by exactly the applied amount |
+| The pending delta could be stranded forever if the enqueue failed | `POST /api/push` rolls the delta back when the enqueue fails |
+
+**Verified:** `[Workers:neonLikes] processed N`, zero "unparseable item" errors, and the
+`InsertLikes` / `InsertGames` / `InsertGamesmongodb` queues now drain cleanly.
+## Related Issues
 - #89: Likes System Instant Write (uses `enqueue("neon", "likes", ...)`)
 - #91: State Sync JSON Patch (future use of `enqueue`)
 - #93: Migrate to Upstash Redis (Redis client change)

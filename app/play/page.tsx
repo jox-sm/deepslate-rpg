@@ -7,7 +7,7 @@ import type { ScenarioMeta } from "@/lib/scenarios";
 export default function PlayPage() {
   const router = useRouter();
 
-  function onEnter(scenario: ScenarioMeta, _restore: boolean) {
+  function onEnter(scenario: ScenarioMeta) {
     router.push(`/play/${scenario.id}`);
   }
 

@@ -61,8 +61,50 @@ export function useAuth() {
   }, [getToken, isLoaded, isSignedIn]);
 
   useEffect(() => {
-    createClients();
-  }, [createClients]);
+    let cancelled = false;
+    const bootstrap = async () => {
+      if (!isLoaded || !isSignedIn) {
+        if (!cancelled) setState(prev => ({ ...prev, isLoading: false }));
+        return;
+      }
+
+      if (!cancelled) setState(prev => ({ ...prev, isLoading: true, error: null }));
+
+      try {
+        // Get Supabase token
+        const supabaseToken = await getToken({ template: 'supabase' });
+        if (cancelled) return;
+        const supabase = supabaseToken
+          ? createClient(supabaseUrl, supabaseKey, {
+              global: {
+                headers: {
+                  Authorization: `Bearer ${supabaseToken}`,
+                },
+              },
+            })
+          : null;
+
+        setState({
+          supabase,
+          isLoading: false,
+          error: null,
+        });
+      } catch (error) {
+        if (cancelled) return;
+        const classified = classifyError(error, "useAuth.createClients");
+        console.error('Failed to create authenticated clients:', classified.message);
+        setState(prev => ({
+          ...prev,
+          isLoading: false,
+          error: classified.message,
+        }));
+      }
+    };
+    void bootstrap();
+    return () => {
+      cancelled = true;
+    };
+  }, [getToken, isLoaded, isSignedIn]);
 
   const getServiceToken = useCallback(async (service: 'supabase') => {
     return getToken({ template: service });

@@ -6,6 +6,7 @@
 
 import { v7 as uuidv7 } from "uuid";
 import type { AiMemoryChunk } from "@/types/ai-server";
+import { tryOrErrorSync, classifyError } from "@/utilities/errorHandler";
 
 export const SCENARIOS_KEY = "rpg:scenarios";
 export const MAX_SCENARIOS = 20;
@@ -34,21 +35,28 @@ export type EntryDecision =
 const memoryKey = (id: string) => `rpg:memory:${id}`;
 
 function readRegistry(): ScenarioMeta[] {
-  try {
-    const raw = localStorage.getItem(SCENARIOS_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as ScenarioMeta[]) : [];
-  } catch {
-    return [];
-  }
+  const result = tryOrErrorSync(
+    () => {
+      const raw = localStorage.getItem(SCENARIOS_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? (parsed as ScenarioMeta[]) : [];
+    },
+    { context: "scenarios.readRegistry", suppressToast: true, suppressComponent: true }
+  );
+  return result.ok && result.data ? result.data : [];
 }
 
 function writeRegistry(registry: ScenarioMeta[]): void {
-  try {
-    localStorage.setItem(SCENARIOS_KEY, JSON.stringify(registry));
-  } catch (error) {
-    console.error("[Scenarios] Failed to persist registry:", error);
+  const result = tryOrErrorSync(
+    () => {
+      localStorage.setItem(SCENARIOS_KEY, JSON.stringify(registry));
+    },
+    { context: "scenarios.writeRegistry", suppressToast: true, suppressComponent: true }
+  );
+  if (!result.ok) {
+    const classified = classifyError(result.error, "scenarios.writeRegistry");
+    console.error("[Scenarios] Failed to persist registry:", classified.message);
   }
 }
 
@@ -104,32 +112,44 @@ export function saveMemory(id: string, blob: ScenarioMemoryBlob): boolean {
   try {
     const serialized = JSON.stringify(blob);
     if (serialized.length > LOCALSTORAGE_BUDGET_BYTES) {
-      console.warn(
-        `[Scenarios] Memory blob for ${id} exceeds budget (${serialized.length} bytes) — skipping save`
+      const classified = classifyError(
+        new Error(`Memory blob exceeds budget (${serialized.length} bytes)`),
+        "scenarios.saveMemory.budget"
       );
+      console.warn(`[Scenarios] ${classified.message}`);
       return false;
     }
     localStorage.setItem(memoryKey(id), serialized);
     return true;
   } catch (error) {
-    console.error("[Scenarios] Failed to save memory blob:", error);
+    const classified = classifyError(error, "scenarios.saveMemory");
+    console.error("[Scenarios] Failed to save memory blob:", classified.message);
     return false;
   }
 }
 
 export function loadMemory(id: string): ScenarioMemoryBlob | null {
-  try {
-    const raw = localStorage.getItem(memoryKey(id));
-    return raw ? (JSON.parse(raw) as ScenarioMemoryBlob) : null;
-  } catch {
-    return null;
-  }
+  const result = tryOrErrorSync(
+    () => {
+      const raw = localStorage.getItem(memoryKey(id));
+      return raw ? (JSON.parse(raw) as ScenarioMemoryBlob) : null;
+    },
+    { context: "scenarios.loadMemory", suppressToast: true, suppressComponent: true }
+  );
+  return result.ok ? result.data : null;
 }
 
 export function clearMemory(id: string): void {
-  try {
-    localStorage.removeItem(memoryKey(id));
-  } catch {}
+  const result = tryOrErrorSync(
+    () => {
+      localStorage.removeItem(memoryKey(id));
+    },
+    { context: "scenarios.clearMemory", suppressToast: true, suppressComponent: true }
+  );
+  if (!result.ok) {
+    const classified = classifyError(result.error, "scenarios.clearMemory");
+    console.error("[Scenarios] Failed to clear memory:", classified.message);
+  }
 }
 
 // --- entry decision (single pass — see LOOPS.md §4.3) ---
@@ -149,4 +169,42 @@ export function resolveEntry(scenarioId: string | null): EntryDecision {
 
 export function shouldAutosave(turnNumber: number): boolean {
   return turnNumber > 0 && turnNumber % AUTOSAVE_EVERY_TURNS === 0;
+}
+
+// --- persisted turn (single call: memory blob + registry touch + turn key) ---
+
+const TURN_KEY = "rpg:turn:";
+
+export function readTurn(id: string): number {
+  const result = tryOrErrorSync(
+    () => {
+      const raw = localStorage.getItem(TURN_KEY + id);
+      const parsed = raw == null ? NaN : Number.parseInt(raw, 10);
+      return Number.isFinite(parsed) ? parsed : 0;
+    },
+    { context: "scenarios.readTurn", suppressToast: true, suppressComponent: true }
+  );
+  return result.ok && typeof result.data === "number" ? result.data : 0;
+}
+
+export function writeTurn(id: string, turn: number): void {
+  const result = tryOrErrorSync(
+    () => {
+      localStorage.setItem(TURN_KEY + id, String(turn));
+    },
+    { context: "scenarios.writeTurn", suppressToast: true, suppressComponent: true }
+  );
+  if (!result.ok) {
+    const classified = classifyError(result.error, "scenarios.writeTurn");
+    console.error("[Scenarios] Failed to persist turn:", classified.message);
+  }
+}
+
+export function persistScenarioTurn(  id: string,
+  blob: ScenarioMemoryBlob,
+  turn: number
+): void {
+  saveMemory(id, blob);
+  touchScenario(id);
+  writeTurn(id, turn);
 }

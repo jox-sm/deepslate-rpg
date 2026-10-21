@@ -25,12 +25,11 @@ export default function LikeButton({ gameId, initialLikes }: LikeButtonProps) {
       onClick={handleClick}
       disabled={pendingLikes}
       className={cn(
-        "flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all duration-200",
-        "hover:scale-105 active:scale-95",
+        "flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-1 text-xs font-medium transition-colors",
         liked
-          ? "text-ember-400 bg-ember-600/15 border border-ember-600/30"
-          : "text-slate-400 bg-slate-800/50 border border-slate-700/30 hover:text-slate-300",
-        pendingLikes && "opacity-50 cursor-not-allowed",
+          ? "border-accent/40 bg-accent/10 text-accent"
+          : "border-border bg-bg-surface text-text-muted hover:text-text-primary",
+        pendingLikes && "cursor-not-allowed opacity-50",
       )}
       aria-label={liked ? "Unlike" : "Like"}
     >

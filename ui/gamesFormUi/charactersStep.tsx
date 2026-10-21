@@ -32,7 +32,7 @@ export default function CharactersStep({ characters, onAdd, onRemove, onUpdate, 
         const descErrorId = `char-${char.id}-desc-error`;
 
         return (
-          <div key={char.id} className="rounded-lg border border-border bg-bg-surface p-4 space-y-4" role="group" aria-label={`Character ${index + 1}`}>
+          <div key={char.id} className="dungeon-card space-y-4 p-4" role="group" aria-label={`Character ${index + 1}`}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-text-primary">Character {index + 1}</h3>
               <Button

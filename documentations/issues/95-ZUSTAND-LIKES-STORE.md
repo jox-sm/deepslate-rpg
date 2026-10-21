@@ -192,8 +192,16 @@ export const useLikesStore = create<LikesStore>((set, get) => ({
 ## Blocks
 — (none)
 
-## Related Issues
+## Resolution
 
+The store is implemented at `stores/likes-store.ts` with optimistic updates
+(`_optimisticAdd` / `_optimisticRemove`), revert-on-failure (`_revert`), a
+`pendingLikes` guard that blocks double-submits, and a `localStorage` persistence
+adapter that round-trips the `Set` instances.
+
+This issue was still listed as OPEN in `documentations/issues/README.md`; the index has
+been corrected.
+## Related Issues
 - #89: Refactor likes: Upstash instant + async queue drain (server-side instant write)
 - #90: Centralize Redis queue utilities (uses `enqueue`)
 - #91: State sync with JSON Patch (parallel pattern for game mutations)

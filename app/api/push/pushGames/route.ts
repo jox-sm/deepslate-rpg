@@ -9,7 +9,7 @@ import { validateJWTMiddleware } from "@/lib/jwt-validate";
 import { tryApiRoute } from "@/utilities/apiErrorHandler";
 
 export async function POST(request: NextRequest) {
-  const { payload, error } = await validateJWTMiddleware(request);
+  const { error } = await validateJWTMiddleware(request);
   if (error) return error;
 
   return tryApiRoute(async () => {

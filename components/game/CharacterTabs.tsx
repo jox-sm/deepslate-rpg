@@ -21,7 +21,7 @@ export function CharacterTabs({ characters }: CharacterTabsProps) {
       {characters.map((character) => (
         <div
           key={character.id}
-          className="group overflow-hidden rounded-lg border border-border bg-bg-surface transition-all duration-200 ease-ember hover:border-accent/30 hover:shadow-md hover:shadow-accent/5"
+          className="dungeon-card group overflow-hidden transition-colors"
         >
           <FittedImage
             src={character.image || character.imagePreview}

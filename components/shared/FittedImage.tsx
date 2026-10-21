@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import styles from "@/styles/shared/fitted-image.module.css";
 
 interface FittedImageProps {
   src: string;
@@ -25,11 +24,16 @@ export function FittedImage({
   quality = 85,
   showOverlay = false,
 }: FittedImageProps) {
-  const fitClass = fit === "cover" ? styles.cover : fit === "contain" ? styles.contain : styles.fill;
+  const fitClass =
+    fit === "cover"
+      ? "object-cover"
+      : fit === "contain"
+        ? "object-contain"
+        : "object-fill";
 
   return (
     <div
-      className={cn(styles.wrapper, containerClassName)}
+      className={cn("relative w-full overflow-hidden bg-bg-surface", containerClassName)}
       style={{ aspectRatio }}
     >
       <Image
@@ -40,7 +44,12 @@ export function FittedImage({
         priority={priority}
         quality={quality}
       />
-      {showOverlay && <div className={styles.overlay} />}
+      {showOverlay && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent"
+        />
+      )}
     </div>
   );
 }

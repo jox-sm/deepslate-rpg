@@ -1,9 +1,10 @@
-import { redis } from '@/lib/queue';
+import { redis, parseRedisJson } from '@/lib/queue';
 import { getGameById } from '@/lib/db';
 import connectDB from '@/models/games/mongodb/client';
 import Game from '@/models/games/mongodb/schema';
 import { retry } from '@/lib/retry';
 import { tryOrErrorSync, classifyError } from '@/utilities/errorHandler';
+import { getCachedGameData, cacheHit, cacheMiss } from '@/utilities/hotnessCache';
 
 /**
  * Batch Game Fetch Pipeline
@@ -49,7 +50,7 @@ export async function queueGameFetch(
 ): Promise<void> {
   try {
     const request: FetchRequest = { requestId, uuid };
-    await redis.lpush(QUEUE_KEYS.FETCH_QUEUE, JSON.stringify(request));
+    await retry(() => redis.lpush(QUEUE_KEYS.FETCH_QUEUE, JSON.stringify(request)), 3, 500);
   } catch (error) {
     const classified = classifyError(error, "GameFetchPipeline.queueGameFetch");
     console.error('[GameFetchPipeline] Error queuing fetch:', classified.message);
@@ -65,12 +66,17 @@ export async function processBatch(): Promise<void> {
     // Wait a bit for more requests to queue up (up to BATCH_TIMEOUT_MS)
     await new Promise((resolve) => setTimeout(resolve, BATCH_TIMEOUT_MS));
 
-    // Get up to BATCH_SIZE requests from queue
-    const requestsJson = (await redis.lrange(
-      QUEUE_KEYS.FETCH_QUEUE,
-      0,
-      BATCH_SIZE - 1
-    )) as string[];
+    // Atomically claim up to BATCH_SIZE requests.
+    // The old code read the head with LRANGE but removed from the tail with
+    // RPOP, so whenever more than BATCH_SIZE requests were queued it
+    // dropped the ones it had not processed and reprocessed the ones it
+    // had. LPOP with a count is a single atomic operation and matches the
+    // LPUSH used to enqueue (FIFO).
+    const requestsJson = ((await retry(
+      () => redis.lpop(QUEUE_KEYS.FETCH_QUEUE, BATCH_SIZE),
+      3,
+      500
+    )) ?? []) as string[];
 
     if (requestsJson.length === 0) {
       return;
@@ -78,8 +84,8 @@ export async function processBatch(): Promise<void> {
 
     const requests: FetchRequest[] = requestsJson
       .map((json) => {
-        const result = tryOrErrorSync(() => JSON.parse(json), { context: "parseFetchRequest" });
-        return result.ok ? result.data as FetchRequest : null;
+        const result = tryOrErrorSync(() => parseRedisJson<FetchRequest>(json), { context: "parseFetchRequest" });
+        return result.ok ? result.data : null;
       })
       .filter((req): req is FetchRequest => req !== null);
 
@@ -94,26 +100,66 @@ export async function processBatch(): Promise<void> {
     // Extract unique uuids
     const uuids = [...new Set(requests.map((r) => r.uuid))];
 
-    // Fetch from PostgreSQL
-    const pgGames = await Promise.all(
-      uuids.map((uuid) => retry(() => getGameById(uuid), 2, 300))
-    );
-
-    // Fetch from MongoDB for nested data
-    await connectDB();
-    const mongoGames = await Promise.all(
+    // 1) Hotness cache first. A cache hit costs one Redis read and spares
+    //    both the Neon and the MongoDB round trip. This is the same tiered
+    //    lookup the single-game route does, applied across the whole batch.
+    const cached = await Promise.all(
       uuids.map((uuid) =>
-        retry(() => Game.findOne({ id: uuid }).lean(), 2, 300).catch(() => null)
+        retry(() => getCachedGameData(uuid), 2, 300).catch(() => null)
       )
     );
+
+    // 2) Only the misses need the databases.
+    const misses = uuids.filter((_, i) => !cached[i]);
+
+    // Fetch from PostgreSQL
+    const pgGames = await Promise.all(
+      misses.map((uuid) => retry(() => getGameById(uuid), 2, 300))
+    );
+
+    // Fetch from MongoDB for nested data. MongoDB is an optional enrichment
+    // here: if it is unreachable, still serve the Neon row (without nested
+    // data) instead of failing the whole batch.
+    const mongoGames = await (async () => {
+      if (misses.length === 0) return [];
+      try {
+        await connectDB();
+        return await Promise.all(
+          misses.map((uuid) =>
+            retry(() => Game.findOne({ id: uuid }).lean(), 2, 300).catch((error) => {
+              const classified = classifyError(error, `GameFetchPipeline.mongo.${uuid}`);
+              console.error('[GameFetchPipeline] Mongo fetch failed:', classified.message);
+              return null;
+            })
+          )
+        );
+      } catch (error) {
+        const classified = classifyError(error, "GameFetchPipeline.connectDB");
+        console.error('[GameFetchPipeline] MongoDB unavailable, serving without nested data:', classified.message);
+        return misses.map(() => null);
+      }
+    })();
 
     // Build result map
     const resultMap = new Map<string, FullGameData | null>();
 
     for (let i = 0; i < uuids.length; i++) {
       const uuid = uuids[i];
-      const pgGame = pgGames[i];
-      const mongoGame = mongoGames[i];
+      const hit = cached[i];
+
+      if (hit) {
+        resultMap.set(uuid, hit as FullGameData);
+        // Record the view so the entry keeps its hotness ranking.
+        cacheHit(uuid, hit).catch((error) => {
+          const classified = classifyError(error, `GameFetchPipeline.cacheHit.${uuid}`);
+          console.error('[GameFetchPipeline] cacheHit failed:', classified.message);
+        });
+        continue;
+      }
+
+      const missIdx = misses.indexOf(uuid);
+      const pgGame = missIdx >= 0 ? pgGames[missIdx] : null;
+      const mongoGame = missIdx >= 0 ? mongoGames[missIdx] : null;
 
       if (!pgGame) {
         resultMap.set(uuid, null);
@@ -129,6 +175,12 @@ export async function processBatch(): Promise<void> {
       };
 
       resultMap.set(uuid, fullGame);
+
+      // Promote into the hotness cache so the next request is a cache hit.
+      cacheMiss(uuid, fullGame).catch((error) => {
+        const classified = classifyError(error, `GameFetchPipeline.cacheMiss.${uuid}`);
+        console.error('[GameFetchPipeline] cacheMiss failed:', classified.message);
+      });
     }
 
     // Store results and clean queue
@@ -139,17 +191,17 @@ export async function processBatch(): Promise<void> {
       const resultKey = `${QUEUE_KEYS.REQUEST_RESULTS}${request.requestId}`;
 
       operations.push(
-        redis.set(
-          resultKey,
-          JSON.stringify(result || { success: false, error: 'Not found' }),
-          { ex: 3600 }
+        retry(
+          () =>
+            redis.set(
+              resultKey,
+              JSON.stringify(result || { success: false, error: 'Not found' }),
+              { ex: 3600 }
+            ),
+          3,
+          500
         )
       );
-    }
-
-    // Remove processed requests from queue
-    for (let i = 0; i < requests.length; i++) {
-      operations.push(redis.rpop(QUEUE_KEYS.FETCH_QUEUE));
     }
 
     await Promise.all(operations);
@@ -160,6 +212,43 @@ export async function processBatch(): Promise<void> {
   } catch (error) {
     const classified = classifyError(error, "GameFetchPipeline.processBatch");
     console.error('[GameFetchPipeline] Error processing batch:', classified.message);
+  }
+}
+
+/**
+ * Read a batch fetch result without blocking.
+ * Returns null when the batch has not produced the result yet, which the
+ * HTTP route surfaces as 404 so the client can keep polling.
+ */
+export async function getFetchResult(requestId: string): Promise<FullGameData | null> {
+  const resultKey = `${QUEUE_KEYS.REQUEST_RESULTS}${requestId}`;
+  try {
+    const raw = await retry(() => redis.get(resultKey), 3, 300);
+    if (!raw) return null;
+
+    const parsed = tryOrErrorSync(
+      () => parseRedisJson<FullGameData & { success?: boolean; error?: string }>(raw),
+      { context: "GameFetchPipeline.getFetchResult", suppressToast: true, suppressComponent: true }
+    );
+    if (!parsed.ok) {
+      const classified = classifyError(parsed.error, "GameFetchPipeline.getFetchResult.parse");
+      console.error('[GameFetchPipeline] result parse failed:', classified.message);
+      return null;
+    }
+
+    // One-shot: the key is consumed so a later poll cannot re-read it.
+    await retry(() => redis.del(resultKey), 3, 300).catch((error) => {
+      const classified = classifyError(error, "GameFetchPipeline.getFetchResult.del");
+      console.error('[GameFetchPipeline] result cleanup failed:', classified.message);
+    });
+
+    const data = parsed.data;
+    if (!data) return null;
+    return data.success === false ? null : data;
+  } catch (error) {
+    const classified = classifyError(error, "GameFetchPipeline.getFetchResult");
+    console.error('[GameFetchPipeline] result read failed:', classified.message);
+    return null;
   }
 }
 
@@ -175,13 +264,26 @@ export async function waitForFetchResult(
 
   // Poll with backoff
   while (Date.now() - startTime < timeoutMs) {
-    const result = await redis.get<string>(resultKey);
+    let result: string | null = null;
+    try {
+      result = await retry(() => redis.get<string>(resultKey), 3, 300);
+    } catch (error) {
+      const classified = classifyError(error, "GameFetchPipeline.waitForFetchResult.get");
+      console.error('[GameFetchPipeline] result poll failed:', classified.message);
+      return null;
+    }
 
     if (result) {
-      const parseResult = tryOrErrorSync(() => JSON.parse(result), { context: "parseFetchResult" });
+      const parseResult = tryOrErrorSync(() => parseRedisJson<FullGameData & { success?: boolean; error?: string }>(result), { context: "parseFetchResult" });
       if (parseResult.ok) {
-        await redis.del(resultKey);
+        try {
+          await retry(() => redis.del(resultKey), 3, 300);
+        } catch (error) {
+          const classified = classifyError(error, "GameFetchPipeline.waitForFetchResult.del");
+          console.error('[GameFetchPipeline] result cleanup failed:', classified.message);
+        }
         const data = parseResult.data;
+        if (!data) return null;
         return data.success === false ? null : data;
       }
       return null;
@@ -225,7 +327,7 @@ export async function getQueueStats(): Promise<{
   queueLength: number;
 }> {
   try {
-    const queueLength = await redis.llen(QUEUE_KEYS.FETCH_QUEUE);
+    const queueLength = await retry(() => redis.llen(QUEUE_KEYS.FETCH_QUEUE), 3, 500);
     return { queueLength };
   } catch (error) {
     const classified = classifyError(error, "GameFetchPipeline.getQueueStats");
@@ -239,7 +341,7 @@ export async function getQueueStats(): Promise<{
  */
 export async function clearQueue(): Promise<void> {
   try {
-    await redis.del(QUEUE_KEYS.FETCH_QUEUE);
+    await retry(() => redis.del(QUEUE_KEYS.FETCH_QUEUE), 3, 500);
     console.log('[GameFetchPipeline] Queue cleared');
   } catch (error) {
     const classified = classifyError(error, "GameFetchPipeline.clearQueue");

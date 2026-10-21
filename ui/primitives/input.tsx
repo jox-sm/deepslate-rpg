@@ -1,7 +1,8 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import { textFieldBaseClasses } from "./text-field"
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
@@ -9,7 +10,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          "flex h-10 w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-text-primary placeholder:text-text-muted transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:border-torch-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-torch-400/50 focus-visible:shadow-glow-torch disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-10",
+          textFieldBaseClasses,
+          "file:border-0 file:bg-transparent file:text-sm file:font-medium",
           className
         )}
         ref={ref}

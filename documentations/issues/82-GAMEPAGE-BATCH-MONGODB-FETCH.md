@@ -1,7 +1,7 @@
 # Issue #82: GamePage: Implement batch MongoDB fetch via Redis queue
 
 ## Status
-🔄 OPEN
+✅ CLOSED
 
 ## Category
 Feature, Performance, Infrastructure
@@ -89,6 +89,41 @@ If memory pressure is below 85%, the worker backfills fetched data to Redis (`SE
 ## Blocks
 - [#84](84-GAMEPAGE-FULLGAMERESPONSE-TYPE-UI.md)
 
+## Resolution
+
+**The pipeline existed but was completely unreachable.** There was no
+`/api/games/batch-queue` route and no `/api/games/batch-result/[requestId]` route, so
+`utilities/clientUtilities/gameFetch.ts` was calling endpoints that 404'd, and no
+component imported `getGameWithBatchQueue`. The `game:fetch:queue` Redis key was
+therefore always empty and `processBatch()` never ran.
+
+**Fixes**
+
+| Change | File |
+|--------|------|
+| New `POST /api/games/batch-queue` route (JWT auth + Zod validation) | `app/api/games/batch-queue/route.ts` (new) |
+| New `GET /api/games/batch-result/[requestId]` route (404 = "not ready", client polls) | `app/api/games/batch-result/[requestId]/route.ts` (new) |
+| Non-blocking result reader for the route | `utilities/gameFetchPipeline.ts` (`getFetchResult()`) |
+| **Atomic queue claim** - `LPOP key count` replaces `LRANGE` + `RPOP` | `utilities/gameFetchPipeline.ts` |
+| Hotness cache checked before Neon/MongoDB; misses promoted via `cacheMiss()` | `utilities/gameFetchPipeline.ts` |
+| MongoDB treated as optional enrichment (degrades to empty nested data) | `utilities/gameFetchPipeline.ts` |
+| Client uses the batch pipeline, direct route as fallback | `utilities/clientUtilities/useGameCache.ts` |
+
+**Why the atomic claim mattered:** the old code read the head with `LRANGE` but removed
+from the tail with `RPOP`. With more than `BATCH_SIZE` (20) requests queued it dropped
+the requests it had *not* processed and reprocessed the ones it had. `LPOP` with a count
+is a single atomic operation and matches the `LPUSH` used to enqueue (FIFO).
+
+**Verified**
+
+```
+queue 3 fetch requests -> queue length: 3
+3 results stored after ~4s
+req-a: id=019e370f-... name="tests" likes=1
+req-b: id=019e370f-... name="tests" likes=1
+req-c: id=019e370f-... name="tests" likes=1
+queue length after processing: 0
+```
 ## Related Issues
 - #80: Card click navigation with sessionStorage preload
 - #81: Binary-search hotness cache

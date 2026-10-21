@@ -1,16 +1,14 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import { textFieldBaseClasses } from "./text-field"
 
-export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, ...props }, ref) => {
     return (
       <textarea
-        className={cn(
-          "flex min-h-[80px] w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-text-primary placeholder:text-text-muted transition-all duration-200 focus-visible:border-torch-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-torch-400/50 focus-visible:shadow-glow-torch disabled:cursor-not-allowed disabled:opacity-50",
-          className
-        )}
+        className={cn("flex min-h-[80px]", textFieldBaseClasses, className)}
         ref={ref}
         {...props}
       />

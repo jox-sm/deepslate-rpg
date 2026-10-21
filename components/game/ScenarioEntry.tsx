@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import {
   ScenarioMemoryBlob,
-  createScenario,
   deleteScenario,
   listScenarios,
   loadMemory,
@@ -16,23 +16,12 @@ interface ScenarioEntryProps {
 
 export default function ScenarioEntry({ onEnter }: ScenarioEntryProps) {
   const [scenarios, setScenarios] = useState<ScenarioMeta[]>(() => listScenarios());
-  const [showNew, setShowNew] = useState(false);
-  const [name, setName] = useState("");
 
   const withMemory = useMemo(() => {
     const map = new Map<string, ScenarioMemoryBlob | null>();
     for (const s of scenarios) map.set(s.id, loadMemory(s.id));
     return map;
   }, [scenarios]);
-
-  function handleCreate() {
-    const scenario = createScenario(name);
-    if (!scenario) return;
-    setScenarios(listScenarios());
-    setName("");
-    setShowNew(false);
-    onEnter(scenario, false);
-  }
 
   function handleDelete(id: string) {
     deleteScenario(id);
@@ -41,12 +30,12 @@ export default function ScenarioEntry({ onEnter }: ScenarioEntryProps) {
 
   return (
     <div className="mx-auto w-full max-w-xl px-4 py-12">
-      <h1 className="text-center font-serif text-3xl text-accent">Deepslate Dungeons</h1>
+      <h1 className="text-center font-display text-3xl text-accent">Deepslate Dungeons</h1>
       <p className="mt-2 text-center text-sm text-text-muted">
-        Continue an adventure, or forge a new one
+        Continue an adventure, or forge a new world first
       </p>
 
-      <div className="mt-8 overflow-hidden rounded-xl border border-border bg-background/60 shadow-lg shadow-black/20">
+      <div className="mt-8 overflow-hidden rounded-xl border border-border bg-bg-base/60 shadow-lg shadow-black/20">
         {scenarios.length === 0 && (
           <div className="p-8 text-center">
             <p className="text-sm text-text-muted">No saved adventures yet.</p>
@@ -80,45 +69,12 @@ export default function ScenarioEntry({ onEnter }: ScenarioEntryProps) {
         </ul>
       </div>
 
-      {showNew ? (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleCreate();
-          }}
-          className="mt-4 flex gap-2"
-        >
-          <input
-            autoFocus
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Adventure name (e.g. The Sunken Vault)"
-            maxLength={60}
-            className="min-w-0 flex-1 rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-text-secondary outline-none focus:border-accent"
-          />
-          <button
-            type="submit"
-            disabled={!name.trim()}
-            className="rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-background transition-opacity hover:opacity-90 disabled:opacity-40"
-          >
-            Create
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowNew(false)}
-            className="rounded-lg border border-border px-4 py-2.5 text-sm text-text-muted hover:text-text-secondary"
-          >
-            Cancel
-          </button>
-        </form>
-      ) : (
-        <button
-          onClick={() => setShowNew(true)}
-          className="mt-4 w-full rounded-lg border border-dashed border-accent/40 px-5 py-3 text-sm font-medium text-accent transition-colors hover:border-accent hover:bg-accent/5"
-        >
-          + New Adventure
-        </button>
-      )}
+      <Link
+        href="/inventory"
+        className="mt-4 block w-full rounded-[10px] border border-dashed border-accent/40 px-5 py-3 text-center text-sm font-medium text-accent transition-colors hover:border-accent hover:bg-accent/5"
+      >
+        + Forge a new world
+      </Link>
     </div>
   );
 }

@@ -3,24 +3,25 @@ import { getGamesPaginated } from '@/lib/db';
 import { getCachedGameIds, warmUpCache, mergePendingLikesBatch } from '@/lib/cache-warmup';
 import { redis } from '@/lib/queue';
 import { retry } from '@/lib/retry';
+import { drainGames, drainLikes } from '@/utilities/pull';
 import { validateJWTMiddleware } from '@/lib/jwt-validate';
 import { rateLimitMiddleware } from '@/lib/middleware/rate-limit';
 import { tryApiRoute } from '@/utilities/apiErrorHandler';
+import { classifyError, tryOrErrorSync } from '@/utilities/errorHandler';
 
 let cacheInitialized = false;
 
 async function ensureCachePrimed(): Promise<boolean> {
   if (!cacheInitialized) {
-    console.log('[GET /api/games] cache not initialized, attempting warmup...');
-    const primed = await retry(() => warmUpCache(), 2, 500).catch(() => {
-      console.log('[GET /api/games] warmUpCache threw after retries, treating as false');
+    const primed = await retry(() => warmUpCache(), 2, 500).catch((error) => {
+      const classified = classifyError(error, "games.ensureCachePrimed");
+      console.error('[GET /api/games] warmUpCache threw after retries:', classified.message,
+        '| raw:', String(classified.originalError ?? error));
       return false;
     });
     cacheInitialized = primed;
-    console.log('[GET /api/games] warmUpCache result:', primed, 'cacheInitialized set to:', primed);
     return primed;
   }
-  console.log('[GET /api/games] cache already initialized, skipping warmup');
   return true;
 }
 
@@ -28,22 +29,34 @@ const LIKES_INTERVAL_MS = 10_000;
 const GAMES_INTERVAL_MS = 1_000;
 let lastLikesDrain = 0;
 let lastGamesDrain = 0;
+const drainRunning = new Set<"likes" | "games">();
 
+// Drain in-process instead of self-HTTP-fetching /api/drain: the fetch
+// needed NEXT_PUBLIC_APP_URL (unset => "Failed to parse URL") and carried
+// no Clerk session (=> 401 at the drain route), so it never worked.
 function maybeTriggerDrain(): void {
   const now = Date.now();
-  if (now - lastLikesDrain >= LIKES_INTERVAL_MS) {
+  if (now - lastLikesDrain >= LIKES_INTERVAL_MS && !drainRunning.has("likes")) {
     lastLikesDrain = now;
-    fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? ''}/api/drain?target=likes`, {
-      method: 'GET',
-      headers: { 'x-internal-drain': '1' },
-    }).catch(() => { /* drain errors are non-fatal */ });
+    drainRunning.add("likes");
+    drainLikes()
+      .catch((error) => {
+        const classified = classifyError(error, "games.maybeTriggerDrain.likes");
+        console.error('[GET /api/games] drain likes failed:', classified.message,
+          '| raw:', String(classified.originalError ?? error));
+      })
+      .finally(() => drainRunning.delete("likes"));
   }
-  if (now - lastGamesDrain >= GAMES_INTERVAL_MS) {
+  if (now - lastGamesDrain >= GAMES_INTERVAL_MS && !drainRunning.has("games")) {
     lastGamesDrain = now;
-    fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? ''}/api/drain?target=games`, {
-      method: 'GET',
-      headers: { 'x-internal-drain': '1' },
-    }).catch(() => { /* drain errors are non-fatal */ });
+    drainRunning.add("games");
+    drainGames()
+      .catch((error) => {
+        const classified = classifyError(error, "games.maybeTriggerDrain.games");
+        console.error('[GET /api/games] drain games failed:', classified.message,
+          '| raw:', String(classified.originalError ?? error));
+      })
+      .finally(() => drainRunning.delete("games"));
   }
 }
 
@@ -66,46 +79,51 @@ export async function GET(request: NextRequest) {
       const offset = (page - 1) * limit;
       console.log('[GET /api/games] params', { page, limit, offset });
 
-      await ensureCachePrimed();
+      // Fire-and-forget: the handler below already falls back to Postgres
+      // when the cache is empty, so awaiting warmup only adds latency
+      // (seconds when Redis is down) without changing the response.
+      void ensureCachePrimed();
 
-      console.log('[GET /api/games] fetching cached game IDs...');
       const cachedIds = await getCachedGameIds().catch((err) => {
-        console.log('[GET /api/games] getCachedGameIds threw:', err);
+        const classified = classifyError(err, "games.getCachedGameIds");
+        console.error('[GET /api/games] getCachedGameIds threw:', classified.message);
         return [] as string[];
       });
       const cachedCount = cachedIds.length;
-      console.log('[GET /api/games] cachedIds count:', cachedCount);
 
       if (offset < cachedCount) {
         const endIndex = Math.min(offset + limit, cachedCount);
         const pageIds = cachedIds.slice(offset, endIndex);
         const keys = pageIds.map(id => `game:${id}`);
-        console.log('[GET /api/games] fetching from Redis with keys:', keys);
-        const values = await redis.mget<string[]>(...keys).catch((err) => {
-          console.log('[GET /api/games] redis.mget threw:', err);
+        const values = await retry(() => redis.mget<string[]>(...keys), 3, 500).catch((err) => {
+          const classified = classifyError(err, "games.redis.mget");
+          console.error('[GET /api/games] redis.mget threw:', classified.message);
           return [] as (string | null)[];
         });
         const filteredResults = values.map(v => {
           if (!v) return null;
-          if (typeof v === 'string') return JSON.parse(v);
+          if (typeof v === 'string') {
+            const parsed = tryOrErrorSync(() => JSON.parse(v), {
+              context: "games.parseCachedGame",
+              suppressToast: true,
+              suppressComponent: true,
+            });
+            return parsed.ok ? parsed.data : null;
+          }
           return v;
         }).filter(Boolean);
-        console.log('[GET /api/games] Redis hits:', filteredResults.length, '/', keys.length);
 
         if (filteredResults.length > 0) {
           const data = await mergePendingLikesBatch(filteredResults);
-          console.log('[GET /api/games] returning Redis-sourced response');
           return NextResponse.json({
             success: true,
             data,
             pagination: { page, limit, total: cachedCount, totalPages: Math.ceil(cachedCount / limit), hasMore: endIndex < cachedCount, source: 'redis' },
           });
         }
-        console.log('[GET /api/games] Redis returned no valid data, falling back to PostgreSQL');
       }
 
       const skip = offset - cachedCount;
-      console.log('[GET /api/games] falling back to PostgreSQL, skip:', skip, 'limit:', limit);
       const { games, total } = await retry(() => getGamesPaginated(limit, skip), 3, 500);
       const data = await mergePendingLikesBatch(games);
 

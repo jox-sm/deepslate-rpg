@@ -168,8 +168,24 @@ await Promise.all(operations);
 ## Blocks
 - [#94](94-REMOVE-IORedis.md)
 
-## Related Issues
+## Resolution
 
+The migration to Upstash was completed, but the SDK's **automatic
+deserialization** was left enabled. That silently broke every read site in the codebase
+that stores JSON as text and parses it itself (`redis.get<string>(...)` +
+`JSON.parse(...)`):
+
+- the queue drain - every payload discarded as "unparseable"
+- the hotness cache - always read as empty
+- the idempotency cache - never hit, so duplicate requests were never deduplicated
+- the batch fetch pipeline - could not read its own queue
+
+**Fix:** `automaticDeserialization: false` on the Redis client, plus a
+`parseRedisJson()` helper (`lib/queue.ts`) so the read sites accept either shape.
+
+**Verified:** all four round trips confirmed against live Redis - queue item parse, hotness
+cache state load, idempotency result read, and batch fetch result read.
+## Related Issues
 - #90: Centralized Redis Queues (uses `enqueue` utility)
 - #89: Likes System Instant Write (uses `redis.incrby()`)
 - #94: Remove ioredis (cleanup follow-up)

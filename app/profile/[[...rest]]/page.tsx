@@ -10,7 +10,7 @@ export default function ProfilePage() {
         <UserProfile />
       </Authenticated>
       <Unauthenticated>
-        <div className="text-center text-zinc-400">
+        <div className="text-center text-text-muted">
           <p className="text-lg">You need to sign in to view your profile.</p>
         </div>
       </Unauthenticated>

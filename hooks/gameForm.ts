@@ -46,8 +46,8 @@ export function createEmptyItem(): ItemData {
 const STEP_KEYS: GamesFormStep[] = ["characters", "maps", "items"];
 const STEP_COUNT = STEP_KEYS.length;
 
-export function useGamesForm(onComplete?: (data: GamesFormData) => void): UseGamesFormReturn {
-  const { state: formData, updateField, reset: resetFormState, setLoading } = useFormState<GamesFormData>(initialFormData);
+export function useGamesForm(): UseGamesFormReturn {
+  const { state: formData, updateField, reset: resetFormState } = useFormState<GamesFormData>(initialFormData);
   const [currentStep, setCurrentStep] = useState(0);
 
   const setStep = useCallback((step: number) => {
@@ -66,53 +66,53 @@ export function useGamesForm(onComplete?: (data: GamesFormData) => void): UseGam
   const reset = useCallback(() => {
     resetFormState();
     setCurrentStep(0);
-  }, []);
+  }, [resetFormState]);
 
   const addCharacter = useCallback(() => {
     updateField("characters", [...formData.characters, createEmptyCharacter()]);
     setCurrentStep(0);
-  }, [formData.characters]);
+  }, [formData.characters, updateField]);
 
   const removeCharacter = useCallback((id: string) => {
     updateField("characters", formData.characters.filter((c) => c.id !== id));
-  }, [formData.characters]);
+  }, [formData.characters, updateField]);
 
   const updateCharacter = useCallback((id: string, field: keyof CharacterData, value: unknown) => {
     const updatedCharacters = formData.characters.map((c) => 
       c.id === id ? { ...c, [field]: value } : c
     );
     updateField("characters", updatedCharacters);
-  }, [formData.characters]);
+  }, [formData.characters, updateField]);
 
   const addMap = useCallback(() => {
     updateField("maps", [...formData.maps, createEmptyMap()]);
-  }, [formData.maps]);
+  }, [formData.maps, updateField]);
 
   const removeMap = useCallback((id: string) => {
     updateField("maps", formData.maps.filter((m) => m.id !== id));
-  }, [formData.maps]);
+  }, [formData.maps, updateField]);
 
   const updateMap = useCallback((id: string, field: keyof MapData, value: unknown) => {
     const updatedMaps = formData.maps.map((m) => 
       m.id === id ? { ...m, [field]: value } : m
     );
     updateField("maps", updatedMaps);
-  }, [formData.maps]);
+  }, [formData.maps, updateField]);
 
   const addItem = useCallback(() => {
     updateField("items", [...formData.items, createEmptyItem()]);
-  }, [formData.items]);
+  }, [formData.items, updateField]);
 
   const removeItem = useCallback((id: string) => {
     updateField("items", formData.items.filter((i) => i.id !== id));
-  }, [formData.items]);
+  }, [formData.items, updateField]);
 
   const updateItem = useCallback((id: string, field: keyof ItemData, value: unknown) => {
     const updatedItems = formData.items.map((i) => 
       i.id === id ? { ...i, [field]: value } : i
     );
     updateField("items", updatedItems);
-  }, [formData.items]);
+  }, [formData.items, updateField]);
 
    return {
      currentStep,

@@ -199,7 +199,17 @@ describe('GET /api/games', () => {
 ## Blocks
 - [#78](78-DB-RETRY-MECHANISM.md)
 
-## Related Issues
+## Resolution
 
+The N+1 was real and is fixed: `mergePendingLikesBatch()` issues a **single**
+`MGET` for every pending-like key instead of one `GET` per game, and the games list
+reads its page with one `MGET` rather than N round trips.
+
+Verified in the live data - 19 games, one MGET, one pipeline.
+
+> Related: the batch fetch pipeline (#82) now reads the hotness cache before touching
+> Neon or MongoDB, so a burst of GamePage views costs one Redis read per distinct game
+> rather than one query pair per request.
+## Related Issues
 - #45: N+1 Redis query (duplicate of this)
 - #55: Inadequate state management (caching strategy)

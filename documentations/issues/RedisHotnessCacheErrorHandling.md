@@ -1,5 +1,18 @@
 # Redis Hotness Cache Error Handling
 
+## Status
+⚠️ STALE — references a deleted component
+
+> **Note (2026-10-21):** this document describes
+> `components/errors/RedisHotnessCacheError.tsx` and
+> `exceptions/errorPages/redis-hotness-cache.tsx`. Both have been **deleted** - the
+> generic `ui/primitives/error-page-shell.tsx` replaced them. The examples below are
+> kept for reference but no longer match the codebase.
+>
+> The cache described here also **never ran** until this pass: `loadCacheState()` threw
+> on every read (SDK auto-deserialization), and its only consumer
+> (`app/api/games/[id]/route-gamepage.ts`) was never mounted as a route. Both are fixed -
+> see [Issue #81](81-GAMEPAGE-BINARY-SEARCH-HOTNESS-CACHE.md).
 This document explains how to handle Redis hotness cache errors in the Deepslate Dungeons application.
 
 ## Overview

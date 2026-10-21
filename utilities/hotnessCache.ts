@@ -1,8 +1,7 @@
-import { redis } from '@/lib/queue';
+import { redis, parseRedisJson } from '@/lib/queue';
 import pako from 'pako';
 import { classifyError } from '@/utilities/errorHandler';
 import { retry } from '@/lib/retry';
-import { RedisHotnessCacheErrorPage } from '@/exceptions/errorPages/redis-hotness-cache';
 
 /**
  * Hotness Cache: Binary-Search Sorted Cache with Hotness Tracking
@@ -112,12 +111,12 @@ async function loadCacheState(): Promise<{
     const dataJson = await redis.get<string>(CACHE_KEYS.CACHE_DATA_ARRAY);
     const hashmapJson = await redis.get<string>(CACHE_KEYS.CACHE_HASHMAP);
 
-    const views: CacheEntry[] = viewsJson ? JSON.parse(viewsJson) : [];
+    const views: CacheEntry[] = viewsJson ? parseRedisJson<CacheEntry[]>(viewsJson) : [];
     const data: Map<string, string> = dataJson
-      ? new Map(JSON.parse(dataJson))
+      ? new Map(parseRedisJson<[string, string][]>(dataJson))
       : new Map<string, string>();
     const hashmap: Map<string, number> = hashmapJson
-      ? new Map(JSON.parse(hashmapJson))
+      ? new Map(parseRedisJson<[string, number][]>(hashmapJson))
       : new Map<string, number>();
 
     return { views, data, hashmap };

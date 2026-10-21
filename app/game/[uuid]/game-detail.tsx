@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useGameCache, useGamePreload } from '@/utilities/clientUtilities/useGameCache';
 import { CharacterTabs } from '@/components/game/CharacterTabs';
 import { MapList } from '@/components/game/MapList';
@@ -20,16 +20,10 @@ export default function GameDetailClient({
   initialDescription,
   initialImage,
 }: GameDetailClientProps) {
-  const [hasPreload, setHasPreload] = useState(false);
-  const [activeTab, setActiveTab] = useState<'characters' | 'maps' | 'items'>('characters');
   const preloadedData = useGamePreload(uuid);
+  const hasPreload = preloadedData != null;
+  const [activeTab, setActiveTab] = useState<'characters' | 'maps' | 'items'>('characters');
   const { data, loading, error, cacheStats, refreshData } = useGameCache(uuid);
-
-  useEffect(() => {
-    if (preloadedData) {
-      setHasPreload(true);
-    }
-  }, [preloadedData]);
 
   const displayData = {
     id: uuid,
@@ -84,20 +78,20 @@ export default function GameDetailClient({
         {loading && !data && (
           <div className="flex justify-center py-16">
             <div className="text-center">
-              <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent shadow-glow-accent-sm" />
+              <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent glow-accent-sm" />
               <p className="text-sm text-text-muted">Loading game data...</p>
             </div>
           </div>
         )}
 
         {error && !data && (
-          <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 relative overflow-hidden">
+          <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-radial-accent opacity-20 pointer-events-none" />
             <h3 className="font-semibold text-destructive relative">Error Loading Game</h3>
             <p className="mt-1 text-sm text-text-muted relative">{error.message}</p>
             <button
               onClick={refreshData}
-              className="mt-3 rounded-lg bg-destructive/20 px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/30 relative"
+              className="mt-3 rounded-[10px] bg-destructive/20 px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/30 relative"
             >
               Try Again
             </button>

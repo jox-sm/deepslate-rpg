@@ -24,9 +24,11 @@ export async function getServiceToken(
   getToken: (options?: { template?: string }) => Promise<string | null>,
   service: ServiceName
 ): Promise<string> {
-  const config = serviceConfigs[service];
-  const token = await getToken({ template: config.templateName });
-  
+  // Use the Clerk session token (native Clerk<->Supabase integration).
+  // The native integration injects the `role: "authenticated"` claim into the
+  // session token, so no JWT template is required.
+  const token = await getToken();
+   
   if (!token) {
     throw new Error(`Not authenticated - could not get ${service} token`);
   }
@@ -39,17 +41,38 @@ export async function createAuthenticatedSupabaseClient(
   getToken: (options?: { template?: string }) => Promise<string | null>
 ): Promise<SupabaseClient> {
   const config = serviceConfigs.supabase;
-  const token = await getServiceToken(getToken, 'supabase');
-  
+
   if (!config.baseUrl || !config.apiKey) {
     throw new Error('Missing Supabase environment variables');
   }
 
+  // Use the accessToken option so supabase-js itself attaches the Clerk
+  // session token on every request. A static global Authorization header gets
+  // overridden by supabase-js's own auth header when no Supabase session
+  // exists, which made every request look anonymous to Supabase.
   return createClient(config.baseUrl, config.apiKey, {
-    global: {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    accessToken: async () => {
+      const token = await getToken();
+      if (!token) {
+        throw new Error('Not authenticated - could not get supabase token');
+      }
+      return token;
     },
+  });
+}
+
+// Create a service-role Supabase client (server-only, bypasses RLS).
+// Used for privileged server-side operations such as image uploads, so that
+// writes don't depend on a per-user Clerk->Supabase JWT trust relationship.
+export function createServiceRoleSupabaseClient(): SupabaseClient {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceKey) {
+    throw new Error('Missing Supabase service role environment variables');
+  }
+
+  return createClient(url, serviceKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
   });
 }

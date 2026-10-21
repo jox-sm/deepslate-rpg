@@ -2,6 +2,10 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
 const isPublicRoute = createRouteMatcher([
   '/',
+  // PostHog reverse-proxy ingest (see next.config.ts rewrites). These are
+  // machine-to-machine beacons, not user navigation, and must never be
+  // redirected to the sign-in page or every event is silently lost.
+  '/ingest(.*)',
   '/api/test-supabase-auth(.*)',
   '/api/test-neon-auth(.*)',
   '/api/test-mongodb-auth(.*)',

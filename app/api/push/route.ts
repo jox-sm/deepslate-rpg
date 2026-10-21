@@ -86,7 +86,13 @@ export async function POST(request: NextRequest) {
          await retry(() => redis.incrby(`likes:${likeData.id}`, likeData.likesDelta), 3, 500);
          console.log('[POST /api/push] incrby OK');
          console.log('[POST /api/push] about to enqueue...');
-         await retry(() => enqueue("neon", "likes", likeData), 3, 500);
+         await retry(() => enqueue("neon", "likes", likeData), 3, 500).catch(async (error) => {
+           // The pending delta lives in Redis until the drain applies it to
+           // Neon. If the enqueue never lands, nothing would ever drain that
+           // delta and the count would drift upward forever. Undo it.
+           await redis.decrby(`likes:${likeData.id}`, likeData.likesDelta).catch(() => undefined);
+           throw error;
+         });
          console.log('[POST /api/push] like enqueued OK');
          return { success: true, message: "Like registered", data: likeData };
        }

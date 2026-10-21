@@ -6,30 +6,30 @@ import { arrayBufferToBase64 } from '@/utilities/clientUtilities/imagesUtils';
 import { filterEntriesWithImages } from '@/utilities/clientUtilities/exceptions';
 import { prepareGameCard } from '@/utilities/utils';
 import { CardProps } from '@/types/cards';
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import GamesFormWizard from '@/ui/gamesFormUi/form';
 import type { GamesFormData } from '@/types/gameForm';
 import type { CharacterDataDB, MapDataDB, ItemDataDB, GamesFormDataDB } from '@/types/gameForm';
-import { GAME_FORM_FIELD_CONFIG, initialGameFormState, PRE_EXISTING_TAGS, type GameFormState as FormState } from '@/types/form';
+import { GAME_FORM_FIELD_CONFIG, initialGameFormState, PRE_EXISTING_TAGS } from '@/types/form';
 import { useGameForm } from '@/hooks/form';
 import { Button } from "@/ui/primitives/button";
 import { useIdempotentRequest } from '@/hooks/useIdempotentRequest';
 import { v7 as uuidv7 } from 'uuid';
-import { cn } from '@/lib/utils';
-import styles from "@/styles/forms/form.module.css";
 import { classifyError } from '@/utilities/errorHandler';
 
 const STATUS_COLOR_MAP = {
-  success: styles.statusSuccess,
-  warning: styles.statusWarning,
-  error: styles.statusError,
+  success: "text-success",
+  warning: "text-warning",
+  error: "text-destructive",
 } as const;
 
 export default function CreateForm() {
   const { form, loading, setLoading, showWizard, setShowWizard, resetCounter, resetForm, updateField } = useGameForm(initialGameFormState);
   const formRef = useRef(form);
-  formRef.current = form;
-  const { sendRequest, abortAll } = useIdempotentRequest();
+  useEffect(() => {
+    formRef.current = form;
+  }, [form]);
+  const { sendRequest } = useIdempotentRequest();
 
   const nameValidation = validateText(form.name, GAME_FORM_FIELD_CONFIG.name);
   const descValidation = validateText(form.description, GAME_FORM_FIELD_CONFIG.description);
@@ -112,19 +112,19 @@ export default function CreateForm() {
     } finally {
       setLoading(false);
     }
-  }, [isFormValid, resetForm, sendRequest, abortAll]);
+  }, [isFormValid, resetForm, sendRequest, setLoading]);
 
   const renderValidationMessage = () => {
     if (!isFormValid) {
       return (
-        <p className={cn(styles.validationMessage, "text-sm")}>
+        <p className="text-sm text-warning">
           Please follow the length requirements for all fields
         </p>
       );
     }
     if (form.name.length > 0 && form.description.length > 0 && !form.image) {
       return (
-        <p className={cn(styles.validationMessage, "text-sm")}>
+        <p className="text-sm text-warning">
           Please upload an image
         </p>
       );
@@ -142,8 +142,8 @@ export default function CreateForm() {
 
   return (
     <div className="mx-auto max-w-lg">
-      <div className={cn(styles.card, "p-8")}>
-        <h2 className={cn(styles.title, "text-2xl")}>Create Game</h2>
+      <div className="dungeon-card p-8">
+        <h2 className="font-display text-2xl font-semibold tracking-tight">Create game</h2>
         <p className="mt-1 text-sm text-text-muted">Fill in the details to create a new adventure.</p>
 
         <div className="mt-8 space-y-6">

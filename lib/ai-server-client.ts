@@ -97,8 +97,8 @@ export const aiServer = {
       }),
 
     pushUrlEncoded: (uuid: string, data: string): Promise<AiQueuePushResponse> => {
-      const url = `${AI_SERVER_BASE}/queue/push?uuid=${encodeURIComponent(uuid)}&data=${encodeURIComponent(data)}`;
-      return fetch(url, { method: 'POST' }).then(r => r.json());
+      const url = `/queue/push?uuid=${encodeURIComponent(uuid)}&data=${encodeURIComponent(data)}`;
+      return request(url, { method: 'POST' });
     },
 
     pop: (): Promise<AiQueuePopResponse> => request('/queue/pop'),

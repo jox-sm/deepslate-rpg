@@ -35,7 +35,7 @@ export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBa
         const placesErrorId = `map-${mapItem.id}-places-error`;
 
         return (
-          <div key={mapItem.id} className="rounded-lg border border-border bg-bg-surface p-4 space-y-4" role="group" aria-label={`Map ${index + 1}`}>
+          <div key={mapItem.id} className="dungeon-card space-y-4 p-4" role="group" aria-label={`Map ${index + 1}`}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-text-primary">Map {index + 1}</h3>
               <Button

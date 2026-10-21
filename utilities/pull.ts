@@ -1,4 +1,4 @@
-import { drain } from "@/utilities/queue";
+import { drain, enqueue } from "@/utilities/queue";
 import { redis } from "@/lib/queue";
 import { insertGamesBatch, updateGamesLikesBatch } from "@/lib/db";
 import type { GameCardProps } from "@/types/cards";
@@ -17,9 +17,34 @@ export async function drainLikes(): Promise<{ processed: number }> {
       likesMap.set(like.id, (likesMap.get(like.id) || 0) + like.likesDelta);
       ids.add(like.id);
     }
-    await updateGamesLikesBatch(likesMap);
-    const pendingKeys = [...ids].map(id => `likes:${id}`);
-    redis.del(...pendingKeys).catch(() => {});
+
+    // drain() has already consumed the queue, so a failed write would drop
+    // these likes on the floor forever. Put them back before rethrowing.
+    try {
+      await updateGamesLikesBatch(likesMap);
+    } catch (error) {
+      await Promise.all(
+        likes.map((like) => enqueue("neon", "likes", like).catch(() => undefined))
+      );
+      throw error;
+    }
+
+    // Remove only the delta that was actually applied. A blanket DEL also
+    // wiped likes that arrived while this drain was in flight, so the count
+    // on screen would drop back down a moment after the user clicked.
+    await Promise.all(
+      [...likesMap.entries()].map(async ([id, applied]) => {
+        const key = `likes:${id}`;
+        try {
+          const remaining = await redis.decrby(key, applied);
+          if (remaining < 0) await redis.set(key, 0);
+        } catch (error) {
+          const classified = classifyError(error, `pull.drainLikes.cleanup.${id}`);
+          console.error('[Pull] pending-likes cleanup failed:', classified.message);
+        }
+      })
+    );
+
     return { processed: likes.length };
   } catch (error) {
     const classified = classifyError(error, "pull.drainLikes");

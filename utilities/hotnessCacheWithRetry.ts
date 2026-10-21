@@ -1,4 +1,4 @@
-import { redis } from '@/lib/queue';
+import { redis, parseRedisJson } from '@/lib/queue';
 import { classifyError } from '@/utilities/errorHandler';
 import { retry } from '@/lib/retry';
 import pako from 'pako';
@@ -10,8 +10,6 @@ const CACHE_KEYS = {
   CACHE_SIZE: 'cache:size',
 };
 
-const MAX_CACHE_ENTRIES = 1000;
-const PROMOTION_THRESHOLD = 5;
 const CACHE_STATE_TTL = 86400;
 
 interface CacheEntry {
@@ -77,12 +75,12 @@ export async function loadCacheStateWithRetry(): Promise<{
       const dataJson = await redis.get<string>(CACHE_KEYS.CACHE_DATA_ARRAY);
       const hashmapJson = await redis.get<string>(CACHE_KEYS.CACHE_HASHMAP);
 
-      const views: CacheEntry[] = viewsJson ? JSON.parse(viewsJson) : [];
+      const views: CacheEntry[] = viewsJson ? parseRedisJson<CacheEntry[]>(viewsJson) : [];
       const data: Map<string, string> = dataJson
-        ? new Map(JSON.parse(dataJson))
+        ? new Map(parseRedisJson<[string, string][]>(dataJson))
         : new Map<string, string>();
       const hashmap: Map<string, number> = hashmapJson
-        ? new Map(JSON.parse(hashmapJson))
+        ? new Map(parseRedisJson<[string, number][]>(hashmapJson))
         : new Map<string, number>();
 
       return { views, data, hashmap };

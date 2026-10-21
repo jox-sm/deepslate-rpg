@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import type { FullGamePageData } from '@/types/gamePage';
-import { tryOrError, tryOrErrorSync, isNotFound, isServerError } from '@/utilities/errorHandler';
+import { tryOrError, tryOrErrorSync } from '@/utilities/errorHandler';
+import { getGameWithBatchQueue } from '@/utilities/clientUtilities/gameFetch';
 
 interface UseGameCacheResult {
   data: FullGamePageData | null;
@@ -28,6 +29,15 @@ export function useGameCache(gameId: string): UseGameCacheResult {
     setError(null);
 
     const result = await tryOrError(async () => {
+      // Prefer the batched fetch pipeline: a burst of GamePage views
+      // collapses into one Neon query plus one MongoDB query per distinct
+      // game, instead of one query pair per request.
+      const batched = await getGameWithBatchQueue(gameId);
+      if (batched) {
+        return batched as FullGamePageData;
+      }
+
+      // Fallback: the direct route, which also serves the Redis cache path.
       const res = await fetch(`/api/games/${gameId}`);
 
       if (!res.ok) {
@@ -76,19 +86,16 @@ export function useGameCache(gameId: string): UseGameCacheResult {
 export function useGamePreload(
   gameId: string
 ): Pick<FullGamePageData, 'name' | 'description' | 'image' | 'tags' | 'likes_count'> | null {
-  const [preloadedData, setPreloadedData] = useState(null);
-
-  useEffect(() => {
+  const [preloadedData] = useState(() => {
     const key = `game:${gameId}:card`;
     const result = tryOrErrorSync(() => {
       const stored = sessionStorage.getItem(key);
       return stored ? JSON.parse(stored) : null;
     }, { context: "useGamePreload" });
-
-    if (result.ok && result.data) {
-      setPreloadedData(result.data);
-    }
-  }, [gameId]);
+    return result.ok
+      ? (result.data as Pick<FullGamePageData, 'name' | 'description' | 'image' | 'tags' | 'likes_count'> | null)
+      : null;
+  });
 
   return preloadedData;
 }

@@ -2,40 +2,39 @@
 
 import { Unauthenticated } from "convex/react";
 import { useClerk } from "@clerk/nextjs";
-import { cn } from "@/lib/utils";
-import styles from "@/styles/authentication/unauthenticated.module.css";
+import { Button } from "@/ui/primitives/button";
 
 export default function UnauthenticatedOverlay() {
   const clerk = useClerk();
 
   return (
     <Unauthenticated>
-      <div className={styles.overlay}>
-        <div className="absolute inset-0 bg-gradient-radial-accent pointer-events-none" />
-        <div className={cn(styles.content, "max-w-sm")}>
-          <div className="space-y-3">
-            <h1 className={cn(styles.logo, "text-5xl md:text-[3.75rem] lg:text-[4.5rem]")}>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg-base/95 p-4 backdrop-blur">
+        <div className="dungeon-card w-full max-w-sm space-y-6 p-8 text-center">
+          <div className="space-y-2">
+            <h1 className="font-display text-4xl font-semibold tracking-tight">
               Deepslate Dungeons
             </h1>
-            <p className={styles.description}>
+            <p className="text-sm text-text-muted">
               Sign in to craft your adventure
             </p>
           </div>
-          <div className={cn(styles.buttons, "flex-col")}>
-            <button
+          <div className="flex flex-col gap-2">
+            <Button
               type="button"
               onClick={() => clerk.openSignIn({})}
-              className={cn(styles.button, styles.buttonSignIn, "w-full")}
+              className="w-full"
             >
-              Sign In
-            </button>
-            <button
+              Sign in
+            </Button>
+            <Button
               type="button"
+              variant="outline"
               onClick={() => clerk.openSignUp({})}
-              className={cn(styles.button, styles.buttonSignUp, "w-full")}
+              className="w-full"
             >
-              Sign Up
-            </button>
+              Sign up
+            </Button>
           </div>
         </div>
       </div>

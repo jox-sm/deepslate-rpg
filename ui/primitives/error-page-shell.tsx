@@ -53,7 +53,7 @@ const ErrorPageShell = React.forwardRef<HTMLDivElement, ErrorPageShellProps>(
               {action && (
                 <Button
                   onClick={action.onClick}
-                  variant={action.variant ?? "gradient"}
+                   variant={action.variant ?? "default"}
                   size="lg"
                 >
                   {action.label}
@@ -62,7 +62,7 @@ const ErrorPageShell = React.forwardRef<HTMLDivElement, ErrorPageShellProps>(
               {secondaryAction && (
                 <Button
                   onClick={secondaryAction.onClick}
-                  variant={secondaryAction.variant ?? "glass"}
+                   variant={secondaryAction.variant ?? "outline"}
                   size="lg"
                 >
                   {secondaryAction.label}

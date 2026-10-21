@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react"
+import { useState, type ComponentType } from "react"
 import {
   Menu,
   ChevronLeft,
@@ -10,7 +10,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import posthog from "posthog-js";
 import { cn } from "@/lib/utils";
-import styles from "@/styles/sidebar/sidebar.module.css";
 
 function toHref(label: string): string {
   const slug = label.toLowerCase().replace(/\s+/g, "-")
@@ -18,7 +17,7 @@ function toHref(label: string): string {
 }
 
 type SidebarItem = {
-  icon: any
+  icon: ComponentType<{ size?: number | string; className?: string }>
   label: string
 }
 
@@ -28,23 +27,27 @@ type SidebarProps = {
 }
 
 export default function Sidebar({
-  logo = "App",
+  logo = "Deepslate",
   items,
 }: SidebarProps) {
-  const [collapsed, setCollapsed] = useState(true)
+  const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
 
   return (
     <aside
       className={cn(
-        styles.sidebar,
-        "dd-fade-in flex h-screen flex-col",
-        collapsed ? styles.collapsed : ""
+        "sticky top-0 flex h-screen shrink-0 flex-col border-r border-border bg-bg-surface",
+        collapsed ? "w-[72px]" : "w-60"
       )}
     >
-      <div className={styles.header}>
+      <div className={cn(
+        "flex h-16 items-center border-b border-border",
+        collapsed ? "justify-center px-2" : "justify-between px-4"
+      )}>
         {!collapsed && (
-          <h1 className={styles.logo}>{logo}</h1>
+          <span className="font-display text-lg font-semibold tracking-tight text-text-primary">
+            {logo}
+          </span>
         )}
         <button
           onClick={() => {
@@ -52,14 +55,14 @@ export default function Sidebar({
             setCollapsed(next);
             posthog.capture('sidebar_toggled', { collapsed: next });
           }}
-          className={styles.toggleButton}
+          className="flex h-8 w-8 items-center justify-center rounded-[10px] text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          {collapsed ? <Menu size={18} /> : <ChevronLeft size={18} />}
+          {collapsed ? <Menu size={16} /> : <ChevronLeft size={16} />}
         </button>
       </div>
 
-      <nav className={cn(styles.menu, "flex-1")}>
+      <nav className="flex-1 space-y-1 overflow-y-auto p-2">
         {items.map((item) => {
           const Icon = item.icon
           const href = toHref(item.label)
@@ -70,25 +73,30 @@ export default function Sidebar({
               key={item.label}
               href={href}
               onClick={() => posthog.capture('navigation_item_clicked', { label: item.label })}
-              className={cn(
-                styles.menuItem,
-                collapsed ? "" : "",
-                isActive ? cn(styles.active, "dd-torch-pulse") : ""
-              )}
               title={collapsed ? item.label : undefined}
-            >
-              <div className={styles.icon}>
-                <Icon size={20} />
-              </div>
-              {!collapsed && (
-                <span className={styles.label}>{item.label}</span>
+              aria-current={isActive ? "page" : undefined}
+              className={cn(
+                "relative flex items-center gap-3 rounded-[10px] px-3 py-2 text-sm transition-colors",
+                collapsed && "justify-center px-0",
+                isActive
+                  ? "bg-bg-elevated font-medium text-text-primary"
+                  : "text-text-muted hover:bg-bg-hover hover:text-text-primary"
               )}
+            >
+              {isActive && (
+                <span
+                  aria-hidden
+                  className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-accent"
+                />
+              )}
+              <Icon size={18} className={cn("shrink-0", isActive ? "text-accent" : undefined)} />
+              {!collapsed && <span>{item.label}</span>}
             </Link>
           )
         })}
       </nav>
 
-      <div className={styles.footer}>
+      <div className="border-t border-border p-3">
         <div className="flex items-center justify-center">
           <UserButton />
         </div>

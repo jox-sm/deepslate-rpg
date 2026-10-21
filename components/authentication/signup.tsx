@@ -2,20 +2,21 @@
 
 import { Unauthenticated } from "convex/react";
 import { useClerk } from "@clerk/nextjs";
-import styles from "@/styles/auth/signup.module.css";
+import { Button } from "@/ui/primitives/button";
 
 export default function Signup() {
   const clerk = useClerk();
 
   return (
     <Unauthenticated>
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="sm"
         onClick={() => clerk.openSignUp({})}
-        className={styles.button}
       >
-        Sign Up
-      </button>
+        Sign up
+      </Button>
     </Unauthenticated>
   );
 }

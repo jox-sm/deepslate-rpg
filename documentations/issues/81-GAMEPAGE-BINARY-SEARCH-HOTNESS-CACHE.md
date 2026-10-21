@@ -1,7 +1,7 @@
 # Issue #81: GamePage: Implement binary-search hotness cache
 
 ## Status
-🔄 OPEN
+✅ CLOSED
 
 ## Category
 Feature, Performance
@@ -75,6 +75,38 @@ At 85%+ memory pressure, skip cache entirely, only update hotness map, serve dir
 ## Blocks
 - [#82](82-GAMEPAGE-BATCH-MONGODB-FETCH.md)
 
+## Resolution
+
+**Implemented, but it had never actually worked.** Two independent reasons:
+
+1. **The cache always read as empty.** `loadCacheState()` called `JSON.parse()` on a value
+   the Upstash SDK had *already* deserialized, so it threw on every read and the
+   `catch` returned empty views/data/hashmap. The binary search therefore had nothing
+   to search.
+2. **Its only consumer was dead code.** `app/api/games/[id]/route-gamepage.ts` is not a
+   Next.js App Router route (only `route.ts` is mounted) and nothing imported it, so the
+   hotness cache was never reachable from a request.
+
+**Fixes**
+
+| Change | File |
+|--------|------|
+| `automaticDeserialization: false` on the Redis client + `parseRedisJson()` helper | `lib/queue.ts` |
+| Batch worker consults the hotness cache first, promotes misses with `cacheMiss()` | `utilities/gameFetchPipeline.ts` |
+| Parse either shape in the cache state loaders | `utilities/hotnessCache.ts`, `utilities/hotnessCacheWithRetry.ts` |
+| Removed the unreachable duplicate route file | `app/api/games/[id]/route-gamepage.ts` (deleted) |
+
+**Verified**
+
+```
+request 1..5  -> hotness 1,2,3,4,5
+cache:views:array : [{"views":5,"uuid":"019e370f-..."}]
+cache:data:array  : [["019e370f-...","H4sIAAAAAAAAA..."]]   (gzip + base64)
+cache:hashmap:map : [["019e370f-...",0]]
+cache:size        : "1"
+game:hotness:<id> : null                                     (deleted on promotion)
+request 6         -> served from cache, view count incremented 5 -> 6
+```
 ## Related Issues
 - #80: Card click navigation with sessionStorage preload
 - #82: Batch MongoDB fetch via Redis queue

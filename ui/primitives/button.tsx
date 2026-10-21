@@ -4,34 +4,36 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 ease-ember focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97]",
+  "inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-colors duration-200 ease-ember focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base disabled:pointer-events-none disabled:opacity-50 active:translate-y-px",
   {
     variants: {
       variant: {
         default:
-          "bg-accent text-white hover:bg-accent-hover shadow-lg glow-accent-sm",
+          "bg-accent text-charcoal-950 font-semibold hover:bg-accent-hover",
         destructive:
-          "bg-destructive text-white hover:bg-destructive-hover",
+          "bg-destructive text-text-primary hover:bg-destructive-hover",
         outline:
-          "border border-border bg-transparent text-text-secondary hover:bg-bg-hover hover:text-text-primary hover:border-accent/30",
+          "border border-border bg-transparent text-text-secondary hover:bg-bg-hover hover:text-text-primary",
         secondary:
-          "bg-bg-elevated text-text-primary hover:bg-bg-hover border border-border",
+          "bg-bg-elevated text-text-primary border border-border hover:bg-bg-hover",
         ghost:
           "text-text-secondary hover:text-text-primary hover:bg-bg-hover",
         link:
           "text-accent underline-offset-4 hover:underline",
+        // Deprecated aliases — kept so old call sites keep building.
+        // Do not use in new code; they all resolve to the single accent.
         gradient:
-          "text-white shadow-lg glow-accent bg-gradient-to-r from-torch-500 to-torch-400 hover:from-torch-400 hover:to-torch-300",
+          "bg-accent text-charcoal-950 font-semibold hover:bg-accent-hover",
         glass:
-          "bg-glass text-text-primary border border-border/50 hover:bg-bg-hover/70 hover:border-accent/30 glow-accent-sm",
+          "bg-bg-elevated text-text-primary border border-border hover:bg-bg-hover",
         torch:
-          "bg-torch-500 text-charcoal-950 hover:bg-torch-400 shadow-lg glow-torch active:glow-torch",
+          "bg-accent text-charcoal-950 font-semibold hover:bg-accent-hover",
         glow:
-          "bg-gradient-to-r from-torch-500 to-torch-400 text-charcoal-950 shadow-lg glow-torch dd-glow-pulse",
+          "bg-accent text-charcoal-950 font-semibold hover:bg-accent-hover",
         gold:
-          "bg-gold-500 text-charcoal-950 hover:bg-gold-400 shadow-lg glow-gold font-semibold",
+          "bg-accent text-charcoal-950 font-semibold hover:bg-accent-hover",
         blood:
-          "bg-blood-500 text-charcoal-950 hover:bg-blood-400 shadow-lg glow-blood font-semibold",
+          "bg-destructive text-text-primary hover:bg-destructive-hover",
       },
       size: {
         default: "h-10 px-4 py-2",

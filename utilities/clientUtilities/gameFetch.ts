@@ -31,7 +31,7 @@ export async function requestGameFetch(
 export async function pollGameResult(
   requestId: string,
   timeoutMs: number = 5000
-): Promise<any | null> {
+): Promise<unknown> {
   const startTime = Date.now();
 
   while (Date.now() - startTime < timeoutMs) {
@@ -39,18 +39,20 @@ export async function pollGameResult(
       const response = await fetch(`/api/games/batch-result/${requestId}`);
 
       if (response.ok) {
-        return await response.json();
+        const json = await response.json();
+        // The route wraps the game in { success, data }.
+        return json?.success && json?.data ? json.data : null;
       }
 
+      // 404 means the worker has not produced the result yet.
       if (response.status === 404) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
         return null;
       }
 
       throw new Error('Failed to fetch result');
     }, { context: "pollGameResult" });
 
-    if (result.ok && result.data !== null) {
+    if (result.ok && result.data) {
       return result.data;
     }
 
@@ -63,7 +65,7 @@ export async function pollGameResult(
 export async function getGameWithBatchQueue(
   uuid: string,
   requestId?: string
-): Promise<any | null> {
+): Promise<unknown> {
   const id = requestId || uuidv7();
 
   const result = await tryOrError(async () => {
