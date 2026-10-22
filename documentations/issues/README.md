@@ -9,7 +9,7 @@ Complete documentation of all GitHub issues for the Deepslate RPG project. Each 
 - Dependencies on other issues
 
 **Last updated:** 2026-10-21  
-**Total issues:** 45 unique (45 closed, 0 open)
+**Total issues:** 46 unique (45 closed, 1 open)
 
 ---
 
@@ -100,6 +100,7 @@ N+1 Redis → DB retry → Cache helpers → Batch fetch
 | 78 | [DB retry mechanism](./78-DB-RETRY-MECHANISM.md) | ✅ | #67 | #82 |
 | 62 | [Route-specific cache helpers](./62-ROUTE-SPECIFIC-HELPERS-IN-CACHE-WARMUP-MODULE.md) | ✅ | — | #78 |
 | 87 | [Duplicate of #78](./87-DUPLICATE-DB-RETRY-MECHANISM.md) | ✅ | — | — |
+| 96 | [db/migrate.ts not runnable](./96-DB-MIGRATOR-NOT-RUNNABLE.md) | 🔄 | — | — |
 
 ### Chain 6: GamePage Suite
 Card click → Hotness cache → Batch fetch → UI components → A11y
@@ -203,6 +204,7 @@ No dependencies
 | 77 | [Centralized Zod validation](./77-ZOD-VALIDATION-CENTRALIZATION.md) | ✅ | Security | #71, #64 |
 | 78 | [DB retry mechanism](./78-DB-RETRY-MECHANISM.md) | ✅ | Reliability | #67 |
 | 88 | [Centralized errors](./88-GAMES-CENTRALIZED-ERRORS.md) | ✅ | Maintenance | — |
+| 96 | [db/migrate.ts not runnable](./96-DB-MIGRATOR-NOT-RUNNABLE.md) | 🔄 | Tooling | — |
 
 ### Image Pipeline
 
@@ -258,14 +260,17 @@ No dependencies
 
 ## Open Issues
 
-None. All 45 documented issues are closed.
+| # | Issue | Status | Blocks |
+|---|-------|--------|--------|
+| 96 | [db/migrate.ts not runnable](./96-DB-MIGRATOR-NOT-RUNNABLE.md) | 🔄 | — |
 
-> **Outstanding external blocker:** the MongoDB Atlas cluster referenced by
-> `MONGODB_URI` (`games.aidaubb.mongodb.net`) does not resolve in DNS, so the nested
-> game data (characters / maps / items) cannot be read. The application now degrades
-> gracefully - it serves the Neon row with empty nested data instead of failing the
-> request - but the underlying data is unreachable until the correct Atlas hostname is
-> configured. See [Issue #82](82-GAMEPAGE-BATCH-MONGODB-FETCH.md).
+> **Resolved external blocker:** the MongoDB Atlas cluster has been recreated
+> (`cluster0.kbexmce.mongodb.net`) and the application now connects and writes to it.
+> The previous cluster was terminated by Atlas after ~30 days of inactivity and the
+> nested game data (characters / maps / items) it held was lost - Neon never stored
+> it, so it cannot be restored from the database. A keep-alive heartbeat
+> (`keepMongoAlive()`) now runs every 60s so the cluster is not reclaimed again, and
+> `db/backfill-mongo.mjs` re-seeds MongoDB from Neon.
 
 ---
 
@@ -352,6 +357,9 @@ None. All 45 documented issues are closed.
 **Memory:**
 - #56 — Object URL memory leak
 
+**Tooling:**
+- #96 — `db/migrate.ts` cannot be executed (schema changes must be applied by hand)
+
 **UX/Accessibility:**
 - #53, #54 — Accessibility gaps
 - #48, #51 — Layout and responsiveness
@@ -418,4 +426,4 @@ Bug/Feature/Refactor/Performance/Security/UI-UX/Accessibility
 
 ---
 
-*45 unique issues documented. All closed as of 2026-10-21.*
+*46 unique issues documented. 45 closed, 1 open as of 2026-10-22: #96 (`db/migrate.ts` not runnable).*

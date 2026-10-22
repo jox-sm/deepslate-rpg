@@ -144,13 +144,68 @@ export const pushGameDataSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(1).max(255),
   description: z.string().min(1).max(5000),
-  image: z.string().url().optional(),
+  // Either a remote URL or a bundled path such as "/images/project.jpg"
+  // (used as the placeholder cover when no image was uploaded).
+  image: z.union([z.string().url(), z.string().regex(/^\/[^\s]*$/)]).optional(),
   tags: z.array(z.string().max(50)).max(10),
   likes_count: z.number().int().min(0).optional(),
   created_at: z.string().datetime(),
   updated_at: z.string().datetime(),
 });
 export type PushGameData = z.infer<typeof pushGameDataSchema>;
+
+// ── pushGames route schemas (nested game data -> MongoDB) ──
+// These mirror models/games/mongodb/schema.ts. MongoDB marks id/name/
+// description as required and insertMany() SILENTLY SKIPS documents that
+// fail validation, so the API has to reject them up front instead of
+// reporting success for a game that was never stored.
+export const pushGameCharacterSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1).max(255),
+  description: z.string().min(1).max(5000),
+  image: z.string().nullish().transform((v) => v ?? ""),
+});
+export type PushGameCharacter = z.infer<typeof pushGameCharacterSchema>;
+
+export const pushGameMapSchema = z.object({
+  id: z.string().min(1),
+  nameOfPlace: z.string().min(1).max(255),
+  sizeOfPlace: z.string().max(500).nullish().transform((v) => v ?? ""),
+  placesAtMap: z.string().max(5000).nullish().transform((v) => v ?? ""),
+  image: z.string().nullish().transform((v) => v ?? ""),
+});
+export type PushGameMap = z.infer<typeof pushGameMapSchema>;
+
+export const pushGameItemSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1).max(255),
+  image: z.string().nullish().transform((v) => v ?? ""),
+});
+export type PushGameItem = z.infer<typeof pushGameItemSchema>;
+
+export const pushGamesRequestSchema = z.object({
+  idempotencyKey: z.string().uuid(),
+  id: z.string().uuid(),
+  // Every nested collection is OPTIONAL. A game can be created with no
+  // characters, no maps and no items - and an entry without an image is
+  // still a valid entry (the image is just empty).
+  characters: z.array(pushGameCharacterSchema).max(50).optional().default([]),
+  maps: z.array(pushGameMapSchema).max(50).optional().default([]),
+  items: z.array(pushGameItemSchema).max(100).optional().default([]),
+});
+export type PushGamesRequest = z.infer<typeof pushGamesRequestSchema>;
+
+/**
+ * Same payload without the idempotency key - used by the image conversion
+ * route, which strips the key itself before doing anything.
+ */
+export const gameNestedDataSchema = z.object({
+  id: z.string().uuid(),
+  characters: z.array(pushGameCharacterSchema).max(50).optional().default([]),
+  maps: z.array(pushGameMapSchema).max(50).optional().default([]),
+  items: z.array(pushGameItemSchema).max(100).optional().default([]),
+});
+export type GameNestedData = z.infer<typeof gameNestedDataSchema>;
 
 export const uploadProgressSchema = z.object({
   loaded: z.number().min(0),

@@ -74,7 +74,7 @@ export interface UseGamesFormReturn {
   setStep: (step: number) => void;
   nextStep: () => void;
   prevStep: () => void;
-  updateField: <K extends keyof GamesFormData>(field: K, value: GamesFormData[K]) => void;
+  updateField: <K extends keyof GamesFormData>(field: K, value: GamesFormData[K] | ((prev: GamesFormData[K]) => GamesFormData[K])) => void;
   reset: () => void;
   addCharacter: () => void;
   removeCharacter: (id: string) => void;

@@ -21,6 +21,11 @@ type ImageUploadProps = {
   label: string;
   onSelect: (buffer: ArrayBuffer) => void;
   onPreviewChange?: (url: string) => void;
+  /**
+   * An existing preview (data URL) to restore. The wizard passes the
+   * entry's `imagePreview` so the image survives a step change or a reload.
+   */
+  value?: string | null;
   accept?: string;
   maxSizeMB?: number;
   resetKey?: number;

@@ -9,7 +9,9 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "backfill:mongo": "node --env-file=.env --env-file=.env.local db/backfill-mongo.mjs",
+    "reset:data": "node --env-file=.env --env-file=.env.local db/reset-data.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.4.1",

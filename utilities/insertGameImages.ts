@@ -10,6 +10,10 @@ export async function convertComponentImagesJSON(
   const characters: CharacterDataDB[] = [];
   for (const char of gameData.characters) {
     try {
+      if (!char.image) {
+        characters.push({ id: char.id, name: char.name, description: char.description, image: '' });
+        continue;
+      }
       const buffer = Buffer.from(char.image, 'base64');
       const image = await uploadImage(buffer, char.name, undefined, authenticatedClient);
       characters.push({
@@ -33,6 +37,10 @@ export async function convertComponentImagesJSON(
   const maps: MapDataDB[] = [];
   for (const map of gameData.maps) {
     try {
+      if (!map.image) {
+        maps.push({ id: map.id, nameOfPlace: map.nameOfPlace, image: '', sizeOfPlace: map.sizeOfPlace, placesAtMap: map.placesAtMap });
+        continue;
+      }
       const buffer = Buffer.from(map.image, 'base64');
       const image = await uploadImage(buffer, map.nameOfPlace, undefined, authenticatedClient);
       maps.push({
@@ -58,6 +66,10 @@ export async function convertComponentImagesJSON(
   const items: ItemDataDB[] = [];
   for (const item of gameData.items) {
     try {
+      if (!item.image) {
+        items.push({ id: item.id, name: item.name, image: '' });
+        continue;
+      }
       const buffer = Buffer.from(item.image, 'base64');
       const image = await uploadImage(buffer, item.name, undefined, authenticatedClient);
       items.push({

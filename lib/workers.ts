@@ -2,6 +2,7 @@ import { drainGames, drainLikes } from "@/utilities/pull";
 import { processGamesQueue } from "@/lib/GamesInsert";
 import { getQueueStats, processBatch } from "@/utilities/gameFetchPipeline";
 import { warmUpCache } from "@/lib/cache-warmup";
+import { keepMongoAlive } from "@/models/games/mongodb/client";
 import { queueSize } from "@/utilities/queue";
 import { classifyError } from "@/utilities/errorHandler";
 
@@ -134,6 +135,11 @@ async function tickFetchBatch(): Promise<number> {
 }
 
 async function tickCacheWarmup(): Promise<number> {
+  // Atlas terminates idle clusters, and the nested game data (characters /
+  // maps / items) only exists in MongoDB. A heartbeat on the slow worker
+  // keeps the cluster from being reclaimed.
+  void keepMongoAlive();
+
   // Returns false when already primed => idle, terminates the tick.
   const warmed = await warmUpCache();
   return warmed ? 1 : 0;

@@ -128,14 +128,14 @@ export async function processBatch(): Promise<void> {
           misses.map((uuid) =>
             retry(() => Game.findOne({ id: uuid }).lean(), 2, 300).catch((error) => {
               const classified = classifyError(error, `GameFetchPipeline.mongo.${uuid}`);
-              console.error('[GameFetchPipeline] Mongo fetch failed:', classified.message);
+              console.error('[GameFetchPipeline] Mongo fetch failed:', classified.message, '| raw:', String(classified.originalError ?? error));
               return null;
             })
           )
         );
       } catch (error) {
         const classified = classifyError(error, "GameFetchPipeline.connectDB");
-        console.error('[GameFetchPipeline] MongoDB unavailable, serving without nested data:', classified.message);
+        console.error('[GameFetchPipeline] MongoDB unavailable, serving without nested data:', classified.message, '| raw:', String(classified.originalError ?? error));
         return misses.map(() => null);
       }
     })();

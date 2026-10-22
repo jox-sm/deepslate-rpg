@@ -72,6 +72,7 @@ export default function ItemsStep({
             </div>
             <ImageUpload
               label="Item Image"
+              value={item.imagePreview || null}
               onSelect={(file) => onUpdate(item.id, "image", file)}
               onPreviewChange={(preview) => onUpdate(item.id, "imagePreview", preview)}
             />

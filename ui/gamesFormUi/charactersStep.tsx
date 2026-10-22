@@ -88,6 +88,7 @@ export default function CharactersStep({ characters, onAdd, onRemove, onUpdate, 
 
             <ImageUpload
               label="Image"
+              value={char.imagePreview || null}
               onSelect={(file) => onUpdate(char.id, "image", file)}
               onPreviewChange={(preview) => onUpdate(char.id, "imagePreview", preview)}
             />

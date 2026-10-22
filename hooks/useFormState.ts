@@ -8,7 +8,7 @@ export interface FormState<T> {
 }
 
 export interface FormActions<T> {
-  updateField: <K extends keyof T>(field: K, value: T[K]) => void;
+  updateField: <K extends keyof T>(field: K, value: T[K] | ((prev: T[K]) => T[K])) => void;
   reset: () => void;
   setLoading: (loading: boolean) => void;
 }
@@ -22,9 +22,24 @@ export function useFormState<T>(initialState: T) {
   const [state, setState] = useState<T>(initialState);
   const [loading, setLoading] = useState(false);
 
-  const updateField = useCallback(<K extends keyof T>(field: K, value: T[K]) => {
-    setState(prev => ({ ...prev, [field]: value }));
-  }, []);
+  // The value may be a plain value OR an updater function. The updater form
+  // matters when two updates land in the same React batch: with a plain
+  // value each one is computed from the same stale snapshot, so the second
+  // update silently discards the first. (Setting a character's image and its
+  // image preview are two updates in one tick - the second used to wipe the
+  // first.)
+  const updateField = useCallback(
+    <K extends keyof T>(field: K, value: T[K] | ((prev: T[K]) => T[K])) => {
+      setState(prev => ({
+        ...prev,
+        [field]:
+          typeof value === "function"
+            ? (value as (p: T[K]) => T[K])(prev[field])
+            : value,
+      }));
+    },
+    []
+  );
 
   const reset = useCallback(() => {
     setState(initialState);

@@ -3,7 +3,6 @@ import TextAreaField, { tagsComponent } from '@/ui/FormUI/textComponent';
 import ImageUpload from '@/ui/FormUI/imageComponent';
 import { validateText } from '@/utilities/FormUtils';
 import { arrayBufferToBase64 } from '@/utilities/clientUtilities/imagesUtils';
-import { filterEntriesWithImages } from '@/utilities/clientUtilities/exceptions';
 import { prepareGameCard } from '@/utilities/utils';
 import { CardProps } from '@/types/cards';
 import { useCallback, useEffect, useRef } from "react";
@@ -16,6 +15,15 @@ import { Button } from "@/ui/primitives/button";
 import { useIdempotentRequest } from '@/hooks/useIdempotentRequest';
 import { v7 as uuidv7 } from 'uuid';
 import { classifyError } from '@/utilities/errorHandler';
+import { clearGameDraft } from '@/utilities/clientUtilities/gameDraftStorage';
+
+/**
+ * Fallback cover image. The `games.image` column is NOT NULL, so a game
+ * still needs a value even when the upload fails (e.g. the storage host is
+ * unreachable) or no image was chosen. Images are optional - the game is
+ * not.
+ */
+const PLACEHOLDER_GAME_IMAGE = "/images/project.jpg";
 
 const STATUS_COLOR_MAP = {
   success: "text-success",
@@ -37,7 +45,7 @@ export default function CreateForm() {
 
   const handleFinalSubmit = useCallback(async (wizardData: GamesFormData) => {
     const currentForm = formRef.current;
-    if (!isFormValid || !currentForm.image) return;
+    if (!isFormValid) return;
 
     setLoading(true);
     try {
@@ -46,11 +54,22 @@ export default function CreateForm() {
       const convertImagesKey = uuidv7();
       const pushGamesKey = uuidv7();
 
-      const imageUrl = await sendRequest<{ url: string }>(
-        "/api/convertUrl",
-        { image: arrayBufferToBase64(currentForm.image) },
-        { idempotencyKey: convertUrlKey }
-      ).then(data => data.url);
+      // The cover image is optional. If storage is unreachable (or no image
+      // was chosen) fall back to the bundled placeholder so the game is still
+      // created instead of the whole submit failing.
+      let imageUrl = PLACEHOLDER_GAME_IMAGE;
+      if (currentForm.image) {
+        try {
+          imageUrl = await sendRequest<{ url: string }>(
+            "/api/convertUrl",
+            { image: arrayBufferToBase64(currentForm.image) },
+            { idempotencyKey: convertUrlKey }
+          ).then(data => data.url);
+        } catch (error) {
+          const classified = classifyError(error, "CreateForm.coverImageUpload");
+          console.error("[CreateForm] Cover image upload failed, using placeholder:", classified.message);
+        }
+      }
 
       const characterImages = wizardData.characters.map(c =>
         c.image ? arrayBufferToBase64(c.image) : null
@@ -93,19 +112,25 @@ export default function CreateForm() {
 
       await sendRequest("/api/push", payload, { idempotencyKey: pushKey });
 
+      // Send EVERY entry, not only the ones that have an image. The previous
+      // code filtered them out first, which silently deleted characters,
+      // maps and items the user had added without an image.
       const convertedGame = await sendRequest<GamesFormDataDB>(
         "/api/convertUrl/ConvertGameImages",
         {
           id: gameData.id,
-          characters: filterEntriesWithImages(characters),
-          maps: filterEntriesWithImages(maps),
-          items: filterEntriesWithImages(items),
+          characters,
+          maps,
+          items,
         },
         { idempotencyKey: convertImagesKey }
       );
 
       await sendRequest("/api/push/pushGames", convertedGame, { idempotencyKey: pushGamesKey });
+
+      // The game exists now - the draft has served its purpose.
       resetForm();
+      clearGameDraft();
     } catch (err) {
       const classified = classifyError(err, "CreateForm.handleFinalSubmit");
       console.error(classified.message);
@@ -119,13 +144,6 @@ export default function CreateForm() {
       return (
         <p className="text-sm text-warning">
           Please follow the length requirements for all fields
-        </p>
-      );
-    }
-    if (form.name.length > 0 && form.description.length > 0 && !form.image) {
-      return (
-        <p className="text-sm text-warning">
-          Please upload an image
         </p>
       );
     }
@@ -180,6 +198,7 @@ export default function CreateForm() {
 
           <ImageUpload
             label="Image"
+            value={form.imagePreview || null}
             onSelect={(file) => updateField("image", file)}
             onPreviewChange={(preview) => updateField("imagePreview", preview)}
             resetKey={resetCounter}
@@ -189,7 +208,7 @@ export default function CreateForm() {
 
           <Button
             onClick={() => setShowWizard(true)}
-            disabled={loading || !isFormValid || !form.image}
+            disabled={loading || !isFormValid}
             className="w-full"
           >
             Next

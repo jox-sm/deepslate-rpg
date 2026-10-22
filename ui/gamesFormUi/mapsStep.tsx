@@ -70,6 +70,7 @@ export default function MapsStep({ maps, onAdd, onRemove, onUpdate, onNext, onBa
 
             <ImageUpload
               label="Map Image"
+              value={mapItem.imagePreview || null}
               onSelect={(file) => onUpdate(mapItem.id, "image", file)}
               onPreviewChange={(preview) => onUpdate(mapItem.id, "imagePreview", preview)}
             />
