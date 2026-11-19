@@ -33,7 +33,10 @@ refactor/compact-web         all compaction commits
 
 ### 🎮 PlayScreen agent — `components/game/PlayScreen.tsx` (360 → 66)
 - `components/game/play/`: `usePlaySession.ts` (200) — session state/refs/polling/autosave/send, `useSaveControls.ts` (91) — router/save/exit, plus `PlayHeader`, `StoryPanel`, `MoveInput`, `ExitModal`, `constants.ts`, `types.ts`.
-- **Insight:** `useRouter()` stayed unconditional during render so hook order and the test mock still work; `turnRef` shared by reference via structural `{ current: number }`; all error strings, canonical payload, timestamp/skew detection carried over verbatim; unused `logRef` preserved for DOM fidelity.
+- **Insight:** `useRouter()` stayed unconditional during render so hook order and the
+  test mock still work; `turnRef` shared by reference via structural
+  `{ current: number }`; error strings and timestamp/skew detection carried over
+  verbatim; unused `logRef` preserved for DOM fidelity.
 - **Verification:** 4/4 PlayScreen tests; tsc baseline exact.
 
 ### ⚙️ workers (orchestrator work, not an agent) — `lib/workers.ts` (273 → 3-line barrel)
