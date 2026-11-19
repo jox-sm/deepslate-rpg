@@ -1,0 +1,13 @@
+# web configurations is located at ai agent repo
+#
+# This repo has no Compose wiring of its own — only this Dockerfile note.
+# The web + AI stack wiring lives in the sibling AI repo:
+#
+#   D:\AI agent\docker-compose.yml
+#
+# Run the full stack (web :3000 + AI server :8000):
+#   cd "D:\AI agent"
+#   docker compose up --build
+#
+# (docker.yml is intentionally NOT auto-loaded by docker compose — it's a
+# pointer note, so it can't clash with the real compose file.)

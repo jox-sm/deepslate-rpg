@@ -1,12 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { v7 as uuidv7 } from 'uuid';
 import { useGameCache, useGamePreload } from '@/utilities/clientUtilities/useGameCache';
 import { CharacterTabs } from '@/components/game/CharacterTabs';
 import { MapList } from '@/components/game/MapList';
 import { ItemGrid } from '@/components/game/ItemGrid';
 import { GameHeader } from '@/components/game/GameHeader';
-
+import { createScenarioWithId } from '@/lib/scenarios';
+import { saveGameSeed, type GameSeed } from '@/lib/gameSeed';
+import { classifyError } from '@/utilities/errorHandler';
 interface GameDetailClientProps {
   uuid: string;
   initialName?: string;
@@ -20,10 +24,53 @@ export default function GameDetailClient({
   initialDescription,
   initialImage,
 }: GameDetailClientProps) {
+  const router = useRouter();
   const preloadedData = useGamePreload(uuid);
   const hasPreload = preloadedData != null;
   const [activeTab, setActiveTab] = useState<'characters' | 'maps' | 'items'>('characters');
   const { data, loading, error, cacheStats, refreshData } = useGameCache(uuid);
+  const [startingRun, setStartingRun] = useState(false);
+  const [playError, setPlayError] = useState<string | null>(null);
+
+  // Starts a play session seeded from this catalog game: registers a scenario
+  // slot whose id is the fresh session id, stashes the creative payload
+  // (characters/maps/items) for PlayScreen to inject into the first AI request,
+  // and navigates to /play/{sid}.
+  async function startPlaySession() {
+    if (startingRun) return;
+    setStartingRun(true);
+    setPlayError(null);
+    try {
+      const sid = uuidv7();
+      const scenario = createScenarioWithId(sid, displayData.name || 'Unnamed Adventure');
+      if (!scenario) throw new Error('Scenario slots are full — free one up from /play first');
+      const seed: GameSeed = {
+        game_id: displayData.id,
+        name: displayData.name,
+        description: displayData.description || '',
+        // Slim the payload: names/descriptions only — image blobs stay out of
+        // the queue item.
+        characters: (displayData.characters ?? []).map((c) => ({
+          id: c.id,
+          name: c.name,
+          description: c.description,
+        })),
+        maps: (displayData.maps ?? []).map((m) => ({
+          id: m.id,
+          name: m.nameOfPlace,
+          places_at: m.placesAtMap,
+          size: m.sizeOfPlace,
+        })),
+        items: (displayData.items ?? []).map((i) => ({ id: i.id, name: i.name })),
+      };
+      if (!saveGameSeed(sid, seed)) throw new Error('Could not stash the game seed for this session');
+      router.push(`/play/${sid}`);
+    } catch (e) {
+      const classified = classifyError(e, 'gameDetail.startPlaySession');
+      setStartingRun(false);
+      setPlayError(classified.message);
+    }
+  }
 
   const displayData = {
     id: uuid,
@@ -58,6 +105,24 @@ export default function GameDetailClient({
       />
 
       <div className="container-page py-8">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-text-muted">
+            Enter the game&apos;s world as an AI-driven adventure.
+          </p>
+          <button
+            onClick={startPlaySession}
+            disabled={startingRun || loading && !data}
+            className="rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-charcoal-950 transition-opacity hover:opacity-90 disabled:opacity-40"
+          >
+            {startingRun ? 'Opening the depths…' : 'Play'}
+          </button>
+        </div>
+        {playError && (
+          <p className="mb-6 rounded-[10px] border border-destructive/30 bg-destructive/10 px-4 py-2 text-sm text-destructive">
+            {playError}
+          </p>
+        )}
+
         <div className="mb-6 flex gap-6 border-b border-border">
           {tabs.map((tab) => (
             <button

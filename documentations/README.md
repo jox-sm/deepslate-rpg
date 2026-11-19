@@ -1,5 +1,23 @@
 # Documentation Index
 
+## Recent additions (2026-11)
+
+- **Play save vault** — saves moved from localStorage to an in-memory zustand vault
+  (`stores/game-saves.ts`) + `lib/saveFile.ts`: the PlayScreen **Save** button
+  downloads a whole-vault JSON snapshot (`deepslate-saves-*.json`), the scenario
+  list imports files back; memory restore on re-entry. See the web `README.md`
+  → "Play saving (vault + Save button)".
+- **Catalog-game session seeding** — `lib/gameSeed.ts`: the "Play" CTA on
+  `/game/[uuid]` seeds a session (uuidv7 sid + `world_seed` = game id +
+  `campaign` payload on turn 1). Contract: the AI repo's `REDIS_API.md`
+  → "Session Seeding from a Catalog Game" (authoritative cross-repo doc).
+- **Docker** — `Dockerfile` here (web, 3-stage) + the AI repo's
+  `requirements.txt` / `Dockerfile` / `docker-compose.yml` (runs web :3000 +
+  AI server :8000 together; cloud stores stay external).
+- **AI server live status** — full API surface tested live (20 passed / 0 failed /
+  4 skipped); `/memory/*` endpoints answer 503 with guidance until the Upstash
+  Search creds are set in the AI repo (`rpg_ai_server/.env`).
+
 ## Overview
 
 This folder contains comprehensive documentation for the Deepslate Dungeons RPG project, organized into three sections:

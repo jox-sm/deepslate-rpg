@@ -2,9 +2,11 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import ScenarioEntry from "./ScenarioEntry";
 import { createScenario } from "@/lib/scenarios";
+import { useGameSavesStore } from "@/stores/game-saves";
 
 beforeEach(() => {
-  localStorage.clear();
+  // Vault is module-scoped zustand; start every test empty.
+  useGameSavesStore.getState().resetForTests();
 });
 
 describe("ScenarioEntry", () => {
@@ -28,5 +30,10 @@ describe("ScenarioEntry", () => {
 
     fireEvent.click(screen.getByLabelText("Delete Deep"));
     expect(screen.getByText("No saved adventures yet.")).toBeInTheDocument();
+  });
+
+  it("offers to import a save file", () => {
+    render(<ScenarioEntry onEnter={() => undefined} />);
+    expect(screen.getByText("Have a save file? Import it")).toBeInTheDocument();
   });
 });
