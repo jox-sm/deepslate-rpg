@@ -2,12 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { tryApiRoute } from "@/utilities/apiErrorHandler";
 import { retry } from "@/lib/retry";
 import { tryOrErrorSync } from "@/utilities/errorHandler";
+import { validateJWTMiddleware } from "@/lib/jwt-validate";
 
 // Server-only proxy to the AI server's /memory/* endpoints (Upstash Search).
 // The web app never talks to Upstash directly — creds stay on the AI server.
 // Endpoints mirror REDIS_API.md → "Game Memory (Upstash Search)".
+// Requires a signed-in Clerk session (re-checked server-side here).
 
 const AI_SERVER_URL = process.env.AI_SERVER_URL ?? "http://127.0.0.1:8000";
+
+async function guard(_req: NextRequest): Promise<NextResponse | null> {
+  const auth = await validateJWTMiddleware(_req);
+  return auth.error;
+}
 
 async function proxy(request: NextRequest, sid: string, method: string) {
   const path =
@@ -44,25 +51,31 @@ async function proxy(request: NextRequest, sid: string, method: string) {
 }
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
+  const denied = await guard(req);
+  if (denied) return denied;
   const { id } = await params;
-  return (await tryApiRoute(() => proxy(_req, id, "GET"), "games.memory.GET")) as NextResponse;
+  return (await tryApiRoute(() => proxy(req, id, "GET"), "games.memory.GET")) as NextResponse;
 }
 
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
+  const denied = await guard(req);
+  if (denied) return denied;
   const { id } = await params;
   return (await tryApiRoute(() => proxy(req, id, "POST"), "games.memory.POST")) as NextResponse;
 }
 
 export async function DELETE(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
+  const denied = await guard(req);
+  if (denied) return denied;
   const { id } = await params;
-  return (await tryApiRoute(() => proxy(_req, id, "DELETE"), "games.memory.DELETE")) as NextResponse;
+  return (await tryApiRoute(() => proxy(req, id, "DELETE"), "games.memory.DELETE")) as NextResponse;
 }

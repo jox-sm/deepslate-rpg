@@ -1,0 +1,15 @@
+# Keep the build context lean and deterministic.
+node_modules/
+.next/
+.git/
+.gitignore
+*.log
+coverage/
+
+# NOTE: .env / .env.local are deliberately NOT ignored — the Next build stage
+# needs NEXT_PUBLIC_* from them (inlined into the client bundle at build time).
+# They are NOT copied into the runner stage (see Dockerfile), and at runtime
+# docker-compose injects server-side secrets via env_file instead.
+#
+# DANGER for CI/registry pushes: this means secrets ride in the build context.
+# For cloud CI, switch to build args for NEXT_PUBLIC_* and ignore .env* here.

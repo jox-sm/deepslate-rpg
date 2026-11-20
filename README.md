@@ -60,7 +60,7 @@ Hit publish and the data flows through an Upstash-Redis-backed queue into the ri
 
 ### Current status
 
-The app ships a working create-flow (wizard → API → worker → DB), a home page with a paginated cards grid, the **GamePage detail view** (`/game/[uuid]`), the **Play screen** (`/play`), a client **likes store** with optimistic updates, the **hotness cache**, and an **AI server integration** that relays to a FastAPI backend. Clerk powers authentication and Convex is an opt-in realtime scaffold (not on the primary write path). The largest remaining gaps are production hardening items — audit logging, WAF + request signing, monitoring/alerting, and transactional guarantees across Postgres + MongoDB.
+The app ships a working create-flow (wizard → API → worker → DB), a home page with a paginated cards grid, the **GamePage detail view** (`/game/[uuid]`), the **Play screen** (`/play`) with catalog-game seeding and an in-memory **save vault** (zustand) plus a **Save button** that downloads a whole-vault JSON file (importable back into the scenario list), a client **likes store** with optimistic updates, the **hotness cache**, and an **AI server integration** that relays to a FastAPI backend (also available via Docker + docker-compose — see `Dockerfile` here and `docker-compose.yml` in the AI repo). Clerk powers authentication and Convex is an opt-in realtime scaffold (not on the primary write path). The largest remaining gaps are production hardening items — audit logging, WAF + request signing, monitoring/alerting, and transactional guarantees across Postgres + MongoDB.
 
 ---
 
@@ -103,7 +103,7 @@ This layered design keeps everything runnable on free tiers while deferring the 
 | **Analytics** | PostHog (`posthog-js`) | ^1.372.10 | Events, session replay |
 | **Validation** | Zod | ^4.4.3 | Centralized schemas in `types/validation.ts` |
 | **Rate limiting** | Bottleneck | ^2.19.5 | Per-IP limiter via `Bottleneck.Group` |
-| **State management** | Zustand | ^5.0.14 | Client likes store (persisted) |
+| **State management** | Zustand | ^5.0.14 | Client likes store (persisted) + game-saves vault (in-memory) |
 | **ID generation** | UUID | ^14.0.0 | UUID v7 for idempotency keys |
 | **Image processing** | sharp | ^0.34.5 | WebP quality-80 conversion |
 | **Compression** | pako | ^2.1.0 | Gzip for hotness-cache payloads |
@@ -246,10 +246,36 @@ ProfileCard click → localStorage/router navigation
 ### Play / AI server flow (`/play`, `/play/[sid]`)
 
 ```
-ScenarioEntry → /play/[sid] → PlayGate (auth + scenario load)
+ScenarioEntry (zustand vault subscription, save-file import) → /play/[sid] → PlayGate
+  → "Play" CTA on /game/[uuid] seeds a session: uuidv7 sid + scenario slot + GameSeed
+    (sessionStorage rpg:seed:{sid}, single-use) → /play/{sid}
+  → PlayScreen: turn-1 GameRequest.data carries world_seed (= game id) + campaign
+    (characters/maps/items) — the AI engine seeds a stable shared world per catalog game
   → lib/playClient.ts issues requests to /api/ai-server/[...path]
   → app/api/ai-server/[...path]/route.ts relays to FastAPI (AI_SERVER_URL, default 127.0.0.1:8000)
   → lib/ai-server-client.ts types the queue/state/memory/counter endpoints
+  → PlayScreen polls GET /output/{sid} every 2s (~2 min budget); timestamp-based
+    turn-change detection (story-string fallback), send-epoch stale gate
+```
+
+### Play saving (vault + Save button)
+
+```
+Saves live in stores/game-saves.ts — in-memory zustand vault (scenarios, memory
+blobs keyed by sid, turn counters). NOT localStorage.
+
+Save button (PlayScreen header):
+  GET /memory/export/{sid} → refresh vault blob
+  → lib/saveFile.ts builds { kind: "deepslate-saves", version: 1, … } snapshot
+  → browser downloads deepslate-saves-YYYYMMDD-HHmmss.json
+
+ScenarioEntry "Have a save file? Import it":
+  readSavesFile() → vault importSnapshot() → imported runs resume normally
+  (memory chunks re-uploaded to the AI index via /memory/restore)
+
+Autosave: every 10 turns the vault blob refreshes from the AI server.
+Tradeoff: refresh/close loses un-downloaded runs (vault is memory-only);
+story continuity survives via AI-side memory restore.
 ```
 
 ### Likes flow
@@ -315,11 +341,15 @@ deepslate dungeons/
 │   ├── patch-applier.ts          # applyGamePatches()
 │   ├── GamesInsert.ts            # Background worker: processGamesQueue()
 │   ├── ai-server-client.ts       # Typed FastAPI client
+│   ├── playClient.ts             # Play-flow calls (queue/output/memory/counter)
+│   ├── gameSeed.ts               # Catalog-game session seed (sessionStorage, single-use)
+│   ├── saveFile.ts               # Save-vault snapshot build/download/import
 │   └── middleware/
 │       └── rate-limit.ts         # Bottleneck.Group per-IP
 │
 ├── stores/
-│   └── likes-store.ts            # Zustand + persist likes store (optimistic + revert)
+│   ├── likes-store.ts            # Zustand + persist likes store (optimistic + revert)
+│   └── game-saves.ts             # In-memory save vault (scenarios, blobs, turns)
 │
 ├── utilities/
 │   ├── clientUtilities/          # Browser-only helpers (useGameCache, useGamePreload)
@@ -493,7 +523,8 @@ Honest accounting of what's NOT done yet. Updated 2026-08-17.
 
 - **GamePage detail route** (`/game/[uuid]`) — server `page.tsx` (with `generateMetadata`) + client `game-detail.tsx`, tabs for characters/maps/items, instant preload via `useGamePreload()`.
 - **Play screen** (`/play`, `/play/[sid]`) — `PlayScreen`, `PlayGate`, `ScenarioEntry` + scenario components.
-- **AI server integration** — `lib/ai-server-client.ts`, `lib/playClient.ts`, `app/api/ai-server/[...path]/route.ts` relay to FastAPI (`AI_SERVER_URL`).
+- **AI server integration** — `lib/ai-server-client.ts`, `lib/playClient.ts`, `app/api/ai-server/[...path]/route.ts` relay to FastAPI (`AI_SERVER_URL`); catalog-game session seeding (`lib/gameSeed.ts` + turn-1 `world_seed`/`campaign` injection).
+- **Play save vault** — `stores/game-saves.ts` (in-memory zustand), `lib/saveFile.ts` (whole-vault JSON snapshot download + import), Save button in PlayScreen; memory restore on re-entry.
 - **Likes store** — `stores/likes-store.ts` (zustand + persist, optimistic + revert) and **hotness cache** — `utilities/hotnessCache.ts` (binary-search sorted array, pako-gzip, promotion threshold).
 
 ### 🟧 Production checklist (incomplete)
@@ -684,6 +715,7 @@ UPSTASH_REDIS_REST_TOKEN=...
 
 # AI server (FastAPI relay target for /api/ai-server)
 AI_SERVER_URL=http://127.0.0.1:8000
+# (inside docker-compose the web container gets AI_SERVER_URL=http://ai-server:8000)
 
 # App URL (used for internal drain self-calls)
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -704,11 +736,16 @@ npm run dev          # Start Next.js dev server (Turbopack, hot reload)
 npm run build        # Production build with type-checking
 npm run start        # Run production server
 npm run lint         # ESLint across all source files
+npm test             # Vitest suite (113 tests)
 
 # Convex (optional, requires separate terminal)
 npx convex dev       # Local Convex deployment with hot reload
 npx convex dashboard # Open Convex web dashboard
 npx convex deploy    # Deploy Convex functions to production
+
+# Docker (image only — the web→AI wiring lives in the AI repo's compose)
+docker build -t deepslate-web .          # 3-stage: deps → build → runner
+docker run --env-file .env -p 3000:3000 deepslate-web
 ```
 
 ### Quick start
@@ -721,6 +758,23 @@ npm run dev          # Terminal 2
 ```
 
 Open http://localhost:3000. Clerk handles sign-in, the wizard walks you through creating your first game, the GamePage and Play screens are live, and PostHog records the visit.
+
+### Full stack (web + AI server) via Docker
+
+The AI server repo (`../AI agent`) holds `docker-compose.yml` that builds **both**
+folders and wires them together:
+
+```bash
+cd "../AI agent"
+docker compose up --build
+# web → http://localhost:3000 (AI_SERVER_URL=http://ai-server:8000 inside the network)
+# api → http://localhost:8000/health
+```
+
+Upstash Redis/Search, Neon Postgres and MongoDB stay cloud-hosted — no
+containers for them. Note the web build stage reads `.env`/`.env.local`
+(NEXT_PUBLIC_* are inlined at build time); server-side secrets are injected at
+runtime and are **not** in the final image.
 
 ---
 

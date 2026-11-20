@@ -69,6 +69,8 @@ export interface AiOutput {
   narrative_context?: string;
   quest_updates?: AiQuest[];
   combat_result?: AiCombatResult;
+  /** Server-side write time (engine per-turn). Primary turn-change marker. */
+  timestamp?: number;
   [key: string]: unknown;
 }
 

@@ -18,7 +18,7 @@ vi.mock("@/lib/playClient", () => ({
   outputGet: vi.fn(async () => null),
 }));
 
-import { queuePush, outputGet } from "@/lib/playClient";
+import { queuePush, outputGet, memoryExport } from "@/lib/playClient";
 
 const scenario = { id: "sid1", name: "Sunken Vault", created_at: 0, last_played_at: 0 };
 
@@ -69,5 +69,33 @@ describe("PlayScreen", () => {
     fireEvent.click(screen.getByText("Save & Exit"));
     await act(async () => {});
     expect(pushMock).toHaveBeenCalledWith("/play");
+  });
+
+  it("downloads a whole-vault JSON file from the Save button", async () => {
+    const createObjectURL = vi.fn((_snapshotBlob: Blob) => "blob:mock");
+    const revokeObjectURL = vi.fn();
+    Object.defineProperty(URL, "createObjectURL", { value: createObjectURL, configurable: true });
+    Object.defineProperty(URL, "revokeObjectURL", { value: revokeObjectURL, configurable: true });
+    const clicked: string[] = [];
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (this: HTMLAnchorElement) {
+      clicked.push(this.download);
+    });
+
+    vi.mocked(memoryExport).mockResolvedValueOnce({
+      sid: "sid1",
+      chunks: [{ id: "c1", content: {} }],
+      saved_at: 55,
+    } as never);
+
+    render(<PlayScreen sid="sid1" scenario={scenario} />);
+    await act(async () => {});
+    fireEvent.click(screen.getByText("Save"));
+    await act(async () => {});
+
+    expect(memoryExport).toHaveBeenCalledWith("sid1");
+    expect(clicked).toHaveLength(1);
+    expect(clicked[0]).toMatch(/^deepslate-saves-\d{8}-\d{6}\.json$/);
+    expect(createObjectURL).toHaveBeenCalledTimes(1);
+    expect(revokeObjectURL).toHaveBeenCalledWith("blob:mock");
   });
 });

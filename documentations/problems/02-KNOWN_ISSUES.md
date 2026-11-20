@@ -502,6 +502,47 @@ Frontend → API Gateway → Microservices
 
 ---
 
+## TypeScript Type Errors (test files only)
+
+### N+1. `vi.fn()` mocks with undeclared parameters (6 tsc errors)
+
+**Issue:** `npx tsc --noEmit` reports exactly 6 errors — all in test files, none in
+production code. Runtime suite is green (113/113). Recorded 2026-11-19 during the
+web compaction; deliberately left untouched so the refactor's tsc baseline stayed
+identical (proving zero new errors).
+
+**Current Problem:**
+```typescript
+// hooks/useIdempotentRequest.test.ts:23
+const fetchMock = vi.fn(async () => okJson({ url: "x" }));   // parameters inferred as []
+const body = JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string);
+//                                          ^ TS2493 (tuple [] has no index 1)
+//                                          ^ TS2352 (cast from undefined to RequestInit)
+
+// lib/playClient.test.ts:25,28,56
+const fetchMock = vi.fn(async () => okJson({ queued: true }));
+const [url, init] = fetchMock.mock.calls[0];  // TS2493 ×2 (indices 0, 1)
+expect((init as RequestInit).method).toBe("POST");  // TS2352
+const urls = fetchMock.mock.calls.map((c) => String(c[0]));  // TS2493
+```
+
+**Root cause:** `vi.fn(async () => …)` declares zero parameters, so TypeScript types
+`mock.calls` as `[]`. The tests then inspect arguments `fetch` actually received —
+present at runtime, invisible to the type system.
+
+**Risk:** Type-check is not fully green; no runtime impact (Vitest passes all 113 tests).
+Can mask genuine typing regressions in these mocks.
+
+**Solution (one line per mock):**
+```typescript
+const fetchMock = vi.fn(async (_url: string, _init?: RequestInit) => okJson(...));
+// mock.calls[0] is now [string, RequestInit?] — all 6 errors vanish; casts can be removed.
+```
+
+**Files:** `hooks/useIdempotentRequest.test.ts` (2 errors), `lib/playClient.test.ts` (4 errors).
+
+---
+
 ## Recommended Fixes Priority
 
 | Issue | Impact | Effort | Priority |
@@ -516,3 +557,4 @@ Frontend → API Gateway → Microservices
 | Performance Metrics | Low | Medium | 8 |
 | Zero-Downtime Deployment | Low | High | 9 |
 | Microservices | Low | High | 10 |
+| vi.fn mock type errors (6) | Low | Low | 11 |

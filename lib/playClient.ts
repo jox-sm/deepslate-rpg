@@ -36,6 +36,9 @@ function fetchWithRetry(input: string, init?: RequestInit): Promise<Response> {
   return retry(() => fetch(input, init), 2, 500);
 }
 
+// Pushes a turn onto the AI server queue. `data` is the serialized AI-server
+// GameRequest: { uuid, prompt, data, images, timestamp } (uuid is required by
+// the backend's Pydantic GameRequest; the session id doubles as the queue key).
 export function queuePush(sid: string, data: Record<string, unknown>): Promise<AiQueuePushResponse> {
   const qs = new URLSearchParams();
   qs.set("uuid", sid);

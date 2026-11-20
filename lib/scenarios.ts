@@ -1,155 +1,111 @@
-// lib/scenarios.ts — Named save slots (scenario lifecycle)
-// localStorage keys: rpg:scenarios (registry), rpg:memory:{id} (exported search-memory blob)
-// Contract: REDIS_API.md → "Scenario Lifecycle — Named Save Slots"
+// lib/scenarios.ts — Named save slots (scenario lifecycle).
+//
+// The registry, AI memory blobs and turn counters live in the in-memory
+// zustand vault `stores/game-saves.ts` (NOT localStorage). Durability is
+// explicit and user-driven: the PlayScreen "Save" button snapshots the whole
+// vault into a downloadable JSON file (lib/saveFile.ts); the scenario list
+// imports those files back. Same function names as before — consumers keep
+// calling this module.
+// Contract: REDIS_API.md → "Scenario Lifecycle — Named Save Slots".
 
 "use client";
 
 import { v7 as uuidv7 } from "uuid";
-import type { AiMemoryChunk } from "@/types/ai-server";
-import { tryOrErrorSync, classifyError } from "@/utilities/errorHandler";
+import { useGameSavesStore, type ScenarioMeta, type ScenarioMemoryBlob } from "@/stores/game-saves";
+import { classifyError } from "@/utilities/errorHandler";
 
-export const SCENARIOS_KEY = "rpg:scenarios";
 export const MAX_SCENARIOS = 20;
 export const AUTOSAVE_EVERY_TURNS = 10;
-export const LOCALSTORAGE_BUDGET_BYTES = 4_000_000; // stay under the 5MB quota
 
-export interface ScenarioMeta {
-  id: string;
-  name: string;
-  created_at: number;
-  last_played_at: number;
-}
-
-export interface ScenarioMemoryBlob {
-  sid: string;
-  saved_at: number;
-  last_turn: number;
-  chunks: AiMemoryChunk[];
-}
+export type { ScenarioMeta, ScenarioMemoryBlob };
 
 export type EntryDecision =
   | { action: "resume"; scenario: ScenarioMeta }
   | { action: "restore"; scenario: ScenarioMeta }
   | { action: "create" };
 
-const memoryKey = (id: string) => `rpg:memory:${id}`;
-
-function readRegistry(): ScenarioMeta[] {
-  const result = tryOrErrorSync(
-    () => {
-      const raw = localStorage.getItem(SCENARIOS_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? (parsed as ScenarioMeta[]) : [];
-    },
-    { context: "scenarios.readRegistry", suppressToast: true, suppressComponent: true }
-  );
-  return result.ok && result.data ? result.data : [];
-}
-
-function writeRegistry(registry: ScenarioMeta[]): void {
-  const result = tryOrErrorSync(
-    () => {
-      localStorage.setItem(SCENARIOS_KEY, JSON.stringify(registry));
-    },
-    { context: "scenarios.writeRegistry", suppressToast: true, suppressComponent: true }
-  );
-  if (!result.ok) {
-    const classified = classifyError(result.error, "scenarios.writeRegistry");
-    console.error("[Scenarios] Failed to persist registry:", classified.message);
-  }
-}
+const store = useGameSavesStore;
 
 export function listScenarios(): ScenarioMeta[] {
-  return readRegistry().sort((a, b) => b.last_played_at - a.last_played_at);
+  return [...store.getState().scenarios].sort((a, b) => b.last_played_at - a.last_played_at);
 }
 
 export function getScenario(id: string): ScenarioMeta | null {
-  return readRegistry().find((s) => s.id === id) ?? null;
+  return store.getState().scenarios.find((s) => s.id === id) ?? null;
 }
 
-export function createScenario(name: string): ScenarioMeta | null {
-  const registry = readRegistry();
-  if (registry.length >= MAX_SCENARIOS) {
-    console.warn(`[Scenarios] Registry full (${MAX_SCENARIOS}); refusing to create`);
-    return null;
-  }
-  const scenario: ScenarioMeta = {
-    id: uuidv7(),
+function buildScenario(id: string, name: string): ScenarioMeta {
+  return {
+    id,
     name: name.trim() || "Unnamed Adventure",
     created_at: Date.now(),
     last_played_at: Date.now(),
   };
-  writeRegistry([...registry, scenario]);
+}
+
+function addScenario(scenario: ScenarioMeta): ScenarioMeta | null {
+  const st = store.getState();
+  if (st.scenarios.length >= MAX_SCENARIOS) {
+    console.warn(`[Scenarios] Registry full (${MAX_SCENARIOS}); refusing to create`);
+    return null;
+  }
+  st.upsertScenario(scenario);
   return scenario;
 }
 
+export function createScenario(name: string): ScenarioMeta | null {
+  return addScenario(buildScenario(uuidv7(), name));
+}
+
+/**
+ * Creates a scenario whose id is chosen by the caller — used when a play
+ * session is seeded from a catalog game (sid comes from the session creation
+ * step, not from this registry). Idempotent: an existing entry is returned as-is.
+ */
+export function createScenarioWithId(id: string, name: string): ScenarioMeta | null {
+  return getScenario(id) ?? addScenario(buildScenario(id, name));
+}
+
 export function renameScenario(id: string, name: string): ScenarioMeta | null {
-  const registry = readRegistry();
-  const idx = registry.findIndex((s) => s.id === id);
-  if (idx === -1) return null;
-  registry[idx] = { ...registry[idx], name: name.trim() || registry[idx].name };
-  writeRegistry(registry);
-  return registry[idx];
+  const existing = getScenario(id);
+  if (!existing) return null;
+  const updated = { ...existing, name: name.trim() || existing.name };
+  store.getState().upsertScenario(updated);
+  return updated;
 }
 
 export function touchScenario(id: string): void {
-  const registry = readRegistry();
-  const idx = registry.findIndex((s) => s.id === id);
-  if (idx === -1) return;
-  registry[idx] = { ...registry[idx], last_played_at: Date.now() };
-  writeRegistry(registry);
+  const existing = getScenario(id);
+  if (!existing) return;
+  store.getState().upsertScenario({ ...existing, last_played_at: Date.now() });
 }
 
 export function deleteScenario(id: string): void {
-  writeRegistry(readRegistry().filter((s) => s.id !== id));
-  clearMemory(id);
+  // removeScenario also drops the slot's memory blob and turn entry.
+  store.getState().removeScenario(id);
 }
 
 // --- memory blob (exported vectors) ---
 
 export function saveMemory(id: string, blob: ScenarioMemoryBlob): boolean {
-  try {
-    const serialized = JSON.stringify(blob);
-    if (serialized.length > LOCALSTORAGE_BUDGET_BYTES) {
-      const classified = classifyError(
-        new Error(`Memory blob exceeds budget (${serialized.length} bytes)`),
-        "scenarios.saveMemory.budget"
-      );
-      console.warn(`[Scenarios] ${classified.message}`);
-      return false;
-    }
-    localStorage.setItem(memoryKey(id), serialized);
-    return true;
-  } catch (error) {
-    const classified = classifyError(error, "scenarios.saveMemory");
+  if (blob.sid !== id || !Array.isArray(blob.chunks)) {
+    const classified = classifyError(
+      new Error(`Memory blob for ${id} is malformed (sid mismatch or chunks missing)`),
+      "scenarios.saveMemory.shape",
+    );
     console.error("[Scenarios] Failed to save memory blob:", classified.message);
     return false;
   }
+  store.getState().setMemory(blob);
+  return true;
 }
 
 export function loadMemory(id: string): ScenarioMemoryBlob | null {
-  const result = tryOrErrorSync(
-    () => {
-      const raw = localStorage.getItem(memoryKey(id));
-      return raw ? (JSON.parse(raw) as ScenarioMemoryBlob) : null;
-    },
-    { context: "scenarios.loadMemory", suppressToast: true, suppressComponent: true }
-  );
-  return result.ok ? result.data : null;
+  return store.getState().memories[id] ?? null;
 }
 
 export function clearMemory(id: string): void {
-  const result = tryOrErrorSync(
-    () => {
-      localStorage.removeItem(memoryKey(id));
-    },
-    { context: "scenarios.clearMemory", suppressToast: true, suppressComponent: true }
-  );
-  if (!result.ok) {
-    const classified = classifyError(result.error, "scenarios.clearMemory");
-    console.error("[Scenarios] Failed to clear memory:", classified.message);
-  }
+  store.getState().removeMemory(id);
 }
 
 // --- entry decision (single pass — see LOOPS.md §4.3) ---
@@ -171,36 +127,18 @@ export function shouldAutosave(turnNumber: number): boolean {
   return turnNumber > 0 && turnNumber % AUTOSAVE_EVERY_TURNS === 0;
 }
 
-// --- persisted turn (single call: memory blob + registry touch + turn key) ---
-
-const TURN_KEY = "rpg:turn:";
+// --- persisted turn (single call: memory blob + registry touch + turn count) ---
 
 export function readTurn(id: string): number {
-  const result = tryOrErrorSync(
-    () => {
-      const raw = localStorage.getItem(TURN_KEY + id);
-      const parsed = raw == null ? NaN : Number.parseInt(raw, 10);
-      return Number.isFinite(parsed) ? parsed : 0;
-    },
-    { context: "scenarios.readTurn", suppressToast: true, suppressComponent: true }
-  );
-  return result.ok && typeof result.data === "number" ? result.data : 0;
+  return store.getState().turns[id] ?? 0;
 }
 
 export function writeTurn(id: string, turn: number): void {
-  const result = tryOrErrorSync(
-    () => {
-      localStorage.setItem(TURN_KEY + id, String(turn));
-    },
-    { context: "scenarios.writeTurn", suppressToast: true, suppressComponent: true }
-  );
-  if (!result.ok) {
-    const classified = classifyError(result.error, "scenarios.writeTurn");
-    console.error("[Scenarios] Failed to persist turn:", classified.message);
-  }
+  store.getState().setTurn(id, turn);
 }
 
-export function persistScenarioTurn(  id: string,
+export function persistScenarioTurn(
+  id: string,
   blob: ScenarioMemoryBlob,
   turn: number
 ): void {
